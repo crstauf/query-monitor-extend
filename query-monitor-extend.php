@@ -12,7 +12,7 @@ new css_qm_extend;
 class css_qm_extend {
 
 	function __construct() {
-		add_filter('qm/collect/conditionals',array(__CLASS__,'add_woocommerce_conditionals'));
+		add_filter('qm/collect/conditionals',array(__CLASS__,'add_conditionals'),9999999);
 		add_filter('qm/output/menu_class',array(__CLASS__,'adminbar_menu_bg'),9999999);
 	}
 
@@ -87,20 +87,22 @@ class css_qm_extend {
 		return $classes;
 	}
 
-	public static function add_woocommerce_conditionals($conds) {
-		if (!class_exists('WooCommerce')) return $conds;
-		$conds = array_unique(array_merge($conds,array(
-			'is_account_page',
-			'is_cart',
-			'is_checkout',
-			'is_product',
-			'is_product_category',
-			'is_product_tag',
-			'is_shop',
-			'is_wc_endpoint_url',
-			'is_woocommerce',
-		)));
-		sort($conds);
+	public static function add_conditionals($conds) {
+		if (class_exists('WooCommerce')) {
+			$conds = array_merge($conds,array(
+				'is_account_page',
+				'is_cart',
+				'is_checkout',
+				'is_product',
+				'is_product_category',
+				'is_product_tag',
+				'is_shop',
+				'is_wc_endpoint_url',
+				'is_woocommerce',
+			)));
+			$conds = array_unique($conds);
+			sort($conds);
+		}
 		return $conds;
 	}
 
