@@ -88,6 +88,7 @@ class css_qm_extend {
 	}
 
 	public static function add_conditionals($conds) {
+		$conds = array_merge($conds,array('is_custom_post_type'));
 		if (class_exists('WooCommerce')) {
 			$conds = array_merge($conds,array(
 				'is_account_page',
@@ -100,12 +101,27 @@ class css_qm_extend {
 				'is_wc_endpoint_url',
 				'is_woocommerce',
 			)));
-			$conds = array_unique($conds);
-			sort($conds);
 		}
+		$conds = array_unique($conds);
+		sort($conds);
 		return $conds;
 	}
 
+}
+
+if (!function_exists('is_custom_post_type')) {
+	function is_custom_post_type() {
+		global $wp_query;
+
+		if ( ! isset( $wp_query ) || !function_exists( 'get_post_type_object' ) ) {
+			_doing_it_wrong( __FUNCTION__, __( 'Conditional query tags do not work before the query is run. Before then, they always return false.' ), '3.1' );
+			return false;
+		}
+
+		$post_obj = $wp_query->get_queried_object();
+		$post_type_obj = get_post_type_object($post_obj->post_type);
+		return !$post_type_obj->_builtin;
+	}
 }
 
 ?>
