@@ -20,10 +20,9 @@ class css_qm_extend {
 		if (2 > count($classes)) return $classes;
 
 		$num = 0;
-		if ($collector = QM_Collectors::get( 'db_queries' )) {
-			$expensive = count($collector->get_expensive());
-			$num = $num + $expensive;
-		}
+		if ($collector = QM_Collectors::get( 'db_queries' ))
+			if ($expensive = count($collector->get_expensive()))
+				$num = $num + $expensive;
 		if ($collector = QM_Collectors::get( 'php_errors' )) {
 			$data = $collector->get_data();
 			if (isset($data['errors']))
@@ -34,10 +33,11 @@ class css_qm_extend {
 		}
 		if ($collector = QM_Collectors::get( 'http' )) {
 			$data = $collector->get_data();
-			foreach ($data['errors'] as $type => $object) {
-				$$type += count($data['errors'][$type]);
-				$num = $num + $$type;
-			}
+			if (isset($data['errors']))
+				foreach ($data['errors'] as $type => $object) {
+					$$type += count($data['errors'][$type]);
+					$num = $num + $$type;
+				}
 		}
 
 		$colors = array(
