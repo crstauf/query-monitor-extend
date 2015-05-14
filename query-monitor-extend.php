@@ -118,6 +118,8 @@ if (!function_exists('is_custom_post_type')) {
 			return false;
 		}
 
+		if (!$wp_query->is_singular()) return false;
+
 		$post_obj = $wp_query->get_queried_object();
 		$post_type_obj = get_post_type_object($post_obj->post_type);
 		return !$post_type_obj->_builtin;
