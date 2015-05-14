@@ -65,7 +65,7 @@ class css_qm_extend {
 			if (in_array('qm-' . $class,$classes)) {
 				$i = array_search($class,$classes);
 				foreach ($styles as $browser => $style) {
-					$pos = $$class / $num > 0.03 ?: 0.03;
+					$pos = $$class / $num > 0.03 ? $$class / $num : 0.03;
 					if ('-webkit-gradient' == $browser) {
 						$style[] = 'color-stop(' . $lasts[$browser] . ', ' . $color . ')';
 						$style[] = 'color-stop(' . ($pos + $lasts[$browser]) . ', ' . $color . ')';
