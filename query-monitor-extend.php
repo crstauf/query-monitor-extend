@@ -100,7 +100,7 @@ class css_qm_extend {
 				'is_shop',
 				'is_wc_endpoint_url',
 				'is_woocommerce',
-			)));
+			));
 		}
 		$conds = array_unique($conds);
 		sort($conds);
