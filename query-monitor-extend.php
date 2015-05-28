@@ -35,7 +35,8 @@ class css_qm_extend {
 			$data = $collector->get_data();
 			if (isset($data['errors']))
 				foreach ($data['errors'] as $type => $object) {
-					$$type += count($data['errors'][$type]);
+					if (!isset($$type)) $$type = count($data['errors'][$type]);
+					else $$type += count($data['errors'][$type]);
 					$num = $num + $$type;
 				}
 		}
