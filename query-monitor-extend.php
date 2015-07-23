@@ -11,6 +11,8 @@ Author URI: http://develop.calebstauffer.com
 new css_qm_extend;
 class css_qm_extend {
 
+	public static $var_dumps = array();
+
 	function __construct() {
 		add_filter('qm/collectors',array(__CLASS__,'register_qm_collector_constants'),20,2);
 		add_filter('qm/outputter/html',array(__CLASS__,'register_qm_output_html_constants'),115,2);
@@ -18,6 +20,8 @@ class css_qm_extend {
 		add_filter('qm/outputter/html',array(__CLASS__,'register_qm_output_html_multisite'),120,2);
 		add_filter('qm/collectors',array(__CLASS__,'register_qm_collector_paths'),20,2);
 		add_filter('qm/outputter/html',array(__CLASS__,'register_qm_output_html_paths'),130,2);
+		add_filter('qm/collectors',array(__CLASS__,'register_qm_collector_var_dumps'),20,2);
+		add_filter('qm/outputter/html',array(__CLASS__,'register_qm_output_html_var_dumps'),130,2);
 		add_filter('qm/collect/conditionals',array(__CLASS__,'add_conditionals'),9999999);
 		add_filter('qm/output/menu_class',array(__CLASS__,'adminbar_menu_bg'),9999999);
 	}
@@ -147,6 +151,18 @@ class css_qm_extend {
 	public static function register_qm_output_html_paths( array $output, QM_Collectors $collectors ) {
 		if ( $collector = QM_Collectors::get( 'paths' ) ) {
 			$output['paths'] = new CSS_QM_Output_Html_Paths( $collector );
+		}
+		return $output;
+	}
+
+	public static function register_qm_collector_var_dumps( array $collectors, QueryMonitor $qm ) {
+		$collectors['vardumps'] = new CSS_QM_Collector_VarDumps;
+		return $collectors;
+	}
+
+	public static function register_qm_output_html_var_dumps( array $output, QM_Collectors $collectors ) {
+		if ( $collector = QM_Collectors::get( 'vardumps' ) ) {
+			$output['vardumps'] = new CSS_QM_Output_Html_VarDumps( $collector );
 		}
 		return $output;
 	}
@@ -369,6 +385,30 @@ class CSS_QM_Collector_Paths extends QM_Collector {
 
 }
 
+class CSS_QM_Collector_VarDumps extends QM_Collector {
+
+	public $id = 'vardumps';
+
+	public function name() {
+		return __( 'Var Dumps (' . count(css_qm_extend::$var_dumps) . ')', 'query-monitor' );
+	}
+
+	public function __construct() {
+
+		global $wpdb;
+
+		parent::__construct();
+
+	}
+
+	public function process() {
+
+		$this->data['vardumps'] = css_qm_extend::$var_dumps;
+
+	}
+
+}
+
 if (!function_exists('is_custom_post_type')) {
 	function is_custom_post_type() {
 		global $wp_query;
@@ -383,6 +423,12 @@ if (!function_exists('is_custom_post_type')) {
 		$post_obj = $wp_query->get_queried_object();
 		$post_type_obj = get_post_type_object($post_obj->post_type);
 		return !$post_type_obj->_builtin;
+	}
+}
+
+if (!function_exists('QM_dump')) {
+	function QM_dump($label,$var,$single_table = false) {
+		css_qm_extend::$var_dumps[time() . '_' . $label] = array($var,$single_table);
 	}
 }
 
