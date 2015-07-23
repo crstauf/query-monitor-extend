@@ -337,7 +337,7 @@ class CSS_QM_Collector_Paths extends QM_Collector {
 			'home_url()' => home_url(),
 			'get_home_url()' => get_home_url(),
 			'network_home_url()' => network_home_url(),
-			'get_home_path()' => get_home_path(),
+			'get_home_path()' => (function_exists('get_home_path') ? get_home_path() : ''),
 			'&nbsp;' => '',
 			'WP_CONTENT_URL' => WP_CONTENT_URL,
 			'WP_CONTENT_DIR' => WP_CONTENT_DIR,
