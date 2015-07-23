@@ -150,7 +150,7 @@ class CSS_QM_Output_Html_VarDumps extends QM_Output_Html {
 		echo '<table cellspacing="0">';
 		echo '<thead>';
 		echo '<tr>';
-		echo '<th colspan="2">$' . $label . $sub . '</th>';
+		echo '<th colspan="2">' . $label . $sub . '</th>';
 		echo '</tr>';
 		echo '</thead>';
 		echo '<tbody>';
