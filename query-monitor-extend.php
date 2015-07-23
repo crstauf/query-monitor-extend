@@ -1,7 +1,7 @@
 <?php
 /*
 Plugin Name: Query Monitor Extend
-Plugin URI: 
+Plugin URI:
 Description: Enhancements and extensions for the awesome Query Monitor plugin
 Version: 0.0.2
 Author: Caleb Stauffer
