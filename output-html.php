@@ -125,7 +125,6 @@ class CSS_QM_Output_Html_Paths extends QM_Output_Html {
 class CSS_QM_Output_Html_VarDumps extends QM_Output_Html {
 
 	public function __construct( QM_Collector $collector ) {
-		if (!count(css_qm_extend::$var_dumps)) return;
 		parent::__construct( $collector );
 		add_filter( 'qm/output/menus', array( $this, 'admin_menu' ), 110 );
 	}
@@ -133,6 +132,7 @@ class CSS_QM_Output_Html_VarDumps extends QM_Output_Html {
 	public function output() {
 
 		$data = $this->collector->get_data();
+		if (!count(css_qm_extend::$var_dumps)) return;
 
 		echo '<span id="' . esc_attr( $this->collector->id() ) . '"></span>';
 
