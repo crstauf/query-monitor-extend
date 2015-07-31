@@ -14,14 +14,16 @@ class css_qm_extend {
 	public static $var_dumps = array();
 
 	function __construct() {
-		add_filter('qm/collectors',array(__CLASS__,'register_qm_collector_constants'),20,2);
-		add_filter('qm/outputter/html',array(__CLASS__,'register_qm_output_html_constants'),115,2);
-		add_filter('qm/collectors',array(__CLASS__,'register_qm_collector_multisite'),20,2);
-		add_filter('qm/outputter/html',array(__CLASS__,'register_qm_output_html_multisite'),120,2);
-		add_filter('qm/collectors',array(__CLASS__,'register_qm_collector_paths'),20,2);
-		add_filter('qm/outputter/html',array(__CLASS__,'register_qm_output_html_paths'),130,2);
-		add_filter('qm/collectors',array(__CLASS__,'register_qm_collector_var_dumps'),20,2);
-		add_filter('qm/outputter/html',array(__CLASS__,'register_qm_output_html_var_dumps'),130,2);
+		if (class_exists('QM_Collector')) {
+			add_filter('qm/collectors',array(__CLASS__,'register_qm_collector_constants'),20,2);
+			add_filter('qm/outputter/html',array(__CLASS__,'register_qm_output_html_constants'),115,2);
+			add_filter('qm/collectors',array(__CLASS__,'register_qm_collector_multisite'),20,2);
+			add_filter('qm/outputter/html',array(__CLASS__,'register_qm_output_html_multisite'),120,2);
+			add_filter('qm/collectors',array(__CLASS__,'register_qm_collector_paths'),20,2);
+			add_filter('qm/outputter/html',array(__CLASS__,'register_qm_output_html_paths'),130,2);
+			add_filter('qm/collectors',array(__CLASS__,'register_qm_collector_var_dumps'),20,2);
+			add_filter('qm/outputter/html',array(__CLASS__,'register_qm_output_html_var_dumps'),130,2);
+		}
 		add_filter('qm/collect/conditionals',array(__CLASS__,'add_conditionals'),9999999);
 		add_filter('qm/output/menu_class',array(__CLASS__,'adminbar_menu_bg'),9999999);
 	}
@@ -169,244 +171,246 @@ class css_qm_extend {
 
 }
 
-class CSS_QM_Collector_Constants extends QM_Collector {
+if (class_exists('QM_Collector')) {
+	class CSS_QM_Collector_Constants extends QM_Collector {
 
-	public $id = 'constants';
+		public $id = 'constants';
 
-	public function name() {
-		return __( 'Constants', 'query-monitor' );
-	}
+		public function name() {
+			return __( 'Constants', 'query-monitor' );
+		}
 
-	public function __construct() {
+		public function __construct() {
 
-		global $wpdb;
+			global $wpdb;
 
-		parent::__construct();
+			parent::__construct();
 
-	}
+		}
 
-	public function process() {
+		public function process() {
 
-		$constants = array_unique(array(
-			'CORE_UPGRADE_SKIP_NEW_BUNDLED',
-			'DISABLE_WP_CRON',
-			'IMAGE_EDIT_OVERWRITE',
-			'MEDIA_TRASH',
-			'WP_POST_REVISIONS',
-			'APP_REQUEST',
-			'COMMENTS_TEMPLATE',
-			'DOING_AJAX',
-			'DOING_AUTOSAVE',
-			'DOING_CRON',
-			'IFRAME_REQUEST',
-			'IS_PROFILE_PAGE',
-			'SHORTINIT',
-			'WP_ADMIN',
-			'WP_BLOG_ADMIN',
-			'WP_IMPORTING',
-			'WP_INSTALLING',
-			'WP_INSTALLING_NETWORK',
-			'WP_LOAD_IMPORTERS',
-			'WP_NETWORK_ADMIN',
-			'WP_REPAIRING',
-			'WP_SETUP_CONFIG',
-			'WP_UNINSTALL_PLUGIN',
-			'WP_USER_ADMIN',
-			'XMLRPC_REQUEST',
-			'WP_ALLOW_REPAIR',
-			'ENFORCE_GZIP',
-			'FTP_SSH',
-			'WP_HTTP_BLOCK_EXTERNAL',
-			'NO_HEADER_TEXT',
-			'WP_USE_THEMES',
-			'SAVEQUERIES',
-			'SCRIPT_DEBUG',
-			'WP_DEBUG',
-			'WP_DEBUG_DISPLAY',
-			'WP_DEBUG_LOG',
-			'ALLOW_UNFILTERED_UPLOADS',
-			'CUSTOM_TAGS',
-			'DISALLOW_FILE_EDIT',
-			'DISALLOW_FILE_MODS',
-			'DISALLOW_UNFILTERED_HTML',
-			'FORCE_SSL_ADMIN',
-			'FORCE_SSL_LOGIN',
-			'WP_CACHE',
-			'COMPRESS_CSS',
-			'COMPRESS_SCRIPTS',
-			'CONCATENATE_SCRIPTS',
-			'AUTOSAVE_INTERVAL',
-			'EMPTY_TRASH_DAYS',
-			'WPLANG',
-			'WP_DEFAULT_THEME',
-			'WP_CRON_LOCK_TIMEOUT',
-			'WP_MAIL_INTERVAL',
-			'WP_MAX_MEMORY_LIMIT',
-			'WP_MEMORY_LIMIT',
-			'DB_CHARSET',
-			'DB_COLLATE',
-			'WP_ACCESSIBLE_HOSTS',
-		));
+			$constants = array_unique(array(
+				'CORE_UPGRADE_SKIP_NEW_BUNDLED',
+				'DISABLE_WP_CRON',
+				'IMAGE_EDIT_OVERWRITE',
+				'MEDIA_TRASH',
+				'WP_POST_REVISIONS',
+				'APP_REQUEST',
+				'COMMENTS_TEMPLATE',
+				'DOING_AJAX',
+				'DOING_AUTOSAVE',
+				'DOING_CRON',
+				'IFRAME_REQUEST',
+				'IS_PROFILE_PAGE',
+				'SHORTINIT',
+				'WP_ADMIN',
+				'WP_BLOG_ADMIN',
+				'WP_IMPORTING',
+				'WP_INSTALLING',
+				'WP_INSTALLING_NETWORK',
+				'WP_LOAD_IMPORTERS',
+				'WP_NETWORK_ADMIN',
+				'WP_REPAIRING',
+				'WP_SETUP_CONFIG',
+				'WP_UNINSTALL_PLUGIN',
+				'WP_USER_ADMIN',
+				'XMLRPC_REQUEST',
+				'WP_ALLOW_REPAIR',
+				'ENFORCE_GZIP',
+				'FTP_SSH',
+				'WP_HTTP_BLOCK_EXTERNAL',
+				'NO_HEADER_TEXT',
+				'WP_USE_THEMES',
+				'SAVEQUERIES',
+				'SCRIPT_DEBUG',
+				'WP_DEBUG',
+				'WP_DEBUG_DISPLAY',
+				'WP_DEBUG_LOG',
+				'ALLOW_UNFILTERED_UPLOADS',
+				'CUSTOM_TAGS',
+				'DISALLOW_FILE_EDIT',
+				'DISALLOW_FILE_MODS',
+				'DISALLOW_UNFILTERED_HTML',
+				'FORCE_SSL_ADMIN',
+				'FORCE_SSL_LOGIN',
+				'WP_CACHE',
+				'COMPRESS_CSS',
+				'COMPRESS_SCRIPTS',
+				'CONCATENATE_SCRIPTS',
+				'AUTOSAVE_INTERVAL',
+				'EMPTY_TRASH_DAYS',
+				'WPLANG',
+				'WP_DEFAULT_THEME',
+				'WP_CRON_LOCK_TIMEOUT',
+				'WP_MAIL_INTERVAL',
+				'WP_MAX_MEMORY_LIMIT',
+				'WP_MEMORY_LIMIT',
+				'DB_CHARSET',
+				'DB_COLLATE',
+				'WP_ACCESSIBLE_HOSTS',
+			));
 
-		sort($constants);
+			sort($constants);
 
-		foreach ($constants as $constant)
-			if (defined($constant)) {
-				if (is_bool(constant($constant))) $this->data['constants'][$constant] = self::format_bool_constant( $constant );
-				else $this->data['constants'][$constant] = constant($constant);
-			} else
-				$this->data['constants'][$constant] = 'undefined';
+			foreach ($constants as $constant)
+				if (defined($constant)) {
+					if (is_bool(constant($constant))) $this->data['constants'][$constant] = self::format_bool_constant( $constant );
+					else $this->data['constants'][$constant] = constant($constant);
+				} else
+					$this->data['constants'][$constant] = 'undefined';
 
-	}
-
-}
-
-class CSS_QM_Collector_Multisite extends QM_Collector {
-
-	public $id = 'multisite';
-
-	public function name() {
-		return __( 'Multisite Constants', 'query-monitor' );
-	}
-
-	public function __construct() {
-
-		global $wpdb;
-
-		parent::__construct();
+		}
 
 	}
 
-	public function process() {
+	class CSS_QM_Collector_Multisite extends QM_Collector {
 
-		$this->data['multisite'] = array(
-			'ALLOW_SUBDIRECTORY_INSTALL' => self::format_bool_constant( 'ALLOW_SUBDIRECTORY_INSTALL' ),
-			'BLOGUPLOADDIR' => defined('BLOGUPLOADDIR') ? BLOGUPLOADDIR : 'undefined',
-			'BLOG_ID_CURRENT_SITE' => defined('BLOG_ID_CURRENT_SITE') ? BLOG_ID_CURRENT_SITE : 'undefined',
-			'DOMAIN_CURRENT_SITE' => defined('DOMAIN_CURRENT_SITE') ? DOMAIN_CURRENT_SITE : 'undefined',
-			'DIEONDBERROR' => self::format_bool_constant( 'DIEONDBERROR' ),
-			'ERRORLOGFILE' => defined('ERRORLOGFILE') ? ERRORLOGFILE : 'undefined',
-			'MULTISITE' => self::format_bool_constant( 'MULTISITE' ),
-			'NOBLOGREDIRECT' => defined('NOBLOGREDIRECT') ? NOBLOGREDIRECT : 'undefined',
-			'PATH_CURRENT_SITE' => defined('PATH_CURRENT_SITE') ? PATH_CURRENT_SITE : 'undefined',
-			'UPLOADBLOGSDIR' => defined('UPLOADBLOGSDIR') ? UPLOADBLOGSDIR : 'undefined',
-			'SITE_ID_CURRENT_SITE' => defined('SITE_ID_CURRENT_SITE') ? SITE_ID_CURRENT_SITE : 'undefined',
-			'SUBDOMAIN_INSTALL' => self::format_bool_constant( 'SUBDOMAIN_INSTALL' ),
-			'SUNRISE' => self::format_bool_constant( 'SUNRISE' ),
-			'UPLOADS' => defined('UPLOADS') ? UPLOADS : 'undefined',
-			'WPMU_ACCEL_REDIRECT' => self::format_bool_constant( 'WPMU_ACCEL_REDIRECT' ),
-			'WPMU_SENDFILE' => self::format_bool_constant( 'WPMU_SENDFILE' ),
-			'WP_ALLOW_MULTISITE' => self::format_bool_constant( 'WP_ALLOW_MULTISITE' ),
-		);
+		public $id = 'multisite';
 
-		ksort($this->data['multisite']);
+		public function name() {
+			return __( 'Multisite Constants', 'query-monitor' );
+		}
 
-	}
+		public function __construct() {
 
-}
+			global $wpdb;
 
-class CSS_QM_Collector_Paths extends QM_Collector {
+			parent::__construct();
 
-	public $id = 'paths';
+		}
 
-	public function name() {
-		return __( 'Paths', 'query-monitor' );
-	}
+		public function process() {
 
-	public function __construct() {
+			$this->data['multisite'] = array(
+				'ALLOW_SUBDIRECTORY_INSTALL' => self::format_bool_constant( 'ALLOW_SUBDIRECTORY_INSTALL' ),
+				'BLOGUPLOADDIR' => defined('BLOGUPLOADDIR') ? BLOGUPLOADDIR : 'undefined',
+				'BLOG_ID_CURRENT_SITE' => defined('BLOG_ID_CURRENT_SITE') ? BLOG_ID_CURRENT_SITE : 'undefined',
+				'DOMAIN_CURRENT_SITE' => defined('DOMAIN_CURRENT_SITE') ? DOMAIN_CURRENT_SITE : 'undefined',
+				'DIEONDBERROR' => self::format_bool_constant( 'DIEONDBERROR' ),
+				'ERRORLOGFILE' => defined('ERRORLOGFILE') ? ERRORLOGFILE : 'undefined',
+				'MULTISITE' => self::format_bool_constant( 'MULTISITE' ),
+				'NOBLOGREDIRECT' => defined('NOBLOGREDIRECT') ? NOBLOGREDIRECT : 'undefined',
+				'PATH_CURRENT_SITE' => defined('PATH_CURRENT_SITE') ? PATH_CURRENT_SITE : 'undefined',
+				'UPLOADBLOGSDIR' => defined('UPLOADBLOGSDIR') ? UPLOADBLOGSDIR : 'undefined',
+				'SITE_ID_CURRENT_SITE' => defined('SITE_ID_CURRENT_SITE') ? SITE_ID_CURRENT_SITE : 'undefined',
+				'SUBDOMAIN_INSTALL' => self::format_bool_constant( 'SUBDOMAIN_INSTALL' ),
+				'SUNRISE' => self::format_bool_constant( 'SUNRISE' ),
+				'UPLOADS' => defined('UPLOADS') ? UPLOADS : 'undefined',
+				'WPMU_ACCEL_REDIRECT' => self::format_bool_constant( 'WPMU_ACCEL_REDIRECT' ),
+				'WPMU_SENDFILE' => self::format_bool_constant( 'WPMU_SENDFILE' ),
+				'WP_ALLOW_MULTISITE' => self::format_bool_constant( 'WP_ALLOW_MULTISITE' ),
+			);
 
-		global $wpdb;
+			ksort($this->data['multisite']);
 
-		parent::__construct();
-
-	}
-
-	public function process() {
-
-		$this->data['paths'] = array(
-			'ABSPATH' => ABSPATH,
-			'COOKIEPATH' => COOKIEPATH,
-			'SITECOOKIEPATH' => SITECOOKIEPATH,
-			'DOMAIN_CURRENT_SITE' => defined('DOMAIN_CURRENT_SITE') ? DOMAIN_CURRENT_SITE : 'undefined',
-			'PATH_CURRENT_SITE' => defined('PATH_CURRENT_SITE') ? PATH_CURRENT_SITE : 'undefined',
-			'WP_SITEURL' => (defined('WP_SITEURL') ? WP_SITEURL : 'undefined'),
-			'site_url()' => site_url(),
-			'get_site_url()' => get_site_url(),
-			'network_site_url()' => network_site_url(),
-			'WP_HOME' => (defined('WP_HOME') ? WP_HOME : 'undefined'),
-			'home_url()' => home_url(),
-			'get_home_url()' => get_home_url(),
-			'network_home_url()' => network_home_url(),
-			'get_home_path()' => (function_exists('get_home_path') ? get_home_path() : ''),
-			'&nbsp;' => '',
-			'WP_CONTENT_URL' => WP_CONTENT_URL,
-			'WP_CONTENT_DIR' => WP_CONTENT_DIR,
-			'content_url()' => content_url(),
-			'WP_PLUGIN_URL' => WP_PLUGIN_URL,
-			'WP_PLUGIN_DIR' => WP_PLUGIN_DIR,
-			'PLUGINS_COOKIE_PATH' => PLUGINS_COOKIE_PATH,
-			'plugins_url()' => plugins_url(),
-			'plugin_dir_url(__FILE__)' => plugin_dir_url(__FILE__),
-			'plugin_dir_path(__FILE__)' => plugin_dir_path(__FILE__),
-			'plugin_basename(__FILE__)' => plugin_basename(__FILE__),
-			'WPMU_PLUGIN_DIR' => WPMU_PLUGIN_DIR,
-			'WPMU_PLUGIN_URL' => WPMU_PLUGIN_URL,
-			'get_theme_root()' => get_theme_root(),
-			'get_theme_roots()' => get_theme_roots(),
-			'get_theme_root_uri()' => get_theme_root_uri(),
-			'<br />Template (parent)' => '<br />Stylesheet (child, if exists)',
-			'get_template_directory()' => get_template_directory(),
-			'TEMPLATEPATH' => TEMPLATEPATH,
-			'get_template_directory_uri()' => get_template_directory_uri(),
-			'get_stylesheet_uri()' => get_stylesheet_uri(),
-			'get_stylesheet_directory()' => get_stylesheet_directory(),
-			'STYLESHEETPATH' => STYLESHEETPATH,
-			'get_stylesheet_directory_uri()' => get_stylesheet_directory_uri(),
-			'&nbsp;&nbsp;&nbsp;' => '',
-			'admin_url()' => admin_url(),
-			'get_admin_url()' => get_admin_url(),
-			'network_admin_url()' => network_admin_url(),
-			'ADMIN_COOKIE_PATH' => ADMIN_COOKIE_PATH,
-			'WPINC' => WPINC,
-			'includes_url()' => includes_url(),
-			'WP_LANG_DIR' => WP_LANG_DIR,
-			'BLOGUPLOADDIR' => (defined('BLOGUPLOADDIR') ? BLOGUPLOADDIR : 'undefined'),
-			'UPLOADBLOGSDIR' => defined('UPLOADBLOGSDIR') ? UPLOADBLOGSDIR : 'undefined',
-			'UPLOADS' => defined('UPLOADS') ? UPLOADS : 'undefined',
-			'wp_upload_dir()' => 'Array(',
-		);
-
-		foreach (wp_upload_dir() as $k => $v)
-			$this->data['paths']['&nbsp;&nbsp;&nbsp;[' . $k . ']'] = $v;
-		$this->data['paths']['&nbsp;&nbsp;&nbsp;[error]'] = (true === $v ? 'true' : 'false');
-		$this->data['paths'][')'] = '';
+		}
 
 	}
 
-}
+	class CSS_QM_Collector_Paths extends QM_Collector {
 
-class CSS_QM_Collector_VarDumps extends QM_Collector {
+		public $id = 'paths';
 
-	public $id = 'vardumps';
+		public function name() {
+			return __( 'Paths', 'query-monitor' );
+		}
 
-	public function name() {
-		return __( 'Var Dumps (' . count(css_qm_extend::$var_dumps) . ')', 'query-monitor' );
+		public function __construct() {
+
+			global $wpdb;
+
+			parent::__construct();
+
+		}
+
+		public function process() {
+
+			$this->data['paths'] = array(
+				'ABSPATH' => ABSPATH,
+				'COOKIEPATH' => COOKIEPATH,
+				'SITECOOKIEPATH' => SITECOOKIEPATH,
+				'DOMAIN_CURRENT_SITE' => defined('DOMAIN_CURRENT_SITE') ? DOMAIN_CURRENT_SITE : 'undefined',
+				'PATH_CURRENT_SITE' => defined('PATH_CURRENT_SITE') ? PATH_CURRENT_SITE : 'undefined',
+				'WP_SITEURL' => (defined('WP_SITEURL') ? WP_SITEURL : 'undefined'),
+				'site_url()' => site_url(),
+				'get_site_url()' => get_site_url(),
+				'network_site_url()' => network_site_url(),
+				'WP_HOME' => (defined('WP_HOME') ? WP_HOME : 'undefined'),
+				'home_url()' => home_url(),
+				'get_home_url()' => get_home_url(),
+				'network_home_url()' => network_home_url(),
+				'get_home_path()' => (function_exists('get_home_path') ? get_home_path() : ''),
+				'&nbsp;' => '',
+				'WP_CONTENT_URL' => WP_CONTENT_URL,
+				'WP_CONTENT_DIR' => WP_CONTENT_DIR,
+				'content_url()' => content_url(),
+				'WP_PLUGIN_URL' => WP_PLUGIN_URL,
+				'WP_PLUGIN_DIR' => WP_PLUGIN_DIR,
+				'PLUGINS_COOKIE_PATH' => PLUGINS_COOKIE_PATH,
+				'plugins_url()' => plugins_url(),
+				'plugin_dir_url(__FILE__)' => plugin_dir_url(__FILE__),
+				'plugin_dir_path(__FILE__)' => plugin_dir_path(__FILE__),
+				'plugin_basename(__FILE__)' => plugin_basename(__FILE__),
+				'WPMU_PLUGIN_DIR' => WPMU_PLUGIN_DIR,
+				'WPMU_PLUGIN_URL' => WPMU_PLUGIN_URL,
+				'get_theme_root()' => get_theme_root(),
+				'get_theme_roots()' => get_theme_roots(),
+				'get_theme_root_uri()' => get_theme_root_uri(),
+				'<br />Template (parent)' => '<br />Stylesheet (child, if exists)',
+				'get_template_directory()' => get_template_directory(),
+				'TEMPLATEPATH' => TEMPLATEPATH,
+				'get_template_directory_uri()' => get_template_directory_uri(),
+				'get_stylesheet_uri()' => get_stylesheet_uri(),
+				'get_stylesheet_directory()' => get_stylesheet_directory(),
+				'STYLESHEETPATH' => STYLESHEETPATH,
+				'get_stylesheet_directory_uri()' => get_stylesheet_directory_uri(),
+				'&nbsp;&nbsp;&nbsp;' => '',
+				'admin_url()' => admin_url(),
+				'get_admin_url()' => get_admin_url(),
+				'network_admin_url()' => network_admin_url(),
+				'ADMIN_COOKIE_PATH' => ADMIN_COOKIE_PATH,
+				'WPINC' => WPINC,
+				'includes_url()' => includes_url(),
+				'WP_LANG_DIR' => WP_LANG_DIR,
+				'BLOGUPLOADDIR' => (defined('BLOGUPLOADDIR') ? BLOGUPLOADDIR : 'undefined'),
+				'UPLOADBLOGSDIR' => defined('UPLOADBLOGSDIR') ? UPLOADBLOGSDIR : 'undefined',
+				'UPLOADS' => defined('UPLOADS') ? UPLOADS : 'undefined',
+				'wp_upload_dir()' => 'Array(',
+			);
+
+			foreach (wp_upload_dir() as $k => $v)
+				$this->data['paths']['&nbsp;&nbsp;&nbsp;[' . $k . ']'] = $v;
+			$this->data['paths']['&nbsp;&nbsp;&nbsp;[error]'] = (true === $v ? 'true' : 'false');
+			$this->data['paths'][')'] = '';
+
+		}
+
 	}
 
-	public function __construct() {
+	class CSS_QM_Collector_VarDumps extends QM_Collector {
 
-		global $wpdb;
+		public $id = 'vardumps';
 
-		parent::__construct();
+		public function name() {
+			return __( 'Var Dumps (' . count(css_qm_extend::$var_dumps) . ')', 'query-monitor' );
+		}
+
+		public function __construct() {
+
+			global $wpdb;
+
+			parent::__construct();
+
+		}
+
+		public function process() {
+
+			$this->data['vardumps'] = css_qm_extend::$var_dumps;
+
+		}
 
 	}
-
-	public function process() {
-
-		$this->data['vardumps'] = css_qm_extend::$var_dumps;
-
-	}
-
 }
 
 if (!function_exists('is_custom_post_type')) {
