@@ -33,7 +33,7 @@ class CSS_QM_Output_Html_Constants extends QM_Output_Html {
 		echo '</tbody>';
 		echo '<tfoot>';
 		echo '<tr>';
-		echo '<th colspan="2">Reference: <a href="http://wpengineer.com/2382/wordpress-constants-overview/" target="_blank">http://wpengineer.com/2382/wordpress-constants-overview/</a><br />Please note that all QM data is called via AJAX, so some constants are not accurate.</th>';
+		echo '<th colspan="2">Reference: <a href="http://wpengineer.com/2382/wordpress-constants-overview/" target="_blank">http://wpengineer.com/2382/wordpress-constants-overview/</a><br />Please note that some constants will not accurately reflect the page you are currently viewing.</th>';
 		echo '</tr>';
 		echo '</tfoot>';
 		echo '</table>';
@@ -75,6 +75,11 @@ class CSS_QM_Output_Html_Multisite extends QM_Output_Html {
 		}
 
 		echo '</tbody>';
+		echo '<tfoot>';
+		echo '<tr>';
+		echo '<th colspan="2">Reference: <a href="http://wpengineer.com/2382/wordpress-constants-overview/" target="_blank">http://wpengineer.com/2382/wordpress-constants-overview/</a><br />Please note that constants will not accurately reflect the page you are currently viewing.</th>';
+		echo '</tr>';
+		echo '</tfoot>';
 		echo '</table>';
 
 		echo '</div>';
@@ -114,6 +119,11 @@ class CSS_QM_Output_Html_Paths extends QM_Output_Html {
 		}
 
 		echo '</tbody>';
+		echo '<tfoot>';
+		echo '<tr>';
+		echo '<th colspan="2">Reference: <a href="http://wpengineer.com/2382/wordpress-constants-overview/" target="_blank">http://wpengineer.com/2382/wordpress-constants-overview/</a><br />Please note that some paths will not accurately reflect the page you are currently viewing.</th>';
+		echo '</tr>';
+		echo '</tfoot>';
 		echo '</table>';
 
 		echo '</div>';
