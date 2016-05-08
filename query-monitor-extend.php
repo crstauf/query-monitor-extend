@@ -8,6 +8,12 @@ Author: Caleb Stauffer
 Author URI: http://develop.calebstauffer.com
 */
 
+if (!defined('ABSPATH') || !function_exists('add_filter')) {
+	header( 'Status: 403 Forbidden' );
+	header( 'HTTP/1.1 403 Forbidden' );
+	exit();
+}
+
 new css_qm_extend;
 class css_qm_extend {
 
