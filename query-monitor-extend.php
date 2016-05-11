@@ -256,7 +256,12 @@ if (class_exists('QM_Collector')) {
 				'DB_CHARSET',
 				'DB_COLLATE',
 				'WP_ACCESSIBLE_HOSTS',
-			));
+				'DONOTCACHEPAGE',
+				'DONOTCACHEDB',
+				'DONOTMINIFY',
+				'DONOTCDN',
+				'DONOTCACHCEOBJECT'
+			)));
 
 			sort($constants);
 
