@@ -122,7 +122,7 @@ class css_qm_extend {
 				'is_woocommerce',
 			));
 		}
-		$conds = array_unique($conds);
+		$conds = array_unique(apply_filters('qmx/collect/conditionals',$conds));
 		sort($conds);
 		return $conds;
 	}
@@ -197,7 +197,7 @@ if (class_exists('QM_Collector')) {
 
 		public function process() {
 
-			$constants = array_unique(array(
+			$constants = array_unique(apply_filters('qmx/collect/constants',array(
 				'CORE_UPGRADE_SKIP_NEW_BUNDLED',
 				'DISABLE_WP_CRON',
 				'IMAGE_EDIT_OVERWRITE',
@@ -289,7 +289,7 @@ if (class_exists('QM_Collector')) {
 
 		public function process() {
 
-			$this->data['multisite'] = array(
+			$this->data['multisite'] = apply_filters('qmx/collect/constants/multisite',array(
 				'ALLOW_SUBDIRECTORY_INSTALL' => self::format_bool_constant( 'ALLOW_SUBDIRECTORY_INSTALL' ),
 				'BLOGUPLOADDIR' => defined('BLOGUPLOADDIR') ? BLOGUPLOADDIR : 'undefined',
 				'BLOG_ID_CURRENT_SITE' => defined('BLOG_ID_CURRENT_SITE') ? BLOG_ID_CURRENT_SITE : 'undefined',
@@ -307,7 +307,7 @@ if (class_exists('QM_Collector')) {
 				'WPMU_ACCEL_REDIRECT' => self::format_bool_constant( 'WPMU_ACCEL_REDIRECT' ),
 				'WPMU_SENDFILE' => self::format_bool_constant( 'WPMU_SENDFILE' ),
 				'WP_ALLOW_MULTISITE' => self::format_bool_constant( 'WP_ALLOW_MULTISITE' ),
-			);
+			));
 
 			ksort($this->data['multisite']);
 
@@ -390,6 +390,8 @@ if (class_exists('QM_Collector')) {
 				$this->data['paths']['&nbsp;&nbsp;&nbsp;[' . $k . ']'] = $v;
 			$this->data['paths']['&nbsp;&nbsp;&nbsp;[error]'] = (true === $v ? 'true' : 'false');
 			$this->data['paths'][')'] = '';
+
+			$this->data['paths'] = apply_filters('qmx/collect/paths',$this->data['paths']);
 
 		}
 
