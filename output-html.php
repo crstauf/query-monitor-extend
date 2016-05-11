@@ -4,7 +4,7 @@ class CSS_QM_Output_Html_Constants extends QM_Output_Html {
 
 	public function __construct( QM_Collector $collector ) {
 		parent::__construct( $collector );
-		add_filter( 'qm/output/menus', array( $this, 'admin_menu' ), 110 );
+		add_filter( 'qm/output/menus', array( $this, 'admin_menu' ), 111 );
 	}
 
 	public function output() {
@@ -40,6 +40,28 @@ class CSS_QM_Output_Html_Constants extends QM_Output_Html {
 
 		echo '</div>';
 
+	}
+
+	public function admin_menu( array $menu ) {
+		$constants = array();
+		if (defined('W3TC') && W3TC)
+			$constants = array_merge($constants,array(
+				'DONOTCACHEPAGE',
+				'DONOTCACHEDB',
+				'DONOTMINIFY',
+				'DONOTCDN',
+				'DONOTCACHCEOBJECT'
+			));
+		foreach (apply_filters('qmx/collect/conditionals/constants',$constants) as $constant) {
+			if (defined($constant) && true === constant($constant))
+				$menu[] = $this->menu( array(
+					'title' => esc_html( $constant ),
+					'id'    => 'query-monitor-constant-' . esc_attr( $constant ),
+					'meta'  => array( 'classname' => 'qm-true qm-ltr' )
+				) );
+		}
+
+		return $menu;
 	}
 
 }
