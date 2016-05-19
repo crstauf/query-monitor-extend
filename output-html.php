@@ -53,7 +53,7 @@ class CSS_QM_Output_Html_Constants extends QM_Output_Html {
 				'DONOTCACHCEOBJECT'
 			));
 		foreach (apply_filters('qmx/collect/conditionals/constants',$constants) as $constant) {
-			if (defined($constant) && true === constant($constant))
+			if (defined($constant) && true === !!constant($constant))
 				$menu[] = $this->menu( array(
 					'title' => esc_html( $constant ),
 					'id'    => 'query-monitor-constant-' . esc_attr( $constant ),
