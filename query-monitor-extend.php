@@ -39,9 +39,16 @@ class css_qm_extend {
 		$classes[] = 'query-monitor-extend';
 
 		$num = 0;
-		if ($collector = QM_Collectors::get( 'db_queries' ))
-			if ($expensive = count($collector->get_expensive()))
-				$num = $num + $expensive;
+
+		if ($collector = QM_Collectors::get( 'db_queries' )) {
+			if (false !== $collector->get_expensive())
+				$num += $expensive = count($collector->get_expensive());
+			if (false !== $collector->get_errors()) {
+				$error = count($collector->get_errors());
+				$num += $error;
+			}
+		}
+
 		if ($collector = QM_Collectors::get( 'assets' )) {
 			$data = $collector->get_data();
 			foreach (array(
