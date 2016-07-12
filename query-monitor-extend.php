@@ -42,7 +42,21 @@ class css_qm_extend {
 		if ($collector = QM_Collectors::get( 'db_queries' ))
 			if ($expensive = count($collector->get_expensive()))
 				$num = $num + $expensive;
+		if ($collector = QM_Collectors::get( 'assets' )) {
 			$data = $collector->get_data();
+			foreach (array(
+				'missing',
+				'broken',
+			) as $error)
+				if (isset($data[$error]))
+					foreach (array(
+						'scripts',
+						'styles',
+					) as $type)
+						if (isset($data[$error][$type])) {
+							$error += count($data[$error][$type]);
+							$num = $num + count($data[$error][$type]);
+						}
 		}
 		foreach (array(
 			'php_errors',
