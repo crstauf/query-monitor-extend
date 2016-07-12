@@ -11,7 +11,7 @@ class CSS_QM_Output_Html_Constants extends QM_Output_Html {
 
 		$data = $this->collector->get_data();
 
-		echo '<div id="' . esc_attr( $this->collector->id() ) . '" class="qm qm-half">';
+		echo '<div id="' . esc_attr( $this->collector->id() ) . '" class="qm qm-third">';
 
 		echo '<table cellspacing="0">';
 		echo '<thead>';
@@ -33,7 +33,7 @@ class CSS_QM_Output_Html_Constants extends QM_Output_Html {
 		echo '</tbody>';
 		echo '<tfoot>';
 		echo '<tr>';
-		echo '<th colspan="2">Reference: <a href="http://wpengineer.com/2382/wordpress-constants-overview/" target="_blank">http://wpengineer.com/2382/wordpress-constants-overview/</a><br />Please note that some constants may not accurately reflect the page you are currently viewing.</th>';
+		echo '<th colspan="2">Reference: <a href="http://wpengineer.com/2382/wordpress-constants-overview/" target="_blank">wpengineer.com/2382/wordpress-constants-overview/</a><br />Please note that some constants may not accurately reflect the page you are currently viewing.</th>';
 		echo '</tr>';
 		echo '</tfoot>';
 		echo '</table>';
@@ -99,7 +99,7 @@ class CSS_QM_Output_Html_Multisite extends QM_Output_Html {
 		echo '</tbody>';
 		echo '<tfoot>';
 		echo '<tr>';
-		echo '<th colspan="2">Reference: <a href="http://wpengineer.com/2382/wordpress-constants-overview/" target="_blank">http://wpengineer.com/2382/wordpress-constants-overview/</a><br />Please note that constants/paths may not accurately reflect the page you are currently viewing.</th>';
+		echo '<th colspan="2">Reference: <a href="http://wpengineer.com/2382/wordpress-constants-overview/" target="_blank">wpengineer.com/2382/wordpress-constants-overview/</a><br />Please note that constants/paths may not accurately reflect the page you are currently viewing.</th>';
 		echo '</tr>';
 		echo '</tfoot>';
 		echo '</table>';
