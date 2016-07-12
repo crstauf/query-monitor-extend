@@ -54,15 +54,16 @@ class css_qm_extend {
 			foreach (array(
 				'missing',
 				'broken',
-			) as $error)
-				if (isset($data[$error]))
+			) as $error_type)
+				if (isset($data[$error_type]))
 					foreach (array(
 						'scripts',
 						'styles',
 					) as $type)
-						if (isset($data[$error][$type])) {
-							$error += count($data[$error][$type]);
-							$num = $num + count($data[$error][$type]);
+						if (isset($data[$error_type][$type])) {
+							if (!isset($error)) $error = count($data[$error_type][$type]);
+							else $error += count($data[$error_type][$type]);
+							$num += count($data[$error_type][$type]);
 						}
 		}
 		foreach (array(
