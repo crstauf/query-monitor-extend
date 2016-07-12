@@ -121,30 +121,63 @@ class CSS_QM_Output_Html_Paths extends QM_Output_Html {
 
 		$data = $this->collector->get_data();
 
-		echo '<div id="' . esc_attr( $this->collector->id() ) . '" class="qm qm-full qm-clear">';
+		echo '<div id="' . esc_attr( $this->collector->id() ) . '" class="qm qm-third" style="width: 66.5% !important;">';
 
 		echo '<table cellspacing="0">';
 		echo '<thead>';
 		echo '<tr>';
-		echo '<th colspan="2">Paths</th>';
+		echo '<th colspan="3">Paths</th>';
 		echo '</tr>';
 		echo '</thead>';
 		echo '<tbody>';
 
-		foreach ( $data['paths'] as $key => $val ) {
+		foreach ( $data['paths'] as $i => $group ) {
 
-			echo '<tr>';
-			echo '<td>' . (!in_array($key,array('','<br />Template (parent)')) && false === strpos($key,'[') && ')' !== $key ? '<a href="https://www.google.com/?gws_rd=ssl#q=site:codex.wordpress.org+' . $key . '" target="_blank">' . $key . '</a>' : $key ) . '</td>';
-			echo "<td>{$val}</td>";
-			echo '</tr>';
+			ksort($group);
+
+			if (0 !== $i)
+				echo '<tr><td colspan="3">&nbsp;</td></tr>';
+
+			foreach ( $group as $k => $v ) {
+
+				if ( is_array( $v ) || is_object( $v ) ) {
+
+					$ks = array_keys ( $v );
+
+					echo '<tr>';
+						echo '<th rowspan="' . count( $v ) . '">' . ( !in_array( $k, array( '', '<br />Template (parent)' ) ) && false === strpos( $k, '[' ) && ')' !== $k ? '<a href="https://www.google.com/?gws_rd=ssl#q=site%3Acodex.wordpress.org+OR+developer.wordpress.org+' . $k . '" target="_blank">' . esc_attr( $k ) . '</a>' : esc_attr( $k ) ) . '</th>';
+						echo '<td>' . $ks[0] . '</td>';
+						echo '<td>' . $v[$ks[0]] . '</td>';
+					echo '</tr>';
+					unset($v[$ks[0]]);
+
+					foreach ( $v as $kk => $vv ) {
+						if ( is_array( $vv ) || is_object( $vv ) )
+							$vv = gettype( $vv );
+						echo '<tr>';
+							echo '<th>' . esc_attr( $kk ) . '</th>';
+							echo '<td colspan="2">' . esc_attr( $vv ) . '</td>';
+						echo '</tr>';
+					}
+
+				} else {
+
+					echo '<tr>';
+						echo '<th>' . ( !in_array( $k, array( '', '<br />Template (parent)' ) ) && false === strpos( $k, '[' ) && ')' !== $k ? '<a href="https://www.google.com/?gws_rd=ssl#q=site%3Acodex.wordpress.org+OR+developer.wordpress.org+' . esc_attr( $k ) . '" target="_blank">' . esc_attr( $k ) . '</a>' : esc_attr( $k ) ) . '</th>';
+						echo '<td colspan="2">' . esc_attr( $v ) . '</td>';
+					echo '</tr>';
+
+				}
+
+			}
 
 		}
 
 		echo '</tbody>';
 		echo '<tfoot>';
-		echo '<tr>';
-		echo '<th colspan="2">Reference: <a href="http://wpengineer.com/2382/wordpress-constants-overview/" target="_blank">http://wpengineer.com/2382/wordpress-constants-overview/</a><br />Please note that some paths may not accurately reflect the page you are currently viewing.</th>';
-		echo '</tr>';
+			echo '<tr>';
+				echo '<th colspan="3">Reference: <a href="http://wpengineer.com/2382/wordpress-constants-overview/" target="_blank">wpengineer.com/2382/wordpress-constants-overview/</a><br />Please note that some paths may not accurately reflect the page you are currently viewing.</th>';
+			echo '</tr>';
 		echo '</tfoot>';
 		echo '</table>';
 
