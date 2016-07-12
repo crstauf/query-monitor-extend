@@ -35,7 +35,8 @@ class css_qm_extend {
 	}
 
 	public static function adminbar_menu_bg($classes) {
-		if (2 > count($classes)) return $classes;
+		if (2 > count($classes)) return array_merge($classes,array('query-monitor-extend'));
+		$classes[] = 'query-monitor-extend';
 
 		$num = 0;
 		if ($collector = QM_Collectors::get( 'db_queries' ))
