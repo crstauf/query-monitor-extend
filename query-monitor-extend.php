@@ -68,6 +68,7 @@ class css_qm_extend {
 							$num += count($data[$error_type][$type]);
 						}
 		}
+
 		foreach (array(
 			'php_errors',
 			'http',
@@ -200,6 +201,22 @@ class css_qm_extend {
 		return $output;
 	}
 
+	public static function get_format_value( $value, $is_constant = false ) {
+		if ( true === $is_constant && !defined( $value ) )
+			return 'undefined';
+		else if ( defined( $value ) )
+			$value = constant( $value );
+
+		if ( is_bool( $value ) ) {
+			if ( true === $value ) return 'true';
+			return 'false';
+		}
+		if ( is_array( $value ) || is_object( $value ) )
+			return gettype( $value );
+
+		return esc_attr( $value );
+	}
+
 }
 
 if (class_exists('QM_Collector')) {
@@ -312,23 +329,23 @@ if (class_exists('QM_Collector')) {
 		public function process() {
 
 			$this->data['multisite'] = apply_filters('qmx/collect/constants/multisite',array(
-				'ALLOW_SUBDIRECTORY_INSTALL' => self::format_bool_constant( 'ALLOW_SUBDIRECTORY_INSTALL' ),
-				'BLOGUPLOADDIR' => defined('BLOGUPLOADDIR') ? BLOGUPLOADDIR : 'undefined',
-				'BLOG_ID_CURRENT_SITE' => defined('BLOG_ID_CURRENT_SITE') ? BLOG_ID_CURRENT_SITE : 'undefined',
-				'DOMAIN_CURRENT_SITE' => defined('DOMAIN_CURRENT_SITE') ? DOMAIN_CURRENT_SITE : 'undefined',
-				'DIEONDBERROR' => self::format_bool_constant( 'DIEONDBERROR' ),
-				'ERRORLOGFILE' => defined('ERRORLOGFILE') ? ERRORLOGFILE : 'undefined',
-				'MULTISITE' => self::format_bool_constant( 'MULTISITE' ),
-				'NOBLOGREDIRECT' => defined('NOBLOGREDIRECT') ? NOBLOGREDIRECT : 'undefined',
-				'PATH_CURRENT_SITE' => defined('PATH_CURRENT_SITE') ? PATH_CURRENT_SITE : 'undefined',
-				'UPLOADBLOGSDIR' => defined('UPLOADBLOGSDIR') ? UPLOADBLOGSDIR : 'undefined',
-				'SITE_ID_CURRENT_SITE' => defined('SITE_ID_CURRENT_SITE') ? SITE_ID_CURRENT_SITE : 'undefined',
-				'SUBDOMAIN_INSTALL' => self::format_bool_constant( 'SUBDOMAIN_INSTALL' ),
-				'SUNRISE' => self::format_bool_constant( 'SUNRISE' ),
-				'UPLOADS' => defined('UPLOADS') ? UPLOADS : 'undefined',
-				'WPMU_ACCEL_REDIRECT' => self::format_bool_constant( 'WPMU_ACCEL_REDIRECT' ),
-				'WPMU_SENDFILE' => self::format_bool_constant( 'WPMU_SENDFILE' ),
-				'WP_ALLOW_MULTISITE' => self::format_bool_constant( 'WP_ALLOW_MULTISITE' ),
+				'ALLOW_SUBDIRECTORY_INSTALL',
+				'BLOGUPLOADDIR',
+				'BLOG_ID_CURRENT_SITE',
+				'DOMAIN_CURRENT_SITE',
+				'DIEONDBERROR',
+				'ERRORLOGFILE',
+				'MULTISITE',
+				'NOBLOGREDIRECT',
+				'PATH_CURRENT_SITE',
+				'UPLOADBLOGSDIR',
+				'SITE_ID_CURRENT_SITE',
+				'SUBDOMAIN_INSTALL',
+				'SUNRISE',
+				'UPLOADS',
+				'WPMU_ACCEL_REDIRECT',
+				'WPMU_SENDFILE',
+				'WP_ALLOW_MULTISITE',
 			));
 
 		}
@@ -353,7 +370,7 @@ if (class_exists('QM_Collector')) {
 
 		public function process() {
 
-			$this->data['paths'] = array(
+			$this->data['paths'] = apply_filters( 'qmx/collect/paths', array(
 				array(
 					'ABSPATH' => ABSPATH,
 					'COOKIEPATH' => COOKIEPATH,
@@ -406,9 +423,7 @@ if (class_exists('QM_Collector')) {
 					'UPLOADS' => defined('UPLOADS') ? UPLOADS : 'undefined',
 					'wp_upload_dir()' => wp_upload_dir(),
 				),
-			);
-
-			$this->data['paths'] = apply_filters('qmx/collect/paths',$this->data['paths']);
+			) );
 
 		}
 
@@ -419,7 +434,7 @@ if (class_exists('QM_Collector')) {
 		public $id = 'vardumps';
 
 		public function name() {
-			return __( 'Var Dumps (' . count(css_qm_extend::$var_dumps) . ')', 'query-monitor' );
+			return __( 'Var Dumps (' . count( css_qm_extend::$var_dumps ) . ')', 'query-monitor' );
 		}
 
 		public function __construct() {
@@ -439,16 +454,16 @@ if (class_exists('QM_Collector')) {
 	}
 }
 
-if (!function_exists('is_custom_post_type')) {
+if ( !function_exists( 'is_custom_post_type' ) ) {
 	function is_custom_post_type() {
 		global $wp_query;
 
-		if ( ! isset( $wp_query ) || !function_exists( 'get_post_type_object' ) ) {
+		if ( !isset( $wp_query ) || !function_exists( 'get_post_type_object' ) ) {
 			_doing_it_wrong( __FUNCTION__, __( 'Conditional query tags do not work before the query is run. Before then, they always return false.' ), '3.1' );
 			return false;
 		}
 
-		if (!$wp_query->is_singular()) return false;
+		if ( !$wp_query->is_singular() ) return false;
 
 		$post_obj = $wp_query->get_queried_object();
 		$post_type_obj = get_post_type_object($post_obj->post_type);
@@ -456,9 +471,9 @@ if (!function_exists('is_custom_post_type')) {
 	}
 }
 
-if (!function_exists('QM_dump')) {
-	function QM_dump($label,$var,$single_table = false) {
-		css_qm_extend::$var_dumps[time() . '_' . $label] = array($var,$single_table);
+if ( !function_exists('QM_dump') ) {
+	function QM_dump( $label, $var, $single_table = false ) {
+		css_qm_extend::$var_dumps[time() . '_' . $label] = array( $var, $single_table );
 	}
 }
 
