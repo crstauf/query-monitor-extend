@@ -163,7 +163,8 @@ class css_qm_extend {
 	}
 
 	public static function register_qm_collector_multisite( array $collectors, QueryMonitor $qm ) {
-		$collectors['multisite'] = new CSS_QM_Collector_Multisite;
+		if (is_multisite())
+			$collectors['multisite'] = new CSS_QM_Collector_Multisite;
 		return $collectors;
 	}
 
