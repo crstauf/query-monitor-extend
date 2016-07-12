@@ -23,8 +23,10 @@ class css_qm_extend {
 		if (class_exists('QM_Collector')) {
 			add_filter('qm/collectors',array(__CLASS__,'register_qm_collector_constants'),20,2);
 			add_filter('qm/outputter/html',array(__CLASS__,'register_qm_output_html_constants'),115,2);
-			add_filter('qm/collectors',array(__CLASS__,'register_qm_collector_multisite'),20,2);
-			add_filter('qm/outputter/html',array(__CLASS__,'register_qm_output_html_multisite'),120,2);
+			if (is_multisite()) {
+				add_filter('qm/collectors',array(__CLASS__,'register_qm_collector_multisite'),20,2);
+				add_filter('qm/outputter/html',array(__CLASS__,'register_qm_output_html_multisite'),120,2);
+			}
 			add_filter('qm/collectors',array(__CLASS__,'register_qm_collector_paths'),20,2);
 			add_filter('qm/outputter/html',array(__CLASS__,'register_qm_output_html_paths'),130,2);
 			add_filter('qm/collectors',array(__CLASS__,'register_qm_collector_var_dumps'),20,2);
@@ -163,8 +165,7 @@ class css_qm_extend {
 	}
 
 	public static function register_qm_collector_multisite( array $collectors, QueryMonitor $qm ) {
-		if (is_multisite())
-			$collectors['multisite'] = new CSS_QM_Collector_Multisite;
+		$collectors['multisite'] = new CSS_QM_Collector_Multisite;
 		return $collectors;
 	}
 
