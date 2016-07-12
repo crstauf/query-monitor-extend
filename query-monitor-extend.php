@@ -287,14 +287,7 @@ if (class_exists('QM_Collector')) {
 				'DONOTCACHCEOBJECT'
 			)));
 
-			sort($constants);
-
-			foreach ($constants as $constant)
-				if (defined($constant)) {
-					if (is_bool(constant($constant))) $this->data['constants'][$constant] = self::format_bool_constant( $constant );
-					else $this->data['constants'][$constant] = constant($constant);
-				} else
-					$this->data['constants'][$constant] = 'undefined';
+			$this->data['constants'] = $constants;
 
 		}
 
@@ -337,8 +330,6 @@ if (class_exists('QM_Collector')) {
 				'WPMU_SENDFILE' => self::format_bool_constant( 'WPMU_SENDFILE' ),
 				'WP_ALLOW_MULTISITE' => self::format_bool_constant( 'WP_ALLOW_MULTISITE' ),
 			));
-
-			ksort($this->data['multisite']);
 
 		}
 

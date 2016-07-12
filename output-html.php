@@ -78,6 +78,7 @@ class CSS_QM_Output_Html_Multisite extends QM_Output_Html {
 		$data = $this->collector->get_data();
 
 		echo '<div id="' . esc_attr( $this->collector->id() ) . '" class="qm qm-half">';
+		sort( $data['multisite'] );
 
 		echo '<table cellspacing="0">';
 		echo '<thead>';
