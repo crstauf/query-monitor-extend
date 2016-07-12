@@ -76,7 +76,7 @@ class css_qm_extend {
 					foreach ($data['errors'] as $type => $object) {
 						if (!isset($$type)) $$type = count($data['errors'][$type]);
 						else $$type += count($data['errors'][$type]);
-						$num = $num + $$type;
+						$num += count($data['errors'][$type]);
 					}
 			}
 
