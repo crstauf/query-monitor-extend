@@ -42,23 +42,21 @@ class css_qm_extend {
 		if ($collector = QM_Collectors::get( 'db_queries' ))
 			if ($expensive = count($collector->get_expensive()))
 				$num = $num + $expensive;
-		if ($collector = QM_Collectors::get( 'php_errors' )) {
 			$data = $collector->get_data();
-			if (isset($data['errors']))
-				foreach ($data['errors'] as $type => $object) {
-					$$type = count($data['errors'][$type]);
-					$num = $num + $$type;
-				}
 		}
-		if ($collector = QM_Collectors::get( 'http' )) {
-			$data = $collector->get_data();
-			if (isset($data['errors']))
-				foreach ($data['errors'] as $type => $object) {
-					if (!isset($$type)) $$type = count($data['errors'][$type]);
-					else $$type += count($data['errors'][$type]);
-					$num = $num + $$type;
-				}
-		}
+		foreach (array(
+			'php_errors',
+			'http',
+		) as $collector_name)
+			if ($collector = QM_Collectors::get( $collector_name )) {
+				$data = $collector->get_data();
+				if (isset($data['errors']))
+					foreach ($data['errors'] as $type => $object) {
+						if (!isset($$type)) $$type = count($data['errors'][$type]);
+						else $$type += count($data['errors'][$type]);
+						$num = $num + $$type;
+					}
+			}
 
 		$colors = array(
 			'warning'		=> '#c00',
