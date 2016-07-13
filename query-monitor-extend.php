@@ -86,7 +86,7 @@ class css_qm_extend {
 		$colors = array(
 			'warning'		=> '#c00',
 			'error'			=> '#c00',
-			'alert'			=> '#f70',
+			'alert'			=> '#f60',
 			'notice'		=> '#740',
 			'expensive'		=> '#b60',
 			'strict'		=> '#3c3c3c',
