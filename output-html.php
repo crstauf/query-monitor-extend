@@ -124,7 +124,6 @@ class CSS_QM_Output_Html_Paths extends QM_Output_Html {
 
 	public function __construct( QM_Collector $collector ) {
 		parent::__construct( $collector );
-		add_filter( 'qm/output/menus', array( $this, 'admin_menu' ), 110 );
 	}
 
 	public function output() {
@@ -201,7 +200,6 @@ class CSS_QM_Output_Html_VarDumps extends QM_Output_Html {
 
 	public function __construct( QM_Collector $collector ) {
 		parent::__construct( $collector );
-		add_filter( 'qm/output/menus', array( $this, 'admin_menu' ), 110 );
 	}
 
 	public function output() {
