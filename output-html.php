@@ -27,6 +27,8 @@ class CSS_QM_Output_Html_Constants extends QM_Output_Html {
 				echo '</thead>';
 				echo '<tbody>';
 
+					sort($data['constants']);
+
 					foreach ( $data['constants'] as $constant ) {
 
 						echo '<tr>';
