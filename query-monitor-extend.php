@@ -486,7 +486,7 @@ if (class_exists('QM_Collector')) {
 		public function process() {
 			global $_wp_additional_image_sizes;
 
-			$this->data['imagesizes'] = array_merge(array(
+			$this->data['imagesizes'] = apply_filters('qmx/collect/imagesizes',array_merge(array(
 				'thumbnail' => array(
 					'width' => intval(get_option('thumbnail_size_w')),
 					'height' => intval(get_option('thumbnail_size_h')),
@@ -511,7 +511,7 @@ if (class_exists('QM_Collector')) {
 					'_builtin' => true,
 					'crop' => false,
 				),
-			),$_wp_additional_image_sizes);
+			),$_wp_additional_image_sizes));
 
 		}
 
