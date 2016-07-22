@@ -31,6 +31,8 @@ class css_qm_extend {
 			add_filter('qm/outputter/html',array(__CLASS__,'register_qm_output_html_paths'),130,2);
 			add_filter('qm/collectors',array(__CLASS__,'register_qm_collector_var_dumps'),20,2);
 			add_filter('qm/outputter/html',array(__CLASS__,'register_qm_output_html_var_dumps'),130,2);
+			add_filter('qm/collectors',array(__CLASS__,'register_qm_collector_image_sizes'),20,2);
+			add_filter('qm/outputter/html',array(__CLASS__,'register_qm_output_html_image_sizes'),131,2);
 		}
 		add_filter('qm/collect/conditionals',array(__CLASS__,'add_conditionals'),9999999);
 		add_filter('qm/output/menu_class',array(__CLASS__,'adminbar_menu_bg'),9999999);
@@ -197,6 +199,18 @@ class css_qm_extend {
 	public static function register_qm_output_html_var_dumps( array $output, QM_Collectors $collectors ) {
 		if ( $collector = QM_Collectors::get( 'vardumps' ) ) {
 			$output['vardumps'] = new CSS_QM_Output_Html_VarDumps( $collector );
+		}
+		return $output;
+	}
+
+	public static function register_qm_collector_image_sizes( array $collectors, QueryMonitor $qm ) {
+		$collectors['imagesizes'] = new CSS_QM_Collector_ImageSizes;
+		return $collectors;
+	}
+
+	public static function register_qm_output_html_image_sizes( array $output, QM_Collectors $collectors ) {
+		if ( $collector = QM_Collectors::get( 'imagesizes' ) ) {
+			$output['imagesizes'] = new CSS_QM_Output_Html_ImageSizes( $collector );
 		}
 		return $output;
 	}
@@ -448,6 +462,56 @@ if (class_exists('QM_Collector')) {
 		public function process() {
 
 			$this->data['vardumps'] = css_qm_extend::$var_dumps;
+
+		}
+
+	}
+
+	class CSS_QM_Collector_ImageSizes extends QM_Collector {
+
+		public $id = 'imagesizes';
+
+		public function name() {
+			return __( 'Image Sizes', 'query-monitor' );
+		}
+
+		public function __construct() {
+
+			global $wpdb;
+
+			parent::__construct();
+
+		}
+
+		public function process() {
+			global $_wp_additional_image_sizes;
+
+			$this->data['imagesizes'] = array_merge(array(
+				'thumbnail' => array(
+					'width' => intval(get_option('thumbnail_size_w')),
+					'height' => intval(get_option('thumbnail_size_h')),
+					'_builtin' => true,
+					'crop' => true,
+				),
+				'medium' => array(
+					'width' => intval(get_option('medium_size_w')),
+					'height' => intval(get_option('medium_size_h')),
+					'_builtin' => true,
+					'crop' => false,
+				),
+				'medium_large' => array(
+					'width' => intval(get_option('medium_large_size_w')),
+					'height' => intval(get_option('medium_large_size_h')),
+					'_builtin' => true,
+					'crop' => false,
+				),
+				'large' => array(
+					'width' => intval(get_option('large_size_w')),
+					'height' => intval(get_option('large_size_h')),
+					'_builtin' => true,
+					'crop' => false,
+				),
+			),$_wp_additional_image_sizes);
 
 		}
 

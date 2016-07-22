@@ -40,6 +40,9 @@ class CSS_QM_Output_Html_Constants extends QM_Output_Html {
 
 				echo '</tbody>';
 				echo '<tfoot>';
+					echo '<tr>' .
+						'<td colspan="2" style="text-align: right !important;">Count: ' . count($data['constants']) . '</td>' . 
+					'</tr>';
 					echo '<tr>';
 						echo '<th colspan="2">Reference: <a href="http://wpengineer.com/2382/wordpress-constants-overview/" target="_blank">wpengineer.com/2382/wordpress-constants-overview/</a><br />Please note that some constants may not accurately reflect the page you are currently viewing.</th>';
 					echo '</tr>';
@@ -130,7 +133,7 @@ class CSS_QM_Output_Html_Paths extends QM_Output_Html {
 
 		$data = $this->collector->get_data();
 
-		echo '<div id="' . esc_attr( $this->collector->id() ) . '" class="qm qm-third" style="width: 66.5% !important;">';
+		echo '<div id="' . esc_attr( $this->collector->id() ) . '" class="qm qm-two-thirds">';
 
 			echo '<table cellspacing="0">';
 				echo '<thead>';
@@ -260,3 +263,79 @@ class CSS_QM_Output_Html_VarDumps extends QM_Output_Html {
 	}
 
 }
+
+class CSS_QM_Output_Html_ImageSizes extends QM_Output_Html {
+
+	public function __construct( QM_Collector $collector ) {
+		parent::__construct( $collector );
+	}
+
+	public function output() {
+
+		$data = $this->collector->get_data();
+
+		ksort($data['imagesizes']);
+
+		echo '<div id="' . esc_attr( $this->collector->id() ) . '" class="qm qm-third">';
+
+			echo '<table cellspacing="0" class="qm-sortable">' .
+				'<thead>' .
+					'<tr>' .
+						'<th colspan="4">Registered Image Sizes</th>' .
+					'</tr>' .
+					'<tr>' .
+						'<th class="qm-sorted-asc">Name' .
+							str_replace(
+								'class="qm-sort-controls"',
+								'class="qm-sort-controls" style="text-align: left !important;"',
+								$this->build_sorter()
+							) . '</th>' .
+						'<th class="qm-num qm-imagesize-width" style="width: 50px;">Width' . $this->build_sorter() . '</th>' .
+						'<th class="qm-num qm-imagesize-height" style="width: 50px;">Height' . $this->build_sorter() . '</th>' .
+						'<th style="width: 65px;">' .
+							'Built-in ' .
+							'<select id="qm-filter-imagesizes-builtin" class="qm-filter" data-filter="imagesize" data-highlight="">' .
+								'<option value="">All</option>' .
+								'<option value="builtin">Built-in</option>' .
+								'<option value="additional">Additional</option>' .
+							'</select>' .
+						'</th>' .
+					'</tr>' .
+				'</thead>' .
+				'<tfoot>' .
+					'<tr>' .
+						'<td colspan="4" style="text-align: right !important;">Count: ' . count($data['imagesizes']) . '</td>' .
+					'</tr>' .
+				'</tfoot>' .
+				'<tbody>';
+
+					foreach ($data['imagesizes'] as $name => $details) {
+						$is_builtin = array_key_exists('_builtin',$details) && true === $details['_builtin'];
+						$is_crop = true === $details['crop'];
+
+						echo '<tr id="qm-imagesize-' . esc_attr($name) . '" class="' . ($is_builtin ? 'qm-imagesizes-builtin' : '') . ($is_crop ? ' qm-imagesize-crop' : '') . '" data-qm-imagesize="' . ($is_builtin ? 'builtin' : 'additional') . '">' .
+							'<td class="qm-ltr">' .
+								esc_html($name) .
+							'</td>' .
+							'<td class="qm-num qm-imagesize-width' . (!$is_crop ? ' qm-info' : '') . '">' .
+								esc_html($details['width']) .
+							'</td>' .
+							'<td class="qm-num qm-imagesize-height' . (!$is_crop ? ' qm-info' : '') . '">' .
+								esc_html($details['height']) .
+							'</td>' .
+							'<td class="qm-ltr' . ($is_builtin ? ' qm-true' : '') . '" style="text-align: center !important;">' .
+								($is_builtin ? '&#10003;' : '') .
+							'</td>' .
+						'</tr>';
+					}
+
+				echo '</tbody>' .
+            '</table>' .
+			'<style type="text/css">.qm-hide-imagesize { display: none !important; }</style>' .
+        '</div>';
+
+	}
+
+}
+
+?>
