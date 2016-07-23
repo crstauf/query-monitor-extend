@@ -59,7 +59,7 @@ class CSSLLC_QMX_Collector_ImageSizes extends QM_Collector {
             $this->data['imagesizes'][$size]['ratio'] = $width_ratio . ':' . $height_ratio;
         }
 
-        $this->data['imagesizes'] = apply_filters('qmx/collect/imagesizes',$this->data['imagsizes']);
+        $this->data['imagesizes'] = apply_filters('qmx/collect/imagesizes',$this->data['imagesizes']);
 
     }
 
