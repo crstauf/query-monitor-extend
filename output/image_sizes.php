@@ -56,6 +56,8 @@ class CSSLLC_QMX_Output_Html_ImageSizes extends QM_Output_Html {
 						$is_builtin = array_key_exists('_builtin',$details) && true === $details['_builtin'];
 						$is_crop = true === $details['crop'];
 
+                        $ratio = 0 === $details['height'] ? 0 : $details['width'] / $details['height'];
+
 						echo '<tr id="qm-imagesize-' . esc_attr($name) . '" class="' . ($is_builtin ? 'qm-imagesizes-builtin' : '') . ($is_crop ? ' qm-imagesize-crop' : '') . '" data-qm-imagesize="' . ($is_builtin ? 'builtin' : 'additional') . '">' .
 							'<td class="qm-ltr">' .
 								esc_html($name) .
@@ -67,7 +69,8 @@ class CSSLLC_QMX_Output_Html_ImageSizes extends QM_Output_Html {
 								esc_html($details['height']) .
 							'</td>' .
                             '<td class="qm-num qm-imagesize-ratio">' .
-                                esc_html($details['ratio']) .
+                                '<span style="display: none;">' . number_format($ratio,12,'.','') . '</span>' .
+                                '<abbr title="' . $ratio . '">' . esc_html($details['ratio']) . '</abbr>' .
                             '</td>' .
 							'<td class="qm-ltr' . ($is_builtin ? ' qm-true' : '') . '" style="text-align: center !important;">' .
 								($is_builtin ? '&#10003;' : '') .
