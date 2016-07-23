@@ -52,6 +52,23 @@ class CSSLLC_QMX_Collector_ImageSizes extends QM_Collector {
             ),
         ),$_wp_additional_image_sizes));
 
+        foreach ($this->data['imagesizes'] as $size => $details) {    
+            $gcd          = self::gcd($details['width'],$details['height']);
+            $width_ratio  = $details['width'] / $gcd;
+            $height_ratio = $details['height'] / $gcd;
+            $this->data['imagesizes'][$size]['ratio'] = $width_ratio . ':' . $height_ratio;
+        }
+
+    }
+
+    protected static function gcd($num1,$num2) {
+        while (0 !== $num2) {
+               $t = $num1 % $num2;
+            $num1 = $num2;
+            $num2 = $t;
+        }
+
+        return $num1;
     }
 
 }

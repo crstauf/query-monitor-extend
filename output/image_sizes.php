@@ -23,7 +23,7 @@ class CSSLLC_QMX_Output_Html_ImageSizes extends QM_Output_Html {
 			echo '<table cellspacing="0" class="qm-sortable">' .
 				'<thead>' .
 					'<tr>' .
-						'<th colspan="4">Registered Image Sizes</th>' .
+						'<th colspan="5">Registered Image Sizes</th>' .
 					'</tr>' .
 					'<tr>' .
 						'<th class="qm-sorted-asc">Name' .
@@ -34,6 +34,7 @@ class CSSLLC_QMX_Output_Html_ImageSizes extends QM_Output_Html {
 							) . '</th>' .
 						'<th class="qm-num qm-imagesize-width" style="width: 50px;">Width' . $this->build_sorter() . '</th>' .
 						'<th class="qm-num qm-imagesize-height" style="width: 50px;">Height' . $this->build_sorter() . '</th>' .
+                        '<th class="qm-num qm-imagesize-ratio" style="width: 50px;">Ratio' . $this->build_sorter() . '</th>' .
 						'<th style="width: 65px;">' .
 							'Built-in ' .
 							'<select id="qm-filter-imagesizes-builtin" class="qm-filter" data-filter="imagesize" data-highlight="">' .
@@ -65,6 +66,9 @@ class CSSLLC_QMX_Output_Html_ImageSizes extends QM_Output_Html {
 							'<td class="qm-num qm-imagesize-height' . (!$is_crop ? ' qm-info' : '') . '">' .
 								esc_html($details['height']) .
 							'</td>' .
+                            '<td class="qm-num qm-imagesize-ratio">' .
+                                esc_html($details['ratio']) .
+                            '</td>' .
 							'<td class="qm-ltr' . ($is_builtin ? ' qm-true' : '') . '" style="text-align: center !important;">' .
 								($is_builtin ? '&#10003;' : '') .
 							'</td>' .
