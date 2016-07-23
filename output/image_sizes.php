@@ -36,18 +36,18 @@ class CSSLLC_QMX_Output_Html_ImageSizes extends QM_Output_Html {
 						'<th class="qm-num qm-imagesize-height" style="width: 50px;">Height' . $this->build_sorter() . '</th>' .
                         '<th class="qm-num qm-imagesize-ratio" style="width: 50px;">Ratio' . $this->build_sorter() . '</th>' .
 						'<th style="width: 65px;">' .
-							'Built-in ' .
+							'<span style="white-space: nowrap;">Built-in</span>' .
 							'<select id="qm-filter-imagesizes-builtin" class="qm-filter" data-filter="imagesize" data-highlight="">' .
 								'<option value="">All</option>' .
-								'<option value="builtin">Built-in</option>' .
-								'<option value="additional">Additional</option>' .
+								'<option value="builtin">Yes</option>' .
+								'<option value="additional">No</option>' .
 							'</select>' .
 						'</th>' .
 					'</tr>' .
 				'</thead>' .
 				'<tfoot>' .
 					'<tr>' .
-						'<td colspan="4" style="text-align: right !important;">Count: ' . count($data['imagesizes']) . '</td>' .
+						'<td colspan="5" style="text-align: right !important;">Count: ' . count($data['imagesizes']) . '</td>' .
 					'</tr>' .
 				'</tfoot>' .
 				'<tbody>';
