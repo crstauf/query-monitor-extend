@@ -33,7 +33,18 @@ class CSSLLC_QMX_Output_Html_Constants extends QM_Output_Html {
 
 						echo '<tr>';
 							echo '<th><a href="https://www.google.com/?gws_rd=ssl#q=site%3Acodex.wordpress.org+OR+developer.wordpress.org+' . esc_url( $constant ) . '" target="_blank">' . esc_attr( $constant ) . '</a></th>';
-							echo '<td title="' . ( defined( $constant ) ? gettype( constant( $constant ) ) : 'undefined' ) . '">' . cssllc_query_monitor_extend::get_format_value( $constant, true ) . '</td>';
+							echo '<td ' .
+								'title="' .
+									( defined( $constant )
+										? gettype( constant( $constant ) )
+										: 'undefined'
+									) . '"' .
+								( defined( $constant ) && 'boolean' === gettype( constant( $constant ) )
+									? ' class="qm-' . ( true === constant( $constant ) ? 'true' : 'false' ) .  '"'
+									: '') .
+							'>' .
+								cssllc_query_monitor_extend::get_format_value( $constant, true ) .
+							'</td>';
 						echo '</tr>';
 
 					}
