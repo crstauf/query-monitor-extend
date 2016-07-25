@@ -257,8 +257,8 @@ if ( !function_exists( 'is_custom_post_type' ) ) {
 }
 
 if ( !function_exists('QM_dump') ) {
-	function QM_dump( $label, $var, $single_table = false ) {
-		cssllc_query_monitor_extend::$var_dumps[time() . '_' . $label] = array( $var, $single_table );
+	function QM_dump( $label, $var ) {
+		cssllc_query_monitor_extend::$var_dumps[time() . '_' . $label] = array( $var );
 	}
 }
 
