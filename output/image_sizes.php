@@ -147,10 +147,10 @@ class CSSLLC_QMX_Output_Html_ImageSizes extends QM_Output_Html {
                             r++;
                             if ($(rows[r]).attr('data-id') === id) {
                                 if ('undefined' === typeof row.attr('rowspan'))
-                                    row.find('td').eq(1).attr('rowspan',2);
+                                    row.find('td.qm-imagesize-name').attr('rowspan',2);
                                 else
-                                    row.find('td').eq(1).attr('rowspan',parseInt(row.find('td').eq(1).attr('rowspan')) + 1);
-                                $(rows[r]).find('td').eq(1).addClass('qm-hide-rowspan');
+                                    row.find('td.qm-imagesize-name').attr('rowspan',parseInt(row.find('td.qm-imagesize-name').attr('rowspan')) + 1);
+                                $(rows[r]).find('td.qm-imagesize-name').addClass('qm-hide-rowspan');
                             } else {
                                 r--;
                                 break;
