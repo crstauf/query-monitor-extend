@@ -126,6 +126,7 @@ class CSSLLC_QMX_Output_Html_ImageSizes extends QM_Output_Html {
     }
 
     protected static function output_styling_scripting() {
+        wp_enqueue_script('jquery');
         ?>
         <style type="text/css">
             .qm tbody > tr > td.qm-imagesize-name[rowspan] { background-color: #FFF !important; }
