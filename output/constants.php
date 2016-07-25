@@ -17,7 +17,7 @@ class CSSLLC_QMX_Output_Html_Constants extends QM_Output_Html {
 
 		$data = $this->collector->get_data();
 
-		echo '<div id="' . esc_attr( $this->collector->id() ) . '" class="qm qm-third">';
+		echo '<div id="' . esc_attr( $this->collector->id() ) . '" class="qm qm-clear qm-third">';
 
 			echo '<table cellspacing="0">';
 				echo '<thead>';

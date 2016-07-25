@@ -18,7 +18,7 @@ class CSSLLC_QMX_Output_Html_ImageSizes extends QM_Output_Html {
 
 		ksort($data['imagesizes']);
 
-		echo '<div id="' . esc_attr( $this->collector->id() ) . '" class="qm qm-third">';
+		echo '<div id="' . esc_attr( $this->collector->id() ) . '" class="qm qm-clear qm-half">';
 
 			echo '<table cellspacing="0" class="qm-sortable">' .
 				'<thead>' .
