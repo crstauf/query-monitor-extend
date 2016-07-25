@@ -131,7 +131,7 @@ class CSSLLC_QMX_Output_Html_ImageSizes extends QM_Output_Html {
         <style type="text/css">
             .qm tbody > tr > td.qm-imagesize-name[rowspan] { background-color: #FFF !important; }
             .qm .qm-num.qm-imagesize-ratio { width: 80px !important; }
-            .qm-hide-rowspan, .qm-hide-imagesize-origin { display: none !important; }
+            #qm-imagesizes .qm-hide-rowspan, .qm-hide-imagesize-origin { display: none !important; }
         </style>
         <script type="text/javascript">
             jQuery(function($) {
