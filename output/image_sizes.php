@@ -73,7 +73,7 @@ class CSSLLC_QMX_Output_Html_ImageSizes extends QM_Output_Html {
                                             ? ' rowspan="' . count($sizes) . '"'
                                             : '') .
                                         '>' . esc_html($name) . '</td>'
-                                    : '<td class="qm-ltr qm-hide-rowspan" style="background-color: #FFF !important;">' . esc_html($name) . '</td>'
+                                    : '<td class="qm-ltr qm-imagesize-name qm-hide-rowspan">' . esc_html($name) . '</td>'
                                 ) .
                                 self::output_size_details($size) .
                             '</tr>';
