@@ -24,9 +24,7 @@ class cssllc_query_monitor_extend {
 			foreach ( glob( trailingslashit( dirname( __FILE__ ) ) . 'collectors/*.php' ) as $file )
 				include $file;
 
-		// only hook available to load outputters at the right time
-		// @TODO: add action to QM in dispatchers/Html.php before_output method
-		add_filter('qm/output/absolute_position',array(__CLASS__,'include_outputters'));
+		add_filter('qm/outputter/html',array(__CLASS__,'include_outputters'),0);
 
 		add_filter( 'qm/outputter/html', 'register_cssllc_qmx_output_html_constants', 150, 2 );
 		add_filter( 'qm/outputter/html', 'register_cssllc_qmx_output_html_paths', 151, 2 );
@@ -38,12 +36,12 @@ class cssllc_query_monitor_extend {
 		add_filter('qm/output/menu_class',array(__CLASS__,'adminbar_menu_bg'),9999999);
 	}
 
-	public static function include_outputters($absolute) {
+	public static function include_outputters($output) {
 		if (class_exists('QM_Output_Html'))
 			foreach ( glob( trailingslashit( dirname( __FILE__ ) ) . 'output/*.php' ) as $file )
 				include $file;
 
-		return $absolute;
+		return $output;
 	}
 
 	public static function adminbar_menu_bg($classes) {
