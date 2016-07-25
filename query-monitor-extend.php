@@ -28,6 +28,12 @@ class cssllc_query_monitor_extend {
 		// @TODO: add action to QM in dispatchers/Html.php before_output method
 		add_filter('qm/output/absolute_position',array(__CLASS__,'include_outputters'));
 
+		add_filter( 'qm/outputter/html', 'register_cssllc_qmx_output_html_constants', 150, 2 );
+		add_filter( 'qm/outputter/html', 'register_cssllc_qmx_output_html_paths', 151, 2 );
+		add_filter( 'qm/outputter/html', 'register_cssllc_qmx_output_html_multisite', 152, 2 );
+		add_filter( 'qm/outputter/html', 'register_cssllc_qmx_output_html_imagesizes', 153, 2 );
+		add_filter( 'qm/outputter/html', 'register_cssllc_qmx_output_html_vardumps', 200, 2 );
+
 		add_filter('qm/collect/conditionals',array(__CLASS__,'add_conditionals'),9999999);
 		add_filter('qm/output/menu_class',array(__CLASS__,'adminbar_menu_bg'),9999999);
 	}

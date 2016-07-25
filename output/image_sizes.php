@@ -93,6 +93,4 @@ function register_cssllc_qmx_output_html_imagesizes( array $output, QM_Collector
 	return $output;
 }
 
-add_filter( 'qm/outputter/html', 'register_cssllc_qmx_output_html_imagesizes', 131, 2 );
-
 ?>

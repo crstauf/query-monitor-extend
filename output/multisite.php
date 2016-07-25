@@ -58,6 +58,4 @@ function register_cssllc_qmx_output_html_multisite( array $output, QM_Collectors
 	return $output;
 }
 
-add_filter( 'qm/outputter/html', 'register_cssllc_qmx_output_html_multisite', 120, 2 );
-
 ?>

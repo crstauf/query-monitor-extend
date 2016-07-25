@@ -88,6 +88,4 @@ function register_cssllc_qmx_output_html_paths( array $output, QM_Collectors $co
 	return $output;
 }
 
-add_filter( 'qm/outputter/html', 'register_cssllc_qmx_output_html_paths', 130, 2 );
-
 ?>
