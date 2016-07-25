@@ -24,53 +24,49 @@ class CSSLLC_QMX_Collector_ImageSizes extends QM_Collector {
 
     public function process() {
         global $_wp_additional_image_sizes;
+        $adtl = $_wp_additional_image_sizes;
 
-        $this->data['imagesizes'] = array_merge(array(
-            'thumbnail' => array(
+        foreach ($adtl as $k => $v)
+            $adtl[$k]['origin'] = 'added';
+
+        $this->data['imagesizes'] = array(
+            'thumbnail' => array(array(
                 'width' => intval(get_option('thumbnail_size_w')),
                 'height' => intval(get_option('thumbnail_size_h')),
-                '_builtin' => true,
+                'origin' => 'native',
                 'crop' => true,
-            ),
-            'medium' => array(
+                'num' => 1,
+            )),
+            'medium' => array(array(
                 'width' => intval(get_option('medium_size_w')),
                 'height' => intval(get_option('medium_size_h')),
-                '_builtin' => true,
+                'origin' => 'native',
                 'crop' => false,
-            ),
-            'medium_large' => array(
+                'num' => 2,
+            )),
+            'medium_large' => array(array(
                 'width' => intval(get_option('medium_large_size_w')),
                 'height' => intval(get_option('medium_large_size_h')),
-                '_builtin' => true,
+                'origin' => 'native',
                 'crop' => false,
-            ),
-            'large' => array(
+                'num' => 3,
+            )),
+            'large' => array(array(
                 'width' => intval(get_option('large_size_w')),
                 'height' => intval(get_option('large_size_h')),
-                '_builtin' => true,
+                'origin' => 'native',
                 'crop' => false,
-            ),
-        ),$_wp_additional_image_sizes);
+                'num' => 4,
+            )),
+        );
 
-        foreach ($this->data['imagesizes'] as $size => $details) {
-            $gcd          = self::gcd($details['width'],$details['height']);
-            $width_ratio  = $details['width'] / $gcd;
-            $height_ratio = $details['height'] / $gcd;
-            $this->data['imagesizes'][$size]['ratio'] = $width_ratio . ':' . $height_ratio;
+        $num = 5;
+        foreach ($adtl as $size => $details) {
+            $details['origin'] = 'added';
+            $details['num'] = $num++;
+            $this->data['imagesizes'][$size][] = $details;
         }
 
-        $this->data['imagesizes'] = apply_filters('qmx/collect/imagesizes',$this->data['imagesizes']);
-
-    }
-
-    protected static function gcd($num1,$num2) {
-        while (0 !== $num2) {
-               $t = $num1 % $num2;
-            $num1 = $num2;
-            $num2 = $t;
-        }
-
-        return $num1;
     }
 
 }
