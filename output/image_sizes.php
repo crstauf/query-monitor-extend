@@ -136,8 +136,13 @@ class CSSLLC_QMX_Output_Html_ImageSizes extends QM_Output_Html {
         <script type="text/javascript">
             jQuery(function($) {
                 $("#qm-imagesizes table.qm-sortable").on('qm-sort-click',function() {
+                    $(this).addClass('has-events');
                     $(this).find('td[rowspan]').removeAttr('rowspan');
                     $(this).find('td.qm-hide-rowspan').removeClass('qm-hide-rowspan');
+                });
+                $("#qm-imagesizes table.qm-sortable .qm-sort").on('click',function() {
+                    if ($(this).closest('table').hasClass('has-events')) return;
+                    $(this).closest('table').trigger('qm-sort-click');
                 });
                 $("#qm-imagesizes table.qm-sortable").on('qm-sort-tbody',function(ev,tbody) {
                     var rows = $(tbody).find('tr');
