@@ -128,11 +128,13 @@ class CSSLLC_QMX_Output_Html_ImageSizes extends QM_Output_Html {
     protected static function output_styling_scripting() {
         wp_enqueue_script('jquery');
         ?>
+
         <style type="text/css">
             .qm tbody > tr > td.qm-imagesize-name[rowspan] { background-color: #FFF !important; }
             .qm .qm-num.qm-imagesize-ratio { width: 80px !important; }
             #qm-imagesizes .qm-hide-rowspan, .qm-hide-imagesize-origin { display: none !important; }
         </style>
+
         <script type="text/javascript">
             jQuery(function($) {
                 $("#qm-imagesizes table.qm-sortable").on('qm-sort-click',function() {
