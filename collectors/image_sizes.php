@@ -26,9 +26,6 @@ class CSSLLC_QMX_Collector_ImageSizes extends QM_Collector {
         global $_wp_additional_image_sizes;
         $adtl = $_wp_additional_image_sizes;
 
-        foreach ($adtl as $k => $v)
-            $adtl[$k]['origin'] = 'added';
-
         $this->data['imagesizes'] = array(
             'thumbnail' => array(array(
                 'width' => intval(get_option('thumbnail_size_w')),
@@ -61,11 +58,12 @@ class CSSLLC_QMX_Collector_ImageSizes extends QM_Collector {
         );
 
         $num = 5;
-        foreach ($adtl as $size => $details) {
-            $details['origin'] = 'added';
-            $details['num'] = $num++;
-            $this->data['imagesizes'][$size][] = $details;
-        }
+        if (is_array($adtl) && count($adtl))
+            foreach ($adtl as $size => $details) {
+                $details['num'] = $num++;
+                $details['origin'] = 'added';
+                $this->data['imagesizes'][$size][] = $details;
+            }
 
     }
 
