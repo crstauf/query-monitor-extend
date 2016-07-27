@@ -87,7 +87,10 @@ class CSSLLC_QMX_Collector_Constants extends QM_Collector {
             'DONOTCACHEDB',
             'DONOTMINIFY',
             'DONOTCDN',
-            'DONOTCACHCEOBJECT'
+            'DONOTCACHCEOBJECT',
+            'QM_HIDE_SELF',
+            'QM_SHOW_ALL_HOOKS',
+            'QM_HIDE_CORE_HOOKS',
         )));
 
         $this->data['constants'] = $constants;
