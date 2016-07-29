@@ -31,6 +31,8 @@ class cssllc_query_monitor_extend {
 				include $file;
 
 		add_filter( 'qm/outputter/html', array( __CLASS__, 'include_outputters' ), 0 );
+		add_filter( 'qm/outputter/html', 'unregister_qm_output_html_assets', 79 );
+		add_filter( 'qm/outputter/html', 'register_qmx_output_html_assets', 80, 2 );
 		add_filter( 'qm/outputter/html', 'register_cssllc_qmx_output_html_includedfiles', 119, 2 );
 		add_filter( 'qm/outputter/html', 'register_cssllc_qmx_output_html_constants', 150, 2 );
 		add_filter( 'qm/outputter/html', 'register_cssllc_qmx_output_html_paths', 151, 2 );
