@@ -30,4 +30,4 @@
 #qm-included_files .flex > span + span { margin-left: 10px; }
 
 .qmx-includedfiles-filesize { max-width: 160px; min-width: 110px; }
-.qmx-includedfiles-component { max-width: 200px; }
+.qmx-includedfiles-component { max-width: 150px; }

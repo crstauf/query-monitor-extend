@@ -71,8 +71,9 @@ class CSSLLC_QMX_Output_Html_IncludedFiles extends QM_Output_Html {
         $selectors = array();
         foreach ( $data['files'] as $details )
             $selectors = array_merge( $details['selectors'], $selectors );
-        foreach ( $data['errors'] as $details )
-            $selectors = array_merge( $details['selectors'], $selectors );
+        if ( array_key_exists( 'errors', $data ) && is_array( $data['errors'] ) && count( $data['errors'] ) )
+            foreach ( $data['errors'] as $details )
+                $selectors = array_merge( $details['selectors'], $selectors );
 
         echo '<div id="' . esc_attr( $this->collector->id() ) . '" class="qm">';
 
@@ -105,18 +106,18 @@ class CSSLLC_QMX_Output_Html_IncludedFiles extends QM_Output_Html {
 				'</thead>' .
                 '<tbody>';
 
-                    foreach ($data['errors'] as $path => $details) {
-                        //$filesize = $filesize + $details['filesize'];
-                        echo '<tr data-qm-includedfilespath="' . esc_attr( implode( ' ', array_keys( $details['selectors'] ) ) ) . '" data-qm-includedfilescomponent="' . esc_attr( $details['component'] ) . '" class="error">' .
-                            '<td class="qm-num"> </td>' .
-                            '<td>' .
-                                esc_html( $path ) .  '<br />' .
-                                '<span class="qm-info">&nbsp;' . esc_html( $details['including'] . ':' . $details['including_line'] ) .
-                            '</td>' .
-                            '<td class="qm-num qmx-includedfiles-filesize"> </td>' .
-                            '<td class="qmx-includedfiles-component">' . esc_html( $details['component'] ) . '</td>' .
-                        '</tr>';
-                    }
+                    if ( array_key_exists( 'errors', $data ) && is_array( $data['errors'] ) && count( $data['errors'] ) )
+                        foreach ($data['errors'] as $path => $details) {
+                            echo '<tr data-qm-includedfilespath="' . esc_attr( implode( ' ', array_keys( $details['selectors'] ) ) ) . '" data-qm-includedfilescomponent="' . esc_attr( $details['component'] ) . '" class="error">' .
+                                '<td class="qm-num" data-qmsortweight="0"> </td>' .
+                                '<td data-qmsortweight="' . esc_attr( str_replace( '.php', '', strtolower( $path ) ) ) . '">' .
+                                    esc_html( $path ) .  '<br />' .
+                                    '<span class="qm-info">&nbsp;' . esc_html( $details['including'] . ':' . $details['including_line'] ) .
+                                '</td>' .
+                                '<td class="qm-num qmx-includedfiles-filesize"> </td>' .
+                                '<td class="qmx-includedfiles-component">' . esc_html( $details['component'] ) . '</td>' .
+                            '</tr>';
+                        }
 
                     $count = $filesize = 0;
 
@@ -124,20 +125,23 @@ class CSSLLC_QMX_Output_Html_IncludedFiles extends QM_Output_Html {
                         $count++;
                         $filesize = $filesize + $details['filesize'];
                         echo '<tr data-qm-includedfilespath="' . esc_attr( implode( ' ', array_keys( $details['selectors'] ) ) ) . '" data-qm-includedfilescomponent="' . esc_attr( $details['component'] ) . '">' .
-                            '<td class="qm-num">' . esc_html( $count ) . '</td>' .
-                            '<td>' .
+                            '<td class="qm-num" data-qmsortweight="' . esc_attr( $count ) . '">' . esc_html( $count ) . '</td>' .
+                            '<td data-qmsortweight="' . esc_attr( str_replace( '.php', '', strtolower( $path ) ) ) . '">' .
                                 ( strlen( trailingslashit( dirname( $path ) ) ) < strlen( ABSPATH )
                                 ? esc_html( $path )
                                 : '<abbr title="' . esc_attr( $path ) . '">./' . esc_html( str_replace( ABSPATH, '', $path) ) . '</abbr>') .
                             '</td>' .
-                            '<td class="qm-num qmx-includedfiles-filesize">' . esc_html( number_format_i18n( $details['filesize'] / 1024, 2 ) ) . ' KB</td>' .
+                            '<td class="qm-num qmx-includedfiles-filesize" data-qmsortweight="' . esc_attr( $details['filesize'] ) . '">' . esc_html( number_format_i18n( $details['filesize'] / 1024, 2 ) ) . ' KB</td>' .
                             '<td>' . esc_html( $details['component'] ) . '</td>' .
                         '</tr>';
 					}
 
 				echo '</tbody>' .
 				'<tfoot>' .
-                    '<tr class="qm-items-shown qm-hide"><td colspan="4">Files in filter: <span class="qm-items-number">0</span></td></tr>' .
+                    '<tr class="qm-items-shown qm-hide">' .
+                        '<td colspan="4">Files in filter: <span class="qm-items-number">0</span></td>' .
+                        '<td colspan="2" class="qm-hide">Total in filter: <span class="qm-items-filesize">0<span></td>' .
+                    '</tr>' .
 					'<tr>' .
                         '<td colspan="2">Total files: ' . $count . '</td>' .
                         '<td colspan="2">Total: ' . number_format_i18n( $filesize / 1024, 2) . ' KB Average: ' . number_format_i18n( ( $filesize / $count ) / 1024, 2) . ' KB</td>' .
@@ -146,6 +150,20 @@ class CSSLLC_QMX_Output_Html_IncludedFiles extends QM_Output_Html {
 
             '</table>';
 
+            wp_enqueue_script('jquery');
+            ?>
+
+            <script type="text/javascript">
+                jQuery("#qm-included_files table").on('qm-filtered',function(ev,rows) {
+                    var filesize = 0;
+                    rows.each(function(row) {
+                        filesize = filesize + parseInt( row.find('td.qmx-includedfiles-filesize').attr('data-qmsortweight') );
+                    });
+                    jQuery("#qm-includedfiles table.qm-sortable tfoot .qm-items-filesize").text(filesize / 1024 + ' KB');
+                });
+            </script>
+
+            <?php
         echo '</div>';
     }
 
