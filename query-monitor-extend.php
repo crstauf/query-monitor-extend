@@ -30,19 +30,18 @@ class cssllc_query_monitor_extend {
 			foreach ( glob( trailingslashit( dirname( __FILE__ ) ) . 'collectors/*.php' ) as $file )
 				include $file;
 
-		add_filter('qm/outputter/html',array(__CLASS__,'include_outputters'),0);
-
+		add_filter( 'qm/outputter/html', array( __CLASS__, 'include_outputters' ), 0 );
 		add_filter( 'qm/outputter/html', 'register_cssllc_qmx_output_html_constants', 150, 2 );
 		add_filter( 'qm/outputter/html', 'register_cssllc_qmx_output_html_paths', 151, 2 );
 		add_filter( 'qm/outputter/html', 'register_cssllc_qmx_output_html_multisite', 152, 2 );
 		add_filter( 'qm/outputter/html', 'register_cssllc_qmx_output_html_imagesizes', 153, 2 );
 		add_filter( 'qm/outputter/html', 'register_cssllc_qmx_output_html_vardumps', 200, 2 );
 
-		add_filter('qm/collect/conditionals',array(__CLASS__,'add_conditionals'),9999999);
-		add_filter('qm/output/menu_class',array(__CLASS__,'adminbar_menu_bg'),9999999);
+		add_filter('qm/collect/conditionals', array( __CLASS__, 'add_conditionals' ), 9999999 );
+		add_filter( 'qm/output/menu_class', array( __CLASS__, 'adminbar_menu_bg' ), 9999999 );
 	}
 
-	public static function include_outputters($output) {
+	public static function include_outputters( $output ) {
 		if (class_exists('QM_Output_Html'))
 			foreach ( glob( trailingslashit( dirname( __FILE__ ) ) . 'output/*.php' ) as $file )
 				include $file;
@@ -50,7 +49,7 @@ class cssllc_query_monitor_extend {
 		return $output;
 	}
 
-	public static function adminbar_menu_bg($classes) {
+	public static function adminbar_menu_bg( $classes ) {
 		if (2 > count($classes)) return array_merge($classes,array('query-monitor-extend'));
 		$classes[] = 'query-monitor-extend';
 
@@ -166,65 +165,6 @@ class cssllc_query_monitor_extend {
 		return $conds;
 	}
 
-	public static function register_qm_collector_constants( array $collectors, QueryMonitor $qm ) {
-		$collectors['constants'] = new CSS_QM_Collector_Constants;
-		return $collectors;
-	}
-
-	public static function register_qm_output_html_constants( array $output, QM_Collectors $collectors ) {
-		require_once 'output-html.php';
-		if ( $collector = QM_Collectors::get( 'constants' ) ) {
-			$output['constants'] = new CSS_QM_Output_Html_Constants( $collector );
-		}
-		return $output;
-	}
-
-	public static function register_qm_collector_multisite( array $collectors, QueryMonitor $qm ) {
-		$collectors['multisite'] = new CSS_QM_Collector_Multisite;
-		return $collectors;
-	}
-
-	public static function register_qm_output_html_multisite( array $output, QM_Collectors $collectors ) {
-		if ( $collector = QM_Collectors::get( 'multisite' ) ) {
-			$output['multisite'] = new CSS_QM_Output_Html_Multisite( $collector );
-		}
-		return $output;
-	}
-
-	public static function register_qm_collector_paths( array $collectors, QueryMonitor $qm ) {
-		$collectors['paths'] = new CSS_QM_Collector_Paths;
-		return $collectors;
-	}
-
-	public static function register_qm_output_html_paths( array $output, QM_Collectors $collectors ) {
-		if ( $collector = QM_Collectors::get( 'paths' ) ) {
-			$output['paths'] = new CSS_QM_Output_Html_Paths( $collector );
-		}
-		return $output;
-	}
-
-	public static function register_qm_collector_var_dumps( array $collectors, QueryMonitor $qm ) {
-		$collectors['vardumps'] = new CSS_QM_Collector_VarDumps;
-		return $collectors;
-	}
-
-	public static function register_qm_output_html_var_dumps( array $output, QM_Collectors $collectors ) {
-		if ( $collector = QM_Collectors::get( 'vardumps' ) ) {
-			$output['vardumps'] = new CSS_QM_Output_Html_VarDumps( $collector );
-		}
-		return $output;
-	}
-
-	public static function register_qm_collector_image_sizes( array $collectors, QueryMonitor $qm ) {
-		$collectors['imagesizes'] = new CSS_QM_Collector_ImageSizes;
-		return $collectors;
-	}
-
-	public static function register_qm_output_html_image_sizes( array $output, QM_Collectors $collectors ) {
-		if ( $collector = QM_Collectors::get( 'imagesizes' ) ) {
-			$output['imagesizes'] = new CSS_QM_Output_Html_ImageSizes( $collector );
-		}
-		return $output;
 	}
 
 	public static function get_format_value( $value, $is_constant = false ) {
