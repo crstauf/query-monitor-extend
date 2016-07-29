@@ -1,6 +1,6 @@
 .qm-hide-imagesize-origin,
 .qm-hide-includedfilespath,
-#qm-imagesizes .qm-hide-rowspan,
+#qm-image_sizes .qm-hide-rowspan,
 .qm-hide-includedfilescomponent { display: none !important; }
 
 .qm tbody > tr > td.qm-imagesize-name[rowspan] { background-color: #FFF !important; }
