@@ -46,8 +46,8 @@ class CSSLLC_QMX_Output_Html_VarDumps extends QM_Output_Html {
 }
 
 function register_cssllc_qmx_output_html_vardumps( array $output, QM_Collectors $collectors ) {
-	if ( $collector = QM_Collectors::get( 'vardumps' ) )
-		$output['vardumps'] = new CSSLLC_QMX_Output_Html_VarDumps( $collector );
+	if ( $collector = QM_Collectors::get( 'var_dumps' ) )
+		$output['var_dumps'] = new CSSLLC_QMX_Output_Html_VarDumps( $collector );
 	return $output;
 }
 

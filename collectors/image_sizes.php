@@ -8,7 +8,7 @@ if (!defined('ABSPATH') || !function_exists('add_filter')) {
 
 class CSSLLC_QMX_Collector_ImageSizes extends QM_Collector {
 
-    public $id = 'imagesizes';
+    public $id = 'image_sizes';
 
     public function name() {
         return __( 'Image Sizes', 'query-monitor' );
@@ -70,7 +70,7 @@ class CSSLLC_QMX_Collector_ImageSizes extends QM_Collector {
 }
 
 function register_cssllc_qmx_collector_imagesizes( array $collectors, QueryMonitor $qm ) {
-	$collectors['imagesizes'] = new CSSLLC_QMX_Collector_ImageSizes;
+	$collectors['image_sizes'] = new CSSLLC_QMX_Collector_ImageSizes;
 	return $collectors;
 }
 

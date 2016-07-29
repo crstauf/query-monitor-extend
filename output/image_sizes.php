@@ -129,12 +129,6 @@ class CSSLLC_QMX_Output_Html_ImageSizes extends QM_Output_Html {
         wp_enqueue_script('jquery');
         ?>
 
-        <style type="text/css">
-            .qm tbody > tr > td.qm-imagesize-name[rowspan] { background-color: #FFF !important; }
-            .qm .qm-num.qm-imagesize-ratio { width: 80px !important; }
-            #qm-imagesizes .qm-hide-rowspan, .qm-hide-imagesize-origin { display: none !important; }
-        </style>
-
         <script type="text/javascript">
             jQuery(function($) {
                 $("#qm-imagesizes table.qm-sortable").on('qm-sort-click',function() {
@@ -175,8 +169,8 @@ class CSSLLC_QMX_Output_Html_ImageSizes extends QM_Output_Html {
 }
 
 function register_cssllc_qmx_output_html_imagesizes( array $output, QM_Collectors $collectors ) {
-	if ( $collector = QM_Collectors::get( 'imagesizes' ) )
-		$output['imagesizes'] = new CSSLLC_QMX_Output_Html_ImageSizes( $collector );
+	if ( $collector = QM_Collectors::get( 'image_sizes' ) )
+		$output['image_sizes'] = new CSSLLC_QMX_Output_Html_ImageSizes( $collector );
 	return $output;
 }
 
