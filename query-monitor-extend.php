@@ -14,6 +14,12 @@ if (!defined('ABSPATH') || !function_exists('add_filter')) {
 	exit();
 }
 
+if (
+	( defined( 'QM_DISABLED' ) && QM_DISABLED )
+	|| (defined ( 'QMX_DISABLED' ) && QMX_DISABLED )
+)
+	return;
+
 new cssllc_query_monitor_extend;
 class cssllc_query_monitor_extend {
 
