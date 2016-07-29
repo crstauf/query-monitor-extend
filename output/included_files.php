@@ -6,6 +6,8 @@
 
 class CSSLLC_QMX_Output_Html_IncludedFiles extends QM_Output_Html {
 
+    public static $errors = 0;
+
     public function __construct( QM_Collector $collector ) {
         parent::__construct( $collector );
         add_filter( 'qm/output/menus', array( $this, 'admin_menu' ), 101 );
@@ -48,6 +50,8 @@ class CSSLLC_QMX_Output_Html_IncludedFiles extends QM_Output_Html {
 
                     if ( false === $length )
                         continue;
+
+                    self::$errors++;
 
                     $include_file = substr( $error->message, $start, $length );
                     $component = QM_Util::get_file_component( $error->file )->name;
@@ -108,7 +112,7 @@ class CSSLLC_QMX_Output_Html_IncludedFiles extends QM_Output_Html {
 
                     if ( array_key_exists( 'errors', $data ) && is_array( $data['errors'] ) && count( $data['errors'] ) )
                         foreach ($data['errors'] as $path => $details) {
-                            echo '<tr data-qm-includedfilespath="' . esc_attr( implode( ' ', array_keys( $details['selectors'] ) ) ) . '" data-qm-includedfilescomponent="' . esc_attr( $details['component'] ) . '" class="error">' .
+                            echo '<tr data-qm-includedfilespath="' . esc_attr( implode( ' ', array_keys( $details['selectors'] ) ) ) . '" data-qm-includedfilescomponent="' . esc_attr( $details['component'] ) . '" class="qm-warn">' .
                                 '<td class="qm-num" data-qmsortweight="0"> </td>' .
                                 '<td data-qmsortweight="' . esc_attr( str_replace( '.php', '', strtolower( $path ) ) ) . '">' .
                                     esc_html( $path ) .  '<br />' .
@@ -171,8 +175,9 @@ class CSSLLC_QMX_Output_Html_IncludedFiles extends QM_Output_Html {
         $data = $this->collector->get_data();
 
         $title[] = sprintf(
-            _x( '%s<small>F</small>', 'number of included files', 'query-monitor' ),
-            array_key_exists('files',$data) && is_array( $data['files'] ) ? count( $data['files'] ) : 0
+            _x( '%s%s<small>F</small>', 'number of included files', 'query-monitor' ),
+            array_key_exists( 'files', $data ) && is_array( $data['files'] ) ? count( $data['files'] ) : 0,
+            0 !== self::$errors ? '/' . self::$errors : ''
         );
 
         return $title;
@@ -181,11 +186,20 @@ class CSSLLC_QMX_Output_Html_IncludedFiles extends QM_Output_Html {
     public function admin_menu( array $menu ) {
         $data = $this->collector->get_data();
 
-        $menu[] = $this->menu( array(
+        $add = array(
             'id'    => 'qm-included_files',
             'href'  => '#qm-included_files',
-            'title' => sprintf( __( 'Included files (%s)', 'query-monitor' ), is_array( $data['files'] ) ? count( $data['files'] ) : 0 )
-        ));
+            'title' => sprintf(
+                __( 'Included files (%s%s)', 'query-monitor' ),
+                is_array( $data['files'] ) ? count( $data['files'] ) : 0,
+                0 !== self::$errors ? ' / ' . self::$errors : ''
+            )
+        );
+
+        if ( 0 !== self::$errors )
+            $add['meta']['classname'] = 'qm-alert';
+
+        $menu[] = $this->menu( $add );
 
         return $menu;
     }
