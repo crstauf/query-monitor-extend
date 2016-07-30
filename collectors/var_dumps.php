@@ -6,9 +6,9 @@ if (!defined('ABSPATH') || !function_exists('add_filter')) {
     exit();
 }
 
-class CSSLLC_QMX_Collector_VarDumps extends QM_Collector {
+class QMX_Collector_VarDumps extends QM_Collector {
 
-    public $id = 'var_dumps';
+    public $id = 'qmx-var_dumps';
 
     public function name() {
         return __( 'Var Dumps (' . count( cssllc_query_monitor_extend::$var_dumps ) . ')', 'query-monitor' );
@@ -24,17 +24,17 @@ class CSSLLC_QMX_Collector_VarDumps extends QM_Collector {
 
     public function process() {
 
-        $this->data['var_dumps'] = cssllc_query_monitor_extend::$var_dumps;
+        $this->data['qmx-var_dumps'] = cssllc_query_monitor_extend::$var_dumps;
 
     }
 
 }
 
-function register_cssllc_qmx_collector_vardumps( array $collectors, QueryMonitor $qm ) {
-	$collectors['var_dumps'] = new CSSLLC_QMX_Collector_VarDumps;
+function register_qmx_collector_vardumps( array $collectors, QueryMonitor $qm ) {
+	$collectors['qmx-var_dumps'] = new QMX_Collector_VarDumps;
 	return $collectors;
 }
 
-add_filter( 'qm/collectors', 'register_cssllc_qmx_collector_vardumps', 10, 2 );
+add_filter( 'qm/collectors', 'register_qmx_collector_vardumps', 10, 2 );
 
 ?>

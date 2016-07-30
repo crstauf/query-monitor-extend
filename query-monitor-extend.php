@@ -33,12 +33,12 @@ class cssllc_query_monitor_extend {
 		add_filter( 'qm/outputter/html', array( __CLASS__, 'include_outputters' ), 0 );
 		add_filter( 'qm/outputter/html', 'unregister_qm_output_html_assets', 79 );
 		add_filter( 'qm/outputter/html', 'register_qmx_output_html_assets', 80, 2 );
-		add_filter( 'qm/outputter/html', 'register_cssllc_qmx_output_html_includedfiles', 119, 2 );
-		add_filter( 'qm/outputter/html', 'register_cssllc_qmx_output_html_constants', 150, 2 );
-		add_filter( 'qm/outputter/html', 'register_cssllc_qmx_output_html_paths', 151, 2 );
-		add_filter( 'qm/outputter/html', 'register_cssllc_qmx_output_html_multisite', 152, 2 );
-		add_filter( 'qm/outputter/html', 'register_cssllc_qmx_output_html_imagesizes', 153, 2 );
-		add_filter( 'qm/outputter/html', 'register_cssllc_qmx_output_html_vardumps', 200, 2 );
+		add_filter( 'qm/outputter/html', 'register_qmx_output_html_includedfiles', 119, 2 );
+		add_filter( 'qm/outputter/html', 'register_qmx_output_html_constants', 150, 2 );
+		add_filter( 'qm/outputter/html', 'register_qmx_output_html_paths', 151, 2 );
+		add_filter( 'qm/outputter/html', 'register_qmx_output_html_multisite', 152, 2 );
+		add_filter( 'qm/outputter/html', 'register_qmx_output_html_imagesizes', 153, 2 );
+		add_filter( 'qm/outputter/html', 'register_qmx_output_html_vardumps', 200, 2 );
 
 		add_filter('qm/collect/conditionals', array( __CLASS__, 'add_conditionals' ), 9999999 );
 

@@ -6,7 +6,7 @@ if (!defined('ABSPATH') || !function_exists('add_filter')) {
 	exit();
 }
 
-class CSSLLC_QMX_Output_Html_Assets extends QM_Output_Html_Assets {
+class QMX_Output_Html_Assets extends QM_Output_Html_Assets {
 
     public function output() {
 
@@ -190,7 +190,7 @@ function unregister_qm_output_html_assets( array $output ) {
 
 function register_qmx_output_html_assets( array $output, QM_Collectors $collectors ) {
 	if ( $collector = QM_Collectors::get( 'assets' ) ) {
-		$output['qmx_assets'] = new CSSLLC_QMX_Output_Html_Assets( $collector );
+		$output['qmx-assets'] = new QMX_Output_Html_Assets( $collector );
 	}
 	return $output;
 }

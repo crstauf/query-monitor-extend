@@ -4,7 +4,7 @@
  * http://github.com/khromov/wp-query-monitor-included-files
  */
 
-class CSSLLC_QMX_Output_Html_IncludedFiles extends QM_Output_Html {
+class QMX_Output_Html_IncludedFiles extends QM_Output_Html {
 
     var $data = array();
 
@@ -323,8 +323,8 @@ class CSSLLC_QMX_Output_Html_IncludedFiles extends QM_Output_Html {
         return $menu;
     }
 }
-function register_cssllc_qmx_output_html_includedfiles( array $output, QM_Collectors $collectors ) {
-	if ( $collector = QM_Collectors::get( 'included_files' ) )
-		$output['included_files'] = new CSSLLC_QMX_Output_Html_IncludedFiles( $collector );
+function register_qmx_output_html_includedfiles( array $output, QM_Collectors $collectors ) {
+	if ( $collector = QM_Collectors::get( 'qmx-included_files' ) )
+		$output['qmx-included_files'] = new QMX_Output_Html_IncludedFiles( $collector );
 	return $output;
 }

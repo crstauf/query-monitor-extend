@@ -6,9 +6,9 @@ if (!defined('ABSPATH') || !function_exists('add_filter')) {
     exit();
 }
 
-class CSSLLC_QMX_Collector_ImageSizes extends QM_Collector {
+class QMX_Collector_ImageSizes extends QM_Collector {
 
-    public $id = 'image_sizes';
+    public $id = 'qmx-image_sizes';
 
     public function name() {
         return __( 'Image Sizes', 'query-monitor' );
@@ -69,11 +69,11 @@ class CSSLLC_QMX_Collector_ImageSizes extends QM_Collector {
 
 }
 
-function register_cssllc_qmx_collector_imagesizes( array $collectors, QueryMonitor $qm ) {
-	$collectors['image_sizes'] = new CSSLLC_QMX_Collector_ImageSizes;
+function register_qmx_collector_imagesizes( array $collectors, QueryMonitor $qm ) {
+	$collectors['qmx-image_sizes'] = new QMX_Collector_ImageSizes;
 	return $collectors;
 }
 
-add_filter( 'qm/collectors', 'register_cssllc_qmx_collector_imagesizes', 10, 2 );
+add_filter( 'qm/collectors', 'register_qmx_collector_imagesizes', 10, 2 );
 
 ?>

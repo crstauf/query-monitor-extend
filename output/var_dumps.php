@@ -6,7 +6,7 @@ if (!defined('ABSPATH') || !function_exists('add_filter')) {
     exit();
 }
 
-class CSSLLC_QMX_Output_Html_VarDumps extends QM_Output_Html {
+class QMX_Output_Html_VarDumps extends QM_Output_Html {
 
 	public function __construct( QM_Collector $collector ) {
 		parent::__construct( $collector );
@@ -45,9 +45,9 @@ class CSSLLC_QMX_Output_Html_VarDumps extends QM_Output_Html {
 
 }
 
-function register_cssllc_qmx_output_html_vardumps( array $output, QM_Collectors $collectors ) {
-	if ( $collector = QM_Collectors::get( 'var_dumps' ) )
-		$output['var_dumps'] = new CSSLLC_QMX_Output_Html_VarDumps( $collector );
+function register_qmx_output_html_vardumps( array $output, QM_Collectors $collectors ) {
+	if ( $collector = QM_Collectors::get( 'qmx-var_dumps' ) )
+		$output['qmx-var_dumps'] = new QMX_Output_Html_VarDumps( $collector );
 	return $output;
 }
 

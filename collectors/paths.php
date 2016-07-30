@@ -6,9 +6,9 @@ if (!defined('ABSPATH') || !function_exists('add_filter')) {
     exit();
 }
 
-class CSSLLC_QMX_Collector_Paths extends QM_Collector {
+class QMX_Collector_Paths extends QM_Collector {
 
-    public $id = 'paths';
+    public $id = 'qmx-paths';
 
     public function name() {
         return __( 'Paths', 'query-monitor' );
@@ -83,11 +83,11 @@ class CSSLLC_QMX_Collector_Paths extends QM_Collector {
 
 }
 
-function register_cssllc_qmx_collector_paths( array $collectors, QueryMonitor $qm ) {
-	$collectors['paths'] = new CSSLLC_QMX_Collector_Paths;
+function register_qmx_collector_paths( array $collectors, QueryMonitor $qm ) {
+	$collectors['qmx-paths'] = new QMX_Collector_Paths;
 	return $collectors;
 }
 
-add_filter( 'qm/collectors', 'register_cssllc_qmx_collector_paths', 10, 2 );
+add_filter( 'qm/collectors', 'register_qmx_collector_paths', 10, 2 );
 
 ?>

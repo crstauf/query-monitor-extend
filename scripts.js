@@ -25,12 +25,12 @@ jQuery(function($) {
 
     });
 
-    $("#qm-included_files table").on('qm-filtered',function(ev,rows) {
+    $("#qm-qmx-included_files table").on('qm-filtered',function(ev,rows) {
         var filesize = 0;
         rows.each(function(row) {
             filesize = filesize + parseInt( $(row).find('td.qmx-includedfiles-filesize').attr('data-qm-sort-value') );
         });
-        $("#qm-includedfiles table.qm-sortable tfoot .qm-items-filesize").text(filesize / 1024 + ' KB');
+        $("#qm-qmx-included_files table.qm-sortable tfoot .qm-items-filesize").text(filesize / 1024 + ' KB');
     });
 
 });

@@ -1,12 +1,12 @@
 .qm-hide-imagesize-origin,
 .qm-hide-includedfilespath,
-#qm-image_sizes .qm-hide-rowspan,
+#qm-qmx-image_sizes .qm-hide-rowspan,
 .qm-hide-includedfilescomponent { display: none !important; }
 
 .qm tbody > tr > td.qm-imagesize-name[rowspan] { background-color: #FFF !important; }
 .qm .qm-num.qm-imagesize-ratio { width: 80px !important; }
 
-#qm-included_files .flex {
+#qm-qmx-included_files .flex {
     display: -ms-flexbox;
     display: -webkit-flex;
     display: flex;
@@ -27,7 +27,7 @@
     align-items: center;
 }
 
-#qm-included_files .flex > span + span { margin-left: 10px; }
+#qm-qmx-included_files .flex > span + span { margin-left: 10px; }
 
 .qmx-includedfiles-filesize { max-width: 160px; min-width: 110px; }
 .qmx-includedfiles-component { max-width: 150px; }

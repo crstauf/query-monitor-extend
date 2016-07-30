@@ -6,7 +6,7 @@ if (!defined('ABSPATH') || !function_exists('add_filter')) {
     exit();
 }
 
-class CSSLLC_QMX_Output_Html_Paths extends QM_Output_Html {
+class QMX_Output_Html_Paths extends QM_Output_Html {
 
 	public function __construct( QM_Collector $collector ) {
 		parent::__construct( $collector );
@@ -82,9 +82,9 @@ class CSSLLC_QMX_Output_Html_Paths extends QM_Output_Html {
 
 }
 
-function register_cssllc_qmx_output_html_paths( array $output, QM_Collectors $collectors ) {
-	if ( $collector = QM_Collectors::get( 'paths' ) )
-		$output['paths'] = new CSSLLC_QMX_Output_Html_Paths( $collector );
+function register_qmx_output_html_paths( array $output, QM_Collectors $collectors ) {
+	if ( $collector = QM_Collectors::get( 'qmx-paths' ) )
+		$output['qmx-paths'] = new QMX_Output_Html_Paths( $collector );
 	return $output;
 }
 

@@ -6,9 +6,9 @@ if (!defined('ABSPATH') || !function_exists('add_filter')) {
     exit();
 }
 
-class CSSLLC_QMX_Collector_Multisite extends QM_Collector {
+class QMX_Collector_Multisite extends QM_Collector {
 
-    public $id = 'multisite';
+    public $id = 'qmx-multisite';
 
     public function name() {
         return __( 'Multisite Constants', 'query-monitor' );
@@ -48,12 +48,12 @@ class CSSLLC_QMX_Collector_Multisite extends QM_Collector {
 
 }
 
-function register_cssllc_qmx_collector_multisite( array $collectors, QueryMonitor $qm ) {
+function register_qmx_collector_multisite( array $collectors, QueryMonitor $qm ) {
     if ( is_multisite() )
-	   $collectors['multisite'] = new CSSLLC_QMX_Collector_Multisite;
+	   $collectors['qmx-multisite'] = new QMX_Collector_Multisite;
 	return $collectors;
 }
 
-add_filter( 'qm/collectors', 'register_cssllc_qmx_collector_multisite', 10, 2 );
+add_filter( 'qm/collectors', 'register_qmx_collector_multisite', 10, 2 );
 
 ?>

@@ -6,7 +6,7 @@ if (!defined('ABSPATH') || !function_exists('add_filter')) {
     exit();
 }
 
-class CSSLLC_QMX_Output_Html_ImageSizes extends QM_Output_Html {
+class QMX_Output_Html_ImageSizes extends QM_Output_Html {
 
 	public function __construct( QM_Collector $collector ) {
 		parent::__construct( $collector );
@@ -117,9 +117,9 @@ class CSSLLC_QMX_Output_Html_ImageSizes extends QM_Output_Html {
 
 }
 
-function register_cssllc_qmx_output_html_imagesizes( array $output, QM_Collectors $collectors ) {
-	if ( $collector = QM_Collectors::get( 'image_sizes' ) )
-		$output['image_sizes'] = new CSSLLC_QMX_Output_Html_ImageSizes( $collector );
+function register_qmx_output_html_imagesizes( array $output, QM_Collectors $collectors ) {
+	if ( $collector = QM_Collectors::get( 'qmx-image_sizes' ) )
+		$output['qmx-image_sizes'] = new QMX_Output_Html_ImageSizes( $collector );
 	return $output;
 }
 

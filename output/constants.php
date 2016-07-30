@@ -6,7 +6,7 @@ if (!defined('ABSPATH') || !function_exists('add_filter')) {
 	exit();
 }
 
-class CSSLLC_QMX_Output_Html_Constants extends QM_Output_Html {
+class QMX_Output_Html_Constants extends QM_Output_Html {
 
 	public function __construct( QM_Collector $collector ) {
 		parent::__construct( $collector );
@@ -88,9 +88,9 @@ class CSSLLC_QMX_Output_Html_Constants extends QM_Output_Html {
 
 }
 
-function register_cssllc_qmx_output_html_constants( array $output, QM_Collectors $collectors ) {
-	if ( $collector = QM_Collectors::get( 'constants' ) )
-		$output['constants'] = new CSSLLC_QMX_Output_Html_Constants( $collector );
+function register_qmx_output_html_constants( array $output, QM_Collectors $collectors ) {
+	if ( $collector = QM_Collectors::get( 'qmx-constants' ) )
+		$output['qmx-constants'] = new QMX_Output_Html_Constants( $collector );
 	return $output;
 }
 
