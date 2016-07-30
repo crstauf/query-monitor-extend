@@ -84,7 +84,9 @@ class CSSLLC_QMX_Output_Html_IncludedFiles extends QM_Output_Html {
 			echo '<table cellspacing="0" class="qm-sortable">' .
 				'<thead>' .
 					'<tr>' .
-						'<th colspan="4">Included Files</th>' .
+						'<th colspan="4">Included Files' .
+                            '<label class="qmx-filter-hide" style="float: right;"><input type="checkbox" data-filter="includedfilescomponent" value="Core" /> Hide Core</label>' .
+                        '</th>' .
 					'</tr>' .
 					'<tr>' .
                         '<th class="qm-num qm-sorted-asc"><br />' . $this->build_sorter() . '</th>' .
