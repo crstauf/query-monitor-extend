@@ -236,7 +236,7 @@ class QMX_Output_Html_IncludedFiles extends QM_Output_Html {
                                                         : ''
                                                     )
                                                 : '<abbr title="' . esc_attr( $path ) . '">' .
-                                                    './' . esc_html( str_replace( ABSPATH, '', $path) ) .
+                                                    esc_html( false === $this->get_relative_path( $path ) ? $path : './' . $this->get_relative_path( $path ) ) .
                                                 '</abbr>'
                                             ) .
                                         '</td>' .
@@ -274,6 +274,13 @@ class QMX_Output_Html_IncludedFiles extends QM_Output_Html {
 
             '</table>' .
         '</div>';
+    }
+
+    public function get_relative_path( $path ) {
+        if ( false === stripos( $path, ABSPATH ) )
+            return false;
+
+        return str_replace( ABSPATH, '', $path );
     }
 
     public function admin_title( array $title ) {
