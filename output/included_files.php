@@ -115,8 +115,8 @@ class CSSLLC_QMX_Output_Html_IncludedFiles extends QM_Output_Html {
                     if ( array_key_exists( 'errors', $data ) && is_array( $data['errors'] ) && count( $data['errors'] ) )
                         foreach ($data['errors'] as $path => $details) {
                             echo '<tr data-qm-includedfilespath="' . esc_attr( implode( ' ', array_keys( $details['selectors'] ) ) ) . '" data-qm-includedfilescomponent="' . esc_attr( $details['component'] ) . '" class="qm-warn">' .
-                                '<td class="qm-num" data-qmsortweight="0"> </td>' .
-                                '<td data-qmsortweight="' . esc_attr( str_replace( '.php', '', strtolower( $path ) ) ) . '">' .
+                                '<td class="qm-num" data-qm-sort-value="0"> </td>' .
+                                '<td data-qm-sort-value="' . esc_attr( str_replace( '.php', '', strtolower( $path ) ) ) . '">' .
                                     esc_html( $path ) .  '<br />' .
                                     '<span class="qm-info">&nbsp;' . esc_html( $details['including'] . ':' . $details['including_line'] ) .
                                 '</td>' .
@@ -131,13 +131,13 @@ class CSSLLC_QMX_Output_Html_IncludedFiles extends QM_Output_Html {
                         $count++;
                         $filesize = $filesize + $details['filesize'];
                         echo '<tr data-qm-includedfilespath="' . esc_attr( implode( ' ', array_keys( $details['selectors'] ) ) ) . '" data-qm-includedfilescomponent="' . esc_attr( $details['component'] ) . '">' .
-                            '<td class="qm-num" data-qmsortweight="' . esc_attr( $count ) . '">' . esc_html( $count ) . '</td>' .
-                            '<td data-qmsortweight="' . esc_attr( str_replace( '.php', '', strtolower( $path ) ) ) . '">' .
+                            '<td class="qm-num">' . esc_html( $count ) . '</td>' .
+                            '<td data-qm-sort-value="' . esc_attr( str_replace( '.php', '', strtolower( $path ) ) ) . '">' .
                                 ( strlen( trailingslashit( dirname( $path ) ) ) < strlen( ABSPATH )
                                 ? esc_html( $path )
                                 : '<abbr title="' . esc_attr( $path ) . '">./' . esc_html( str_replace( ABSPATH, '', $path) ) . '</abbr>') .
                             '</td>' .
-                            '<td class="qm-num qmx-includedfiles-filesize" data-qmsortweight="' . esc_attr( $details['filesize'] ) . '">' . esc_html( number_format_i18n( $details['filesize'] / 1024, 2 ) ) . ' KB</td>' .
+                            '<td class="qm-num qmx-includedfiles-filesize" data-qm-sort-value="' . esc_attr( $details['filesize'] ) . '">' . esc_html( number_format_i18n( $details['filesize'] / 1024, 2 ) ) . ' KB</td>' .
                             '<td>' . esc_html( $details['component'] ) . '</td>' .
                         '</tr>';
 					}
