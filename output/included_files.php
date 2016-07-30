@@ -154,23 +154,8 @@ class CSSLLC_QMX_Output_Html_IncludedFiles extends QM_Output_Html {
                     '</tr>' .
 				'</tfoot>' .
 
-            '</table>';
-
-            wp_enqueue_script('jquery');
-            ?>
-
-            <script type="text/javascript">
-                jQuery("#qm-included_files table").on('qm-filtered',function(ev,rows) {
-                    var filesize = 0;
-                    rows.each(function(row) {
-                        filesize = filesize + parseInt( jQuery(row).find('td.qmx-includedfiles-filesize').attr('data-qmsortweight') );
-                    });
-                    jQuery("#qm-includedfiles table.qm-sortable tfoot .qm-items-filesize").text(filesize / 1024 + ' KB');
-                });
-            </script>
-
-            <?php
-        echo '</div>';
+            '</table>' .
+        '</div>';
     }
 
     public function admin_title( array $title ) {
