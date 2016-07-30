@@ -76,7 +76,7 @@ class cssllc_query_monitor_extend {
 				'missing',
 				'broken',
 			) as $error_type)
-				if (isset($data[$error_type]))
+				if (array_key_exists($error_type,$data) && is_array($data[$error_type]) && count($data[$error_type]))
 					foreach (array(
 						'scripts',
 						'styles',
@@ -94,7 +94,7 @@ class cssllc_query_monitor_extend {
 		) as $collector_name)
 			if ($collector = QM_Collectors::get( $collector_name )) {
 				$data = $collector->get_data();
-				if (isset($data['errors']))
+				if (array_key_exists('errors',$data))
 					foreach ($data['errors'] as $type => $object) {
 						if (!isset($$type)) $$type = count($data['errors'][$type]);
 						else $$type += count($data['errors'][$type]);
