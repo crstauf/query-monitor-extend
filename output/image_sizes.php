@@ -106,10 +106,21 @@ class QMX_Output_Html_ImageSizes extends QM_Output_Html {
             '<td class="qm-num qm-imagesize-height' . (false === $details['crop'] ? ' qm-info' : '') . '">' .
                 esc_html($details['height']) .
             '</td>' .
-            '<td class="qm-num qm-imagesize-ratio" data-qm-sort-value="' . sprintf( "%01.020f", $ratio_number ) . '">' .
-                '<abbr title="' . $ratio_number . '">' .
-                    esc_html(($details['width'] / $gcd) . ':' . ($details['height'] / $gcd)) .
-                '</abbr>' .
+            '<td ' .
+                'title="' .
+                    $details['width'] . ' / ' . $details['height'] . ' = ' .
+                    ( $details['width'] / $gcd ) . ' / ' . ( $details['height'] / $gcd ) . ' = ' .
+                    $ratio_number .
+                '" ' .
+                'data-qm-sort-value="' . sprintf( "%01.020f", $ratio_number ) . '" ' .
+                'class="qm-num qm-imagesize-ratio"' .
+            '>' .
+                (
+                    ( $details['width'] / $gcd ) . ':' . ( $details['height'] / $gcd )
+                        !== $details['width'] . ':' . $details['height']
+                    ? esc_html( ( $details['width'] / $gcd ) . ':' . ( $details['height'] / $gcd ) )
+                    : '&mdash;'
+                ) .
             '</td>' .
             '<td class="qm-ltr">' . esc_html($details['origin']) . '</td>';
     }
