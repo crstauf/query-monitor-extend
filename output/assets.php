@@ -49,7 +49,7 @@ class CSSLLC_QMX_Output_Html_Assets extends QM_Output_Html_Assets {
 
 			echo '<tr>';
 			echo '<th colspan="2">' . esc_html( $type_label ) . '</th>';
-            echo '<th>' . esc_html__( 'Filesize', 'query-monitor' ) . '</th>';
+            echo '<th class="qm-num">' . esc_html__( 'Filesize', 'query-monitor' ) . '</th>';
 			echo '<th>' . esc_html__( 'Dependencies', 'query-monitor' ) . '</th>';
 			echo '<th>' . esc_html__( 'Dependents', 'query-monitor' ) . '</th>';
 			echo '<th>' . esc_html__( 'Version', 'query-monitor' ) . '</th>';
@@ -132,7 +132,7 @@ class CSSLLC_QMX_Output_Html_Assets extends QM_Output_Html_Assets {
 			echo ( false === $this->get_relative_src( $src ) ? esc_html( $src ) : esc_html( $this->get_relative_src( $src ) ) );
 		}
 		echo '</span></td>';
-        echo '<td>' . $this->get_filesize( $src ) . '</td>';
+        echo '<td class="qm-num">' . $this->get_filesize( $src ) . '</td>';
 		echo '<td class="qm-nowrap qm-highlighter" data-qm-highlight="' . esc_attr( implode( ' ', $highlight_deps ) ) . '">' . implode( '<br>', array_map( 'esc_html', $deps ) ) . '</td>';
 		echo '<td class="qm-nowrap qm-highlighter" data-qm-highlight="' . esc_attr( implode( ' ', $highlight_dependents ) ) . '">' . implode( '<br>', array_map( 'esc_html', $dependents ) ) . '</td>';
 		echo '<td>' . esc_html( $ver ) . '</td>';
