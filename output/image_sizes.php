@@ -66,15 +66,8 @@ class CSSLLC_QMX_Output_Html_ImageSizes extends QM_Output_Html {
                                 'data-qm-imagesize-origin="' . esc_attr(implode(' ',array_keys($origins))) . '" ' .
                                 'data-qm-subject="' . esc_attr($size['origin']) . '"' .
                             '>' .
-                                '<td class="qm-num">' . $size['num'] . '</td>' .
-                                (1 === count($sizes) || 0 === $i
-                                    ? '<td class="qm-ltr qm-imagesize-name"' .
-                                        (1 !== count($sizes)
-                                            ? ' rowspan="' . count($sizes) . '"'
-                                            : '') .
-                                        '>' . esc_html($name) . '</td>'
-                                    : '<td class="qm-ltr qm-imagesize-name qm-hide-rowspan">' . esc_html($name) . '</td>'
-                                ) .
+                                '<td class="qm-num">' . esc_html( $size['num'] ) . '</td>' .
+                                '<td class="qm-ltr qm-imagesize-name">' . esc_html($name) . '</td>' .
                                 self::output_size_details($size) .
                             '</tr>';
                         }
@@ -86,11 +79,8 @@ class CSSLLC_QMX_Output_Html_ImageSizes extends QM_Output_Html {
 					'<tr><td colspan="6">Total Image Sizes: ' . $count . '</td></tr>' .
 				'</tfoot>' .
 
-            '</table>';
-
-            self::output_styling_scripting();
-
-        echo '</div>';
+            '</table>' .
+        '</div>';
 
 	}
 
@@ -123,47 +113,6 @@ class CSSLLC_QMX_Output_Html_ImageSizes extends QM_Output_Html {
                 '</abbr>' .
             '</td>' .
             '<td class="qm-ltr">' . esc_html($details['origin']) . '</td>';
-    }
-
-    protected static function output_styling_scripting() {
-        wp_enqueue_script('jquery');
-        ?>
-
-        <script type="text/javascript">
-            jQuery(function($) {
-                $("#qm-image_sizes table.qm-sortable").on('qm-sort-click',function() {
-                    $(this).addClass('has-events');
-                    $(this).find('td[rowspan]').removeAttr('rowspan');
-                    $(this).find('td.qm-hide-rowspan').removeClass('qm-hide-rowspan');
-                });
-                $("#qm-image_sizes table.qm-sortable .qm-sort").on('click',function() {
-                    if ($(this).closest('table').hasClass('has-events')) return;
-                    $(this).closest('table').trigger('qm-sort-click');
-                });
-                $("#qm-image_sizes table.qm-sortable").on('qm-sort-tbody',function(ev,tbody) {
-                    var rows = $(tbody).find('tr');
-                    for (var r = 0; r < rows.length; r++) {
-                        var row = $(rows[r]);
-                        var id = row.attr('data-id');
-                        while (1) {
-                            r++;
-                            if ($(rows[r]).attr('data-id') === id) {
-                                if ('undefined' === typeof row.attr('rowspan'))
-                                    row.find('td.qm-imagesize-name').attr('rowspan',2);
-                                else
-                                    row.find('td.qm-imagesize-name').attr('rowspan',parseInt(row.find('td.qm-imagesize-name').attr('rowspan')) + 1);
-                                $(rows[r]).find('td.qm-imagesize-name').addClass('qm-hide-rowspan');
-                            } else {
-                                r--;
-                                break;
-                            }
-                        }
-                    }
-                });
-            });
-        </script>
-
-        <?php
     }
 
 }
