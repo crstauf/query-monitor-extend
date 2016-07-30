@@ -298,8 +298,6 @@ class QMX_Output_Html_IncludedFiles extends QM_Output_Html {
     public function admin_menu( array $menu ) {
 
         $add = array(
-            'id'    => 'qm-included_files',
-            'href'  => '#qm-included_files',
             'title' => sprintf(
                 __( 'Included files (%s%s)', 'query-monitor' ),
                 (
@@ -309,7 +307,7 @@ class QMX_Output_Html_IncludedFiles extends QM_Output_Html {
                 ),
                 (
                     0 !== count( $this->data['errors'] )
-                    ? ' / ' . count( $this->data['errors'] )
+                    ? '/' . count( $this->data['errors'] )
                     : ''
                 )
             )

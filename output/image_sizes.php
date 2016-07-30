@@ -106,7 +106,6 @@ class QMX_Output_Html_ImageSizes extends QM_Output_Html {
             '<td class="qm-num qm-imagesize-height' . (false === $details['crop'] ? ' qm-info' : '') . '">' .
                 esc_html($details['height']) .
             '</td>' .
-                '<span style="display: none;">' . number_format($ratio_number,12,'.','') . '</span>' .
             '<td class="qm-num qm-imagesize-ratio" data-qm-sort-value="' . sprintf( "%01.020f", $ratio_number ) . '">' .
                 '<abbr title="' . $ratio_number . '">' .
                     esc_html(($details['width'] / $gcd) . ':' . ($details['height'] / $gcd)) .
