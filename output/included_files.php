@@ -221,10 +221,10 @@ class QMX_Output_Html_IncludedFiles extends QM_Output_Html {
                                         'data-qm-includedfilescomponent="' . esc_attr( $details['component'] ) . '"' .
                                         ( 'errors' === $status ? ' class="qm-warn"' : '' ) .
                                     '>' .
-                                        '<td class="qm-num" data-qm-sort-value="' . ( 'errors' === $status ? 0 : $count ) . '">' .
+                                        '<td class="qm-num" data-qm-sort-weight="' . ( 'errors' === $status ? 0 : $count ) . '">' .
                                             ( 'errors' === $status ? ' ' : $count ) .
                                         '</td>' .
-                                        '<td data-qm-sort-value="' . esc_attr( str_replace( '.php', '', strtolower( $path ) ) ) . '">' .
+                                        '<td data-qm-sort-weight="' . esc_attr( str_replace( '.php', '', strtolower( $path ) ) ) . '">' .
                                             (
                                                 'errors' === $status
                                                     || strlen( trailingslashit( dirname( $path ) ) ) < strlen( ABSPATH )
@@ -242,7 +242,7 @@ class QMX_Output_Html_IncludedFiles extends QM_Output_Html {
                                         '</td>' .
                                         '<td ' .
                                             'class="qm-num qmx-includedfiles-filesize" ' .
-                                            'data-qm-sort-value="' .
+                                            'data-qm-sort-weight="' .
                                                 (
                                                     'errors' === $status
                                                     ? '0'
@@ -286,7 +286,9 @@ class QMX_Output_Html_IncludedFiles extends QM_Output_Html {
                 : 0
             ),
             (
-                0 !== count( $this->data['errors'] )
+                array_key_exists( 'errors', $this->data )
+                    && is_array( $this->data['errors'] )
+                    && 0 !== count( $this->data['errors'] )
                 ? '/' . count( $this->data['errors'] )
                 : ''
             )
@@ -306,14 +308,20 @@ class QMX_Output_Html_IncludedFiles extends QM_Output_Html {
                     : 0
                 ),
                 (
-                    0 !== count( $this->data['errors'] )
+                    array_key_exists( 'errors', $this->data )
+                        && is_array( $this->data['errors'] )
+                        && 0 !== count( $this->data['errors'] )
                     ? '/' . count( $this->data['errors'] )
                     : ''
                 )
             )
         );
 
-        if ( 0 !== count( $this->data['errors'] ) )
+        if (
+            array_key_exists( 'errors', $this->data )
+            && is_array( $this->data['errors'] )
+            && 0 !== count( $this->data['errors'] )
+        )
             $add['meta']['classname'] = 'qm-alert';
 
         $menu[] = $this->menu( $add );

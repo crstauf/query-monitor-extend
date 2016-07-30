@@ -112,7 +112,7 @@ class QMX_Output_Html_ImageSizes extends QM_Output_Html {
                     ( $details['width'] / $gcd ) . ' / ' . ( $details['height'] / $gcd ) . ' = ' .
                     $ratio_number .
                 '" ' .
-                'data-qm-sort-value="' . sprintf( "%01.020f", $ratio_number ) . '" ' .
+                'data-qm-sort-weight="' . esc_attr( $ratio_number ) . '" ' .
                 'class="qm-num qm-imagesize-ratio"' .
             '>' .
                 (
