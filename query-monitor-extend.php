@@ -56,7 +56,9 @@ class cssllc_query_monitor_extend {
 	}
 
 	public static function adminbar_menu_bg( $classes ) {
-		if (2 > count($classes)) return array_merge($classes,array('query-monitor-extend'));
+		if (2 > count($classes))
+			return array_merge($classes,array('query-monitor-extend'));
+
 		$classes[] = 'query-monitor-extend';
 
 		$num = 0;

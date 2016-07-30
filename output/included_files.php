@@ -231,7 +231,7 @@ class QMX_Output_Html_IncludedFiles extends QM_Output_Html {
                                                 ? esc_html( $path ) .
                                                     (
                                                         array_key_exists( 'including', $details)
-                                                        && array_key_exists( 'including_line', $details )
+                                                            && array_key_exists( 'including_line', $details )
                                                         ? '<br /><span class="qm-info">&nbsp;' . esc_html( $details['including'] . ':' . $details['including_line'] )
                                                         : ''
                                                     )
