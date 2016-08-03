@@ -191,13 +191,13 @@ class QMX_Output_Html_IncludedFiles extends QM_Output_Html {
         							) .
                                 '</span>' .
                                 '<span>' .
-                                    $this->build_filter( 'includedfilespath', array_keys( $selectors ) ) .
+                                    $this->build_filter( 'includedfilespath', array_keys( $selectors ), '' ) .
                                 '</span>' .
                             '</span>' .
                         '</th>' .
 						'<th class="qm-num qmx-includedfiles-filesize">Filesize' . $this->build_sorter() . '</th>' .
 						'<th class="qmx-includedfiles-component">Component' .
-                            $this->build_filter( 'includedfilescomponent', array_keys( $this->data['components'] ) ) .
+                            $this->build_filter( 'includedfilescomponent', array_keys( $this->data['components'] ), '' ) .
 						'</th>' .
 					'</tr>' .
 				'</thead>' .
