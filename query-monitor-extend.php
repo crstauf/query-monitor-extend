@@ -38,7 +38,9 @@ class cssllc_query_monitor_extend {
 		add_filter( 'qm/output/menu_class', array( __CLASS__, 'adminbar_menu_bg' ), 9999999 );
 
 		add_filter( 'qm/outputter/html', 'unregister_qm_output_html_assets', 79 );
+		add_filter( 'qm/outputter/html', 'unregister_qm_output_html_php_errors', 109 );
 		add_filter( 'qm/outputter/html', 'register_qmx_output_html_assets', 80, 2 );
+		add_filter( 'qm/outputter/html', 'register_qmx_output_html_php_errors', 110, 2 );
 		add_filter( 'qm/outputter/html', 'register_qmx_output_html_includedfiles', 119, 2 );
 		add_filter( 'qm/outputter/html', 'register_qmx_output_html_constants', 150, 2 );
 		add_filter( 'qm/outputter/html', 'register_qmx_output_html_paths', 151, 2 );
