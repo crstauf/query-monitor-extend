@@ -31,6 +31,12 @@ class cssllc_query_monitor_extend {
 				include $file;
 
 		add_filter( 'qm/outputter/html', array( __CLASS__, 'include_outputters' ), 0 );
+		add_filter( 'qm/collect/conditionals', array( __CLASS__, 'add_conditionals' ), 9999999 );
+
+		add_action( ( is_admin() ? 'admin' : 'wp' ) . '_enqueue_scripts', array( __CLASS__, 'action_enqueue_scripts' ) );
+
+		add_filter( 'qm/output/menu_class', array( __CLASS__, 'adminbar_menu_bg' ), 9999999 );
+
 		add_filter( 'qm/outputter/html', 'unregister_qm_output_html_assets', 79 );
 		add_filter( 'qm/outputter/html', 'register_qmx_output_html_assets', 80, 2 );
 		add_filter( 'qm/outputter/html', 'register_qmx_output_html_includedfiles', 119, 2 );
@@ -39,12 +45,6 @@ class cssllc_query_monitor_extend {
 		add_filter( 'qm/outputter/html', 'register_qmx_output_html_multisite', 152, 2 );
 		add_filter( 'qm/outputter/html', 'register_qmx_output_html_imagesizes', 153, 2 );
 		add_filter( 'qm/outputter/html', 'register_qmx_output_html_vardumps', 200, 2 );
-
-		add_filter('qm/collect/conditionals', array( __CLASS__, 'add_conditionals' ), 9999999 );
-
-		add_action( ( is_admin() ? 'admin' : 'wp' ) . '_enqueue_scripts', array( __CLASS__, 'action_enqueue_scripts' ) );
-
-		add_filter( 'qm/output/menu_class', array( __CLASS__, 'adminbar_menu_bg' ), 9999999 );
 	}
 
 	public static function include_outputters( $output ) {
@@ -56,10 +56,10 @@ class cssllc_query_monitor_extend {
 	}
 
 	public static function adminbar_menu_bg( $classes ) {
-		if (2 > count($classes))
-			return array_merge($classes,array('query-monitor-extend'));
+		if ( in_array( 'qm-all-clear', $classes ) )
+			return array_merge($classes,array('qmx'));
 
-		$classes[] = 'query-monitor-extend';
+		$classes[] = 'qmx';
 
 		$num = 0;
 
@@ -90,28 +90,29 @@ class cssllc_query_monitor_extend {
 						}
 		}
 
-		foreach (array(
+		foreach ( array(
 			'php_errors',
 			'http',
-		) as $collector_name)
-			if ($collector = QM_Collectors::get( $collector_name )) {
+		) as $collector_name )
+			if ( $collector = QM_Collectors::get( $collector_name ) ) {
 				$data = $collector->get_data();
-				if (array_key_exists('errors',$data))
-					foreach ($data['errors'] as $type => $object) {
-						if (!isset($$type)) $$type = count($data['errors'][$type]);
-						else $$type += count($data['errors'][$type]);
-						$num += count($data['errors'][$type]);
+				if ( is_array( $data ) && array_key_exists( 'errors', $data ) )
+					foreach ( $data['errors'] as $type => $objects ) {
+						$count_type = str_replace( '-', '_', $type );
+						if ( !isset( $$count_type ) ) $$count_type = count( $objects );
+						else $$count_type += count( $objects );
+						$num += count( $objects );
 					}
 			}
 
 		$colors = array(
-			'warning'		=> '#c00',
-			'error'			=> '#c00',
-			'alert'			=> '#f60',
-			'notice'		=> '#740',
-			'expensive'		=> '#b60',
-			'strict'		=> '#3c3c3c',
-			'deprecated'	=> '#3c3c3c',
+			'warning'               => '#c00',
+			'error'                 => '#c00',
+			'alert'                 => '#f60',
+			'notice'                => '#740',
+			'expensive'             => '#b60',
+			'strict'                => '#3c3c3c',
+			'deprecated'            => '#3c3c3c',
 		);
 		$styles = array(
 			'-ms-linear-gradient'		=> array('left'),
@@ -123,7 +124,7 @@ class cssllc_query_monitor_extend {
 		);
 
 		$lasts = array();
-		foreach ($styles as $browser => $style)
+		foreach ( $styles as $browser => $style )
 			$lasts[$browser] = 0;
 
 		foreach ($colors as $class => $color) {
@@ -145,10 +146,14 @@ class cssllc_query_monitor_extend {
 			}
 		}
 
-		echo '<style type="text/css">#wpadminbar li#wp-admin-bar-query-monitor {';
-		foreach ($styles as $browser => $style)
-			echo 'background-image: ' . $browser . '(' . implode(', ',$style) . ') !important;';
-		echo '}</style>';
+		echo '<style type="text/css">' .
+			'#wpadminbar li#wp-admin-bar-query-monitor.qmx {';
+
+			foreach ($styles as $browser => $style)
+				echo 'background-image: ' . $browser . '(' . implode(', ',$style) . ') !important;';
+
+			echo '}' .
+		'</style>';
 
 		return $classes;
 	}
