@@ -25,10 +25,15 @@ class cssllc_query_monitor_extend {
 
 	public static $var_dumps = array();
 
+	private static $highlight_suppresseds = false;
+
 	function __construct() {
 		if (class_exists('QM_Collector'))
 			foreach ( glob( trailingslashit( dirname( __FILE__ ) ) . 'collectors/*.php' ) as $file )
 				include $file;
+
+		if ( defined( 'QMX_HIGHLIGHT_SUPPRESSEDS' ) && QMX_HIGHLIGHT_SUPPRESSEDS )
+			self::$highlight_suppresseds = true;
 
 		add_filter( 'qm/outputter/html', array( __CLASS__, 'include_outputters' ), 0 );
 		add_filter( 'qm/collect/conditionals', array( __CLASS__, 'add_conditionals' ), 9999999 );
@@ -62,6 +67,8 @@ class cssllc_query_monitor_extend {
 			return array_merge($classes,array('qmx'));
 
 		$classes[] = 'qmx';
+		if ( self::$highlight_suppresseds )
+			$classes[] = 'qmx-highlight-suppresseds';
 
 		$num = 0;
 
@@ -110,11 +117,15 @@ class cssllc_query_monitor_extend {
 		$colors = array(
 			'warning'               => '#c00',
 			'error'                 => '#c00',
+			'warning_suppressed'    => '#c00',
+			'notice_suppressed'     => '#740',
 			'alert'                 => '#f60',
 			'notice'                => '#740',
 			'expensive'             => '#b60',
 			'strict'                => '#3c3c3c',
+			'strict_suppressed'     => '#3c3c3c',
 			'deprecated'            => '#3c3c3c',
+			'deprecated_suppressed' => '#3c3c3c',
 		);
 		$styles = array(
 			'-ms-linear-gradient'		=> array('left'),
@@ -129,11 +140,18 @@ class cssllc_query_monitor_extend {
 		foreach ( $styles as $browser => $style )
 			$lasts[$browser] = 0;
 
-		foreach ($colors as $class => $color) {
-			if (in_array('qm-' . $class,$classes)) {
-				$i = array_search($class,$classes);
-				foreach ($styles as $browser => $style) {
-					if (!isset($$class)) continue;
+		foreach ( $colors as $class => $color ) {
+			if (
+				isset( $$class )
+				&& (
+					in_array( 'qm-' . $class, $classes )
+					|| (
+						self::$highlight_suppresseds
+						&& false !== stripos( $class, '_suppressed' )
+					)
+				)
+			)
+				foreach ( $styles as $browser => $style ) {
 					$pos = $$class / $num > 0.03 ? $$class / $num : 0.03;
 					if ('-webkit-gradient' == $browser) {
 						$style[] = 'color-stop(' . $lasts[$browser] . ', ' . $color . ')';
@@ -145,7 +163,6 @@ class cssllc_query_monitor_extend {
 					$lasts[$browser] = $$class / $num;
 					$styles[$browser] = $style;
 				}
-			}
 		}
 
 		echo '<style type="text/css">' .
