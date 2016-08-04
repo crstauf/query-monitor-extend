@@ -91,6 +91,7 @@ class QMX_Collector_Constants extends QM_Collector {
             'QM_HIDE_SELF',
             'QM_SHOW_ALL_HOOKS',
             'QM_HIDE_CORE_HOOKS',
+            'QMX_HIDE_INCLUDED_CORE_FILES',
         )));
 
         $this->data['constants'] = $constants;

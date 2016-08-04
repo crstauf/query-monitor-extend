@@ -15,7 +15,7 @@ class QMX_Output_Html_IncludedFiles extends QM_Output_Html {
     }
 
     public function hide_core_files() {
-        return defined( 'QMX_HIDE_CORE_FILES' ) && QMX_HIDE_CORE_FILES;
+        return defined( 'QMX_HIDE_INCLUDED_CORE_FILES' ) && QMX_HIDE_INCLUDED_CORE_FILES;
     }
 
     public function collect_data() {
