@@ -81,6 +81,39 @@ class QMX_Output_Html_Assets extends QM_Output_Html_Assets {
 
 	}
 
+	protected function dependency_rows( array $handles, WP_Dependencies $dependencies, $label, $type ) {
+
+		$first = true;
+
+		if ( empty( $handles ) ) {
+			echo '<tr>';
+			echo '<td class="qm-nowrap">' . esc_html( $label ) . '</td>';
+			echo '<td colspan="6"><em>' . esc_html__( 'none', 'query-monitor' ) . '</em></td>';
+			echo '</tr>';
+			return;
+		}
+
+		foreach ( $handles as $handle ) {
+
+			if ( in_array( $handle, $dependencies->done ) ) {
+				echo '<tr data-qm-subject="' . esc_attr( $type . '-' . $handle ) . '">';
+			} else {
+				echo '<tr data-qm-subject="' . esc_attr( $type . '-' . $handle ) . '" class="qm-warn">';
+			}
+
+			if ( $first ) {
+				$rowspan = count( $handles );
+				echo '<th rowspan="' . esc_attr( $rowspan ) . '" class="qm-nowrap">' . esc_html( $label ) . '</th>';
+			}
+
+			$this->dependency_row( $dependencies->query( $handle ), $dependencies, $type );
+
+			echo '</tr>';
+			$first = false;
+		}
+
+	}
+
     protected function dependency_row( _WP_Dependency $dependency, WP_Dependencies $dependencies, $type ) {
 
 		if ( empty( $dependency->ver ) ) {
