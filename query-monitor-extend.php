@@ -41,7 +41,7 @@ class cssllc_query_monitor_extend {
 
 		add_action( ( is_admin() ? 'admin' : 'wp' ) . '_enqueue_scripts', array( __CLASS__, 'action_enqueue_scripts' ) );
 
-		add_filter( 'qm/output/menu_class', array( __CLASS__, 'adminbar_menu_bg' ), 9999999 );
+		add_filter( 'qm/output/menu_class/final', array( __CLASS__, 'filter_qm_output_menu_class_final' ), 9999999 );
 
 		add_filter( 'qm/outputter/html', 'unregister_qm_output_html_assets', 79 );
 		add_filter( 'qm/outputter/html', 'unregister_qm_output_html_php_errors', 109 );
@@ -63,9 +63,9 @@ class cssllc_query_monitor_extend {
 		return $output;
 	}
 
-	public static function adminbar_menu_bg( $classes ) {
+	public static function filter_qm_output_menu_class_final( $classes ) {
 		if ( in_array( 'qm-all-clear', $classes ) )
-			return array_merge($classes,array('qmx'));
+			return array_merge( $classes, array( 'qmx' ) );
 
 		$classes[] = 'qmx';
 		if ( self::$highlight_suppresseds )
