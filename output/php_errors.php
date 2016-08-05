@@ -1,5 +1,6 @@
 <?php
 
+/* based on QM v2.12.0 */
 class QMX_Output_Html_PHP_Errors extends QM_Output_Html_PHP_Errors {
 
     public function output() {

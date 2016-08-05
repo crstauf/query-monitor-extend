@@ -6,6 +6,7 @@ if (!defined('ABSPATH') || !function_exists('add_filter')) {
 	exit();
 }
 
+/* based on QM v2.12.0 */
 class QMX_Output_Html_Assets extends QM_Output_Html_Assets {
 
     public function output() {
