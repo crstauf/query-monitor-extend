@@ -37,6 +37,7 @@ class cssllc_query_monitor_extend {
 
 		add_filter( 'qm/outputter/html', array( __CLASS__, 'include_outputters' ), 0 );
 		add_filter( 'qm/collect/conditionals', array( __CLASS__, 'add_conditionals' ), 9999999 );
+		add_filter( 'qmx/collect/constants', array( __CLASS__, 'filter_qmx_collect_constants' ) );
 
 		add_action( ( is_admin() ? 'admin' : 'wp' ) . '_enqueue_scripts', array( __CLASS__, 'action_enqueue_scripts' ) );
 
@@ -178,6 +179,16 @@ class cssllc_query_monitor_extend {
 	}
 
 	public static function add_conditionals($conds) {
+	public static function filter_qmx_collect_constants($constants) {
+		if ( class_exists( 'WooCommerce' ) )
+			$constants = array_merge( $constants, array(
+				'SHOP_IS_ON_FRONT',
+				'WC_TEMPLATE_DEBUG_MODE',
+				'WC_ROUNDING_PRECISION',
+			) );
+		return $constants;
+	}
+
 		$conds = array_merge($conds,array('is_custom_post_type'));
 		if (class_exists('WooCommerce')) {
 			$conds = array_merge($conds,array(
