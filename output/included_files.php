@@ -8,14 +8,19 @@ class QMX_Output_Html_IncludedFiles extends QM_Output_Html {
 
     var $data = array();
 
+    private $hide_qm = false;
+    private $hide_qmx = false;
+    private $hide_core = false;
+
     public function __construct( QM_Collector $collector ) {
         parent::__construct( $collector );
+
+        $this->hide_qm = defined( 'QM_HIDE_SELF' ) and QM_HIDE_SELF;
+        $this->hide_qmx = defined( 'QMX_HIDE_INCLUDED_SELF_FILES' ) and QMX_HIDE_INCLUDED_SELF_FILES;
+        $this->hide_core = defined( 'QMX_HIDE_INCLUDED_CORE_FILES' ) && QMX_HIDE_INCLUDED_CORE_FILES;
+
         add_filter( 'qm/output/menus', array( $this, 'admin_menu' ), 101 );
         add_filter( 'qm/output/title', array( $this, 'admin_title' ), 101 );
-    }
-
-    public function hide_core_files() {
-        return defined( 'QMX_HIDE_INCLUDED_CORE_FILES' ) && QMX_HIDE_INCLUDED_CORE_FILES;
     }
 
     public function collect_data() {
@@ -23,7 +28,14 @@ class QMX_Output_Html_IncludedFiles extends QM_Output_Html {
 
         foreach ( get_included_files() as $file ) {
             $component = QM_Util::get_file_component( $file )->name;
-            if ( $this->hide_core_files() && 'Core' === $component )
+
+            if ( $this->hide_core && 'Core' === $component )
+                continue;
+
+            if ( $this->hide_qm && 'Plugin: query-monitor' === $component )
+                continue;
+
+            if ( $this->hide_qmx && 'Plugin: query-monitor-extend' === $component )
                 continue;
 
             if (array_key_exists($component,$this->data['components']))
@@ -32,7 +44,7 @@ class QMX_Output_Html_IncludedFiles extends QM_Output_Html {
                 $this->data['components'][$component] = 1;
 
             $this->data['files'][$file] = array(
-                'component' => $component,
+                'component' => $component . ' ',
                 'filesize' => filesize( $file ),
                 'selectors' => $this->get_selectors( $file ),
             );
@@ -50,8 +62,6 @@ class QMX_Output_Html_IncludedFiles extends QM_Output_Html {
             foreach ( $php_errors['errors']['warning'] as $error ) {
 
                 $component = QM_Util::get_file_component( $error->file )->name;
-                if ( $this->hide_core_files() && 'Core' === $component )
-                    continue;
 
                 if (false !== stripos( $error->message, 'No such file or directory' ) ) {
                     foreach ( array(
@@ -85,7 +95,7 @@ class QMX_Output_Html_IncludedFiles extends QM_Output_Html {
 
                     $this->data['errors'][$include_file] = array(
                         'filesize'       => filesize( $error->file ),
-                        'component'      => $component,
+                        'component'      => $component . ' ',
                         'including'      => $error->file,
                         'including_line' => $error->line,
                         'selectors'      => $selectors,
@@ -166,17 +176,44 @@ class QMX_Output_Html_IncludedFiles extends QM_Output_Html {
 				'<thead>' .
 					'<tr>' .
 						'<th colspan="4">Included Files' .
-                            '<label class="qmx-filter-hide' .
-                                (
-                                    $this->hide_core_files()
-                                    ? ' qm-info" title="QMX_HIDE_CORE_FILES constant is true'
-                                    : ''
-                                ) . '" style="float: right;"><input type="checkbox" data-filter="includedfilescomponent" value="Core"' .
-                                (
-                                    $this->hide_core_files()
-                                    ? ' checked="checked" disabled="disabled"'
-                                    : ''
-                                ) . ' /> Hide core files</label>' .
+                            '<span class="qmx-filters-hide">' .
+                                '<label class="qmx-filter-hide' .
+                                    (
+                                        $this->hide_core
+                                        ? ' qm-info" title="QMX_HIDE_CORE_FILES constant is true'
+                                        : ''
+                                    ) . '"><input type="checkbox" data-filter="includedfilescomponent" value="Core "' .
+                                    (
+                                        $this->hide_core
+                                        ? ' checked="checked" disabled="disabled"'
+                                        : ''
+                                    ) . ' /> Hide core files' .
+                                '</label>' .
+                                '<label class="qmx-filter-hide' .
+                                    (
+                                        $this->hide_qm
+                                        ? ' qm-info" title="QM_HIDE_SELF constant is true'
+                                        : ''
+                                    ) . '"><input type="checkbox" data-filter="includedfilescomponent" value="Plugin: query-monitor "' .
+                                    (
+                                        $this->hide_qm
+                                        ? ' checked="checked" disabled="disabled"'
+                                        : ''
+                                    ) . ' /> Hide QM files' .
+                                '</label>' .
+                                '<label class="qmx-filter-hide' .
+                                    (
+                                        $this->hide_qmx
+                                        ? ' qm-info" title="QMX_HIDE_INCLUDED_SELF_FILES constant is true'
+                                        : ''
+                                    ) . '"><input type="checkbox" data-filter="includedfilescomponent" value="Plugin: query-monitor-extend "' .
+                                    (
+                                        $this->hide_qmx
+                                        ? ' checked="checked" disabled="disabled"'
+                                        : ''
+                                    ) . ' /> Hide QMX files' .
+                                '</label>' .
+                            '</span>' .
                         '</th>' .
 					'</tr>' .
 					'<tr>' .

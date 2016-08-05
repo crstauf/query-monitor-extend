@@ -92,6 +92,7 @@ class QMX_Collector_Constants extends QM_Collector {
             'QM_SHOW_ALL_HOOKS',
             'QM_HIDE_CORE_HOOKS',
             'QMX_HIDE_INCLUDED_CORE_FILES',
+            'QMX_HIDE_INCLUDED_SELF_FILES',
             'QMX_HIGHLIGHT_SUPPRESSEDS',
         )));
 

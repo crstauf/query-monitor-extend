@@ -8,6 +8,10 @@
 #wp-admin-bar-query-monitor.qmx-highlight-suppresseds #wp-admin-bar-query-monitor-stricts-suppresseds,
 #wp-admin-bar-query-monitor.qmx-highlight-suppresseds #wp-admin-bar-query-monitor-deprecated-suppresseds { background-color: #3c3c3c !important; }
 
+.qm thead .qmx-filters-hide { float: right; }
+
+.qm .qmx-filter-hide + .qmx-filter-hide { margin-left: 15px; }
+
 .qm-hide-imagesize-origin,
 .qm-hide-includedfilespath,
 #qm-qmx-image_sizes .qm-hide-rowspan,
