@@ -36,8 +36,8 @@ class cssllc_query_monitor_extend {
 			self::$highlight_suppresseds = true;
 
 		add_filter( 'qm/outputter/html', array( __CLASS__, 'include_outputters' ), 0 );
-		add_filter( 'qm/collect/conditionals', array( __CLASS__, 'add_conditionals' ), 9999999 );
 		add_filter( 'qmx/collect/constants', array( __CLASS__, 'filter_qmx_collect_constants' ) );
+		add_filter( 'qm/collect/conditionals', array( __CLASS__, 'filter_qm_collect_conditionals' ), 9999999 );
 
 		add_action( ( is_admin() ? 'admin' : 'wp' ) . '_enqueue_scripts', array( __CLASS__, 'action_enqueue_scripts' ) );
 
@@ -178,7 +178,6 @@ class cssllc_query_monitor_extend {
 		return $classes;
 	}
 
-	public static function add_conditionals($conds) {
 	public static function filter_qmx_collect_constants($constants) {
 		if ( class_exists( 'WooCommerce' ) )
 			$constants = array_merge( $constants, array(
@@ -189,6 +188,7 @@ class cssllc_query_monitor_extend {
 		return $constants;
 	}
 
+	public static function filter_qm_collect_conditionals($conds) {
 		$conds = array_merge($conds,array('is_custom_post_type'));
 		if (class_exists('WooCommerce')) {
 			$conds = array_merge($conds,array(
