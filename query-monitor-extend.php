@@ -45,8 +45,10 @@ class cssllc_query_monitor_extend {
 		add_filter( 'qm/output/menu_class/final', array( __CLASS__, 'filter_qm_output_menu_class_final' ), 9999999 );
 
 		add_filter( 'qm/outputter/html', 'unregister_qm_output_html_assets', 79 );
+		add_filter( 'qm/outputter/html', 'unregister_qm_output_html_transients', 99, 2 );
 		add_filter( 'qm/outputter/html', 'unregister_qm_output_html_php_errors', 109 );
 		add_filter( 'qm/outputter/html', 'register_qmx_output_html_assets', 80, 2 );
+		add_filter( 'qm/outputter/html', 'register_qmx_output_html_transients', 100, 2 );
 		add_filter( 'qm/outputter/html', 'register_qmx_output_html_php_errors', 110, 2 );
 		add_filter( 'qm/outputter/html', 'register_qmx_output_html_includedfiles', 119, 2 );
 		add_filter( 'qm/outputter/html', 'register_qmx_output_html_constants', 150, 2 );
