@@ -196,12 +196,20 @@ class cssllc_query_monitor_extend {
 				'is_account_page',
 				'is_cart',
 				'is_checkout',
+				'is_checkout_pay_page',
 				'is_product',
+				'is_product_taxonomy',
 				'is_product_category',
 				'is_product_tag',
 				'is_shop',
 				'is_wc_endpoint_url',
 				'is_woocommerce',
+				'is_view_order_page',
+				'is_edit_account_page',
+				'is_order_received_page',
+				'is_add_payment_method_page',
+				'is_lost_password_page',
+				'is_store_notice_showing',
 			));
 		}
 		$conds = array_unique(apply_filters('qmx/collect/conditionals',$conds));
