@@ -15,7 +15,8 @@ if (!defined('ABSPATH') || !function_exists('add_filter')) {
 }
 
 if (
-	( defined( 'QM_DISABLED' ) && QM_DISABLED )
+	!class_exists( 'QM_Activation' )
+	|| ( defined( 'QM_DISABLED' ) && QM_DISABLED )
 	|| (defined ( 'QMX_DISABLED' ) && QMX_DISABLED )
 )
 	return;
