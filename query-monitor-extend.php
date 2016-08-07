@@ -1,7 +1,7 @@
 <?php
 /*
 Plugin Name: Query Monitor Extend
-Plugin URI:
+Plugin URI: https://github.com/crstauf/query-monitor-extend
 Description: Enhancements and extensions for the awesome Query Monitor plugin by John Blackbourn
 Version: 0.0.3
 Author: Caleb Stauffer
