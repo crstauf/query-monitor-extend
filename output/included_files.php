@@ -15,7 +15,7 @@ class QMX_Output_Html_IncludedFiles extends QM_Output_Html {
     public function __construct( QM_Collector $collector ) {
         parent::__construct( $collector );
 
-        $this->hide_qm = defined( 'QM_HIDE_SELF' ) and QM_HIDE_SELF;
+        $this->hide_qm = defined( 'QMX_HIDE_QM_FILES' ) ? QMX_HIDE_QM_FILES : defined( 'QM_HIDE_SELF' ) and QM_HIDE_SELF;
         $this->hide_qmx = defined( 'QMX_HIDE_INCLUDED_SELF_FILES' ) and QMX_HIDE_INCLUDED_SELF_FILES;
         $this->hide_core = defined( 'QMX_HIDE_INCLUDED_CORE_FILES' ) && QMX_HIDE_INCLUDED_CORE_FILES;
 
