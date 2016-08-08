@@ -44,7 +44,7 @@ class QMX_Output_Html_IncludedFiles extends QM_Output_Html {
                 $this->data['components'][$component] = 1;
 
             $this->data['files'][$file] = array(
-                'component' => $component . ' ',
+                'component' => $component,
                 'filesize' => filesize( $file ),
                 'selectors' => $this->get_selectors( $file ),
             );
@@ -95,7 +95,7 @@ class QMX_Output_Html_IncludedFiles extends QM_Output_Html {
 
                     $this->data['errors'][$include_file] = array(
                         'filesize'       => filesize( $error->file ),
-                        'component'      => $component . ' ',
+                        'component'      => $component,
                         'including'      => $error->file,
                         'including_line' => $error->line,
                         'selectors'      => $selectors,
@@ -176,43 +176,12 @@ class QMX_Output_Html_IncludedFiles extends QM_Output_Html {
 				'<thead>' .
 					'<tr>' .
 						'<th colspan="4">Included Files' .
-                            '<span class="qmx-filters-hide">' .
-                                '<label class="qmx-filter-hide' .
-                                    (
-                                        $this->hide_core
-                                        ? ' qm-info" title="QMX_HIDE_CORE_FILES constant is true'
-                                        : ''
-                                    ) . '"><input type="checkbox" data-filter="includedfilescomponent" value="Core "' .
-                                    (
-                                        $this->hide_core
-                                        ? ' checked="checked" disabled="disabled"'
-                                        : ''
-                                    ) . ' /> Hide core files' .
-                                '</label>' .
-                                '<label class="qmx-filter-hide' .
-                                    (
-                                        $this->hide_qm
-                                        ? ' qm-info" title="QM_HIDE_SELF constant is true'
-                                        : ''
-                                    ) . '"><input type="checkbox" data-filter="includedfilescomponent" value="Plugin: query-monitor "' .
-                                    (
-                                        $this->hide_qm
-                                        ? ' checked="checked" disabled="disabled"'
-                                        : ''
-                                    ) . ' /> Hide QM files' .
-                                '</label>' .
-                                '<label class="qmx-filter-hide' .
-                                    (
-                                        $this->hide_qmx
-                                        ? ' qm-info" title="QMX_HIDE_INCLUDED_SELF_FILES constant is true'
-                                        : ''
-                                    ) . '"><input type="checkbox" data-filter="includedfilescomponent" value="Plugin: query-monitor-extend "' .
-                                    (
-                                        $this->hide_qmx
-                                        ? ' checked="checked" disabled="disabled"'
-                                        : ''
-                                    ) . ' /> Hide QMX files' .
-                                '</label>' .
+                            '<span class="qmx-switches">' .
+                                $this->build_switch( 'includedfilescomponent', 'Core', 'Core', $this->hide_core, !$this->hide_core ) .
+                                $this->build_switch( 'includedfilescomponent', 'Plugin: query-monitor', 'QM', $this->hide_qm, !$this->hide_qm ) .
+                                $this->build_switch( 'includedfilescomponent', 'Plugin: query-monitor-extend', 'QMX', $this->hide_qmx, !$this->hide_qmx ) .
+                                ( array_key_exists( 'Theme', $this->data['components'] ) ? $this->build_switch( 'includedfilescomponent', 'Theme', 'Theme' ) : '' ) .
+                                ( preg_grep( "/^Plugin: .*$/", array_keys( $this->data['components'] ) ) ? $this->build_switch( 'includedfilescomponent', 'Plugin: ', 'Plugins' ) : '' ) .
                             '</span>' .
                         '</th>' .
 					'</tr>' .
@@ -311,6 +280,17 @@ class QMX_Output_Html_IncludedFiles extends QM_Output_Html {
 
             '</table>' .
         '</div>';
+    }
+
+    public function build_switch( $filter, $value, $label, $disabled = false, $checked = true ) {
+        return '<label class="qmx-switch">' .
+            '<input type="checkbox" ' .
+                'data-filter="' . esc_attr( $filter ) . '" ' .
+                'value="' . esc_attr( $value ) . '"' .
+                disabled( true, $disabled, false ) .
+                checked( true, $checked, false ) .
+            ' /><span class="slider"></span><span>' . esc_html( $label ) . '</span>' .
+        '</label>';
     }
 
     public function get_relative_path( $path ) {
