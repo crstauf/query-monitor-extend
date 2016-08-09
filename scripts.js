@@ -29,7 +29,8 @@ jQuery(function($) {
             results.find('.qm-items-number').text( QM_i18n.number_format( visible.length, 0 ) );
         }
 
-        $(this).blur();
+        if ( visible.length === tr.length )
+            results.addClass('qm-hide');
 
     });
 

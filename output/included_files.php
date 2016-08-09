@@ -212,7 +212,7 @@ class QMX_Output_Html_IncludedFiles extends QM_Output_Html {
 				'</thead>' .
                 '<tbody>';
 
-                    $count = $filesize = 0;
+                    $filesize = 0;
 
                     foreach ( array( 'errors', 'files' ) as $status )
                         if (
@@ -221,10 +221,10 @@ class QMX_Output_Html_IncludedFiles extends QM_Output_Html {
                             && count( $this->data[$status] )
                         )
                             foreach ( $this->data[$status] as $path => $details ) {
-                                if ( 'files' === $status ) {
-                                    $count++;
+
+                                if ( 'files' === $status )
                                     $filesize = $filesize + intval( $details['filesize'] );
-                                }
+
                                 echo '<tr ' .
                                         'data-qm-includedfilespath="' . esc_attr( implode( ' ', array_keys( $details['selectors'] ) ) ) . '" ' .
                                         'data-qm-includedfilescomponent="' . esc_attr( $details['component'] ) . '"' .
@@ -276,8 +276,8 @@ class QMX_Output_Html_IncludedFiles extends QM_Output_Html {
                         '<td colspan="2" class="qm-hide">Total in filter: <span class="qm-items-filesize">0<span></td>' .
                     '</tr>' .
 					'<tr>' .
-                        '<td colspan="2">Total files: ' . $count . '</td>' .
-                        '<td colspan="2">Total: ' . number_format_i18n( $filesize / 1024, 2) . ' KB Average: ' . number_format_i18n( ( $filesize / $count ) / 1024, 2) . ' KB</td>' .
+                        '<td colspan="2">Total files: ' . count( $this->data['files'] ) . '</td>' .
+                        '<td colspan="2">Total: ' . number_format_i18n( $filesize / 1024, 2) . ' KB Average: ' . number_format_i18n( ( $filesize / intval( $details['i'] ) ) / 1024, 2) . ' KB</td>' .
                     '</tr>' .
 				'</tfoot>' .
 
