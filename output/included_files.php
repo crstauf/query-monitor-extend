@@ -26,7 +26,7 @@ class QMX_Output_Html_IncludedFiles extends QM_Output_Html {
     public function collect_data() {
         $this->data['components'] = array();
 
-        foreach ( get_included_files() as $file ) {
+        foreach ( get_included_files() as $i => $file ) {
             $component = QM_Util::get_file_component( $file )->name;
 
             if ( $this->hide_core && 'Core' === $component )
@@ -44,6 +44,7 @@ class QMX_Output_Html_IncludedFiles extends QM_Output_Html {
                 $this->data['components'][$component] = 1;
 
             $this->data['files'][$file] = array(
+                'i' => $i,
                 'component' => $component,
                 'filesize' => filesize( $file ),
                 'selectors' => $this->get_selectors( $file ),
@@ -230,8 +231,8 @@ class QMX_Output_Html_IncludedFiles extends QM_Output_Html {
                                         'data-qm-includedfilescomponent="' . esc_attr( $details['component'] ) . '"' .
                                         ( 'errors' === $status ? ' class="qm-warn"' : '' ) .
                                     '>' .
-                                        '<td class="qm-num" data-qm-sort-weight="' . ( 'errors' === $status ? 0 : $count ) . '">' .
-                                            ( 'errors' === $status ? ' ' : $count ) .
+                                        '<td class="qm-num" data-qm-sort-weight="' . ( 'errors' === $status ? 0 : ( $details['i'] + 1 ) ) . '">' .
+                                            ( 'errors' === $status ? ' ' : ( $details['i'] + 1 ) ) .
                                         '</td>' .
                                         '<td data-qm-sort-weight="' . esc_attr( str_replace( '.php', '', strtolower( $path ) ) ) . '">' .
                                             (
@@ -277,7 +278,7 @@ class QMX_Output_Html_IncludedFiles extends QM_Output_Html {
                     '</tr>' .
 					'<tr>' .
                         '<td colspan="2">Total files: ' . count( $this->data['files'] ) . '</td>' .
-                        '<td colspan="2">Total: ' . number_format_i18n( $filesize / 1024, 2) . ' KB Average: ' . number_format_i18n( ( $filesize / intval( $details['i'] ) ) / 1024, 2) . ' KB</td>' .
+                        '<td colspan="2">Total: ' . number_format_i18n( $filesize / 1024, 2) . ' KB Average: ' . number_format_i18n( ( $filesize / count( $this->data['files'] ) ) / 1024, 2) . ' KB</td>' .
                     '</tr>' .
 				'</tfoot>' .
 
