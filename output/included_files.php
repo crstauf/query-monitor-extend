@@ -158,17 +158,20 @@ class QMX_Output_Html_IncludedFiles extends QM_Output_Html {
 
         $selectors = array();
 
-        foreach ( array( 'files', 'errors' ) as $status )
+        foreach ( array( 'files', 'errors' ) as $status ) {
             if (
                 array_key_exists( $status, $this->data )
                 && is_array( $this->data[$status] )
                 && count( $this->data[$status] )
-                && array_key_exists( 'selectors', $this->data[$status] )
-                && is_array( $this->data[$status]['selectors'] )
-                && count( $this->data[$status]['selectors'] )
             )
                 foreach ( $this->data[$status] as $details )
-                    $selectors = array_merge( $details['selectors'], $selectors );
+                    if (
+                        array_key_exists( 'selectors', $details )
+                        && is_array( $details['selectors'] )
+                        && count( $details['selectors'] )
+                    )
+                        $selectors = array_merge( $details['selectors'], $selectors );
+        }
 
         echo '<div id="' . esc_attr( $this->collector->id() ) . '" class="qm">';
 
