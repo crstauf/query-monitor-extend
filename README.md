@@ -28,6 +28,10 @@ WordPress plugin to add enhancements and extend the already awesome [Query Monit
  * `is_lost_password_page`
  * `is_store_notice_showing`
 
+- adds additional columns/info to:
+ * Assets panels
+ * Transients panel
+
 - provides a "graph" display of all notices/errors (multiple background colors of admin bar menu item)
 
 !["Graph" display of notices/errors](https://cldup.com/orLoJ0VsTe-3000x3000.png "'Graph' display of notices/errors")
