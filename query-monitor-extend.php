@@ -47,6 +47,7 @@ class cssllc_query_monitor_extend {
 		add_filter( 'qm/outputter/html', 'unregister_qm_output_html_assets', 79 );
 		add_filter( 'qm/outputter/html', 'unregister_qm_output_html_transients', 99, 2 );
 		add_filter( 'qm/outputter/html', 'unregister_qm_output_html_php_errors', 109 );
+		add_filter( 'qm/outputter/html', 'register_qmx_output_html_benchmarks', 15, 2 );
 		add_filter( 'qm/outputter/html', 'register_qmx_output_html_assets', 80, 2 );
 		add_filter( 'qm/outputter/html', 'register_qmx_output_html_transients', 100, 2 );
 		add_filter( 'qm/outputter/html', 'register_qmx_output_html_php_errors', 110, 2 );

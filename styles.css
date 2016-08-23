@@ -93,3 +93,7 @@
 
 .qmx-includedfiles-filesize { max-width: 160px; min-width: 110px; }
 .qmx-includedfiles-component { max-width: 200px; }
+
+#qm-qmx-benchmarks tr .qm-info { visibility: hidden; }
+
+    #qm-qmx-benchmarks tr:hover .qm-info { visibility: visible; }
