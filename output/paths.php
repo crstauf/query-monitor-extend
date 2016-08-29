@@ -16,7 +16,7 @@ class QMX_Output_Html_Paths extends QM_Output_Html {
 
 		$data = $this->collector->get_data();
 
-		echo '<div id="' . esc_attr( $this->collector->id() ) . '" class="qm qm-half qm-two-thirds">';
+		echo '<div id="' . esc_attr( $this->collector->id() ) . '" class="qm qm-half">';
 
 			echo '<table cellspacing="0">';
 				echo '<thead>';

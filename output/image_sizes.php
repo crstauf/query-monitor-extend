@@ -27,7 +27,7 @@ class QMX_Output_Html_ImageSizes extends QM_Output_Html {
                     ? 0
                     : ($origins[$size['origin']] + 1);
 
-		echo '<div id="' . esc_attr( $this->collector->id() ) . '" class="qm qm-clear qm-half">';
+		echo '<div id="' . esc_attr( $this->collector->id() ) . '" class="qm qm-half">';
 
 			echo '<table cellspacing="0" class="qm-sortable">' .
 				'<thead>' .

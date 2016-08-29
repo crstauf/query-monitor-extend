@@ -15,19 +15,20 @@ class QMX_Output_Html_Constants extends QM_Output_Html {
 
 	public function output() {
 
-		$data = $this->collector->get_data();
+		$constants = get_defined_constants( true );
+		$data['constants'] = array_keys( $constants['user'] );
 
-		echo '<div id="' . esc_attr( $this->collector->id() ) . '" class="qm qm-clear qm-third">';
+		echo '<div id="' . esc_attr( $this->collector->id() ) . '" class="qm qm-clear qm-half">';
 
 			echo '<table cellspacing="0">';
 				echo '<thead>';
 					echo '<tr>';
-						echo '<th colspan="2">Constants</th>';
+						echo '<th colspan="2">Defined Constants</th>';
 					echo '</tr>';
 				echo '</thead>';
 				echo '<tbody>';
 
-					sort($data['constants']);
+					sort( $data['constants'], SORT_STRING | SORT_FLAG_CASE );
 
 					foreach ( $data['constants'] as $constant ) {
 
@@ -54,9 +55,6 @@ class QMX_Output_Html_Constants extends QM_Output_Html {
 					echo '<tr>' .
 						'<td colspan="2" style="text-align: right !important;">Count: ' . count($data['constants']) . '</td>' .
 					'</tr>';
-					echo '<tr>';
-						echo '<th colspan="2">Reference: <a href="http://wpengineer.com/2382/wordpress-constants-overview/" target="_blank">wpengineer.com/2382/wordpress-constants-overview/</a><br />Please note that some constants may not accurately reflect the page you are currently viewing.</th>';
-					echo '</tr>';
 				echo '</tfoot>';
 			echo '</table>';
 
