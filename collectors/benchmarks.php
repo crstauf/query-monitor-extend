@@ -28,6 +28,7 @@ class QMX_Collector_Benchmarks extends QM_Collector {
     }
 
     public function add_data($label = false) {
+        global $wpdb;
 
         $now = array();
 
@@ -47,8 +48,7 @@ class QMX_Collector_Benchmarks extends QM_Collector {
 
 		$now['included_files'] = count( get_included_files() );
 
-        if ( defined( 'SAVEQUERIES' ) && SAVEQUERIES ) {
-            global $wpdb;
+        if ( defined( 'SAVEQUERIES' ) && SAVEQUERIES && isset( $wpdb ) && is_object( $wpdb ) && is_array( $wpdb->queries ) ) {
             $queries = array_slice( $wpdb->queries, $this->db_queries );
             $this->db_queries = count( $wpdb->queries );
 
