@@ -48,7 +48,10 @@ class QMX_Collector_Benchmarks extends QM_Collector {
 
 		$now['included_files'] = count( get_included_files() );
 
-        if ( defined( 'SAVEQUERIES' ) && SAVEQUERIES && isset( $wpdb ) && is_object( $wpdb ) && is_array( $wpdb->queries ) ) {
+        if ( defined( 'SAVEQUERIES' ) && SAVEQUERIES ) {
+            if ( !is_array( $wpdb->queries ) )
+                $wpdb->queries = ( array ) $wpdb->queries;
+
             $queries = array_slice( $wpdb->queries, $this->db_queries );
             $this->db_queries = count( $wpdb->queries );
 
@@ -74,8 +77,16 @@ class QMX_Collector_Benchmarks extends QM_Collector {
 QM_Collectors::add( new QMX_Collector_Benchmarks );
 
 function QMX_Benchmark($label = false) {
-    if ( $collector = QM_Collectors::get( 'qmx-benchmarks' ) )
+    if ( $collector = QM_Collectors::get( 'qmx-benchmarks' ) ) {
+        $data = $collector->get_data();
+        if ( function_exists( 'wp_get_current_user' ) ) {
+            if ( current_user_can( 'administrator' ) )
+                echo '<!-- QMX Benchmark ' . ( count( $data['benchmarks'] ) + 1 ) . ': ' . ( false === $label ? time() : esc_html( $label ) ) . ' -->';
+        } else
+            echo '<!-- QMX Benchmark ' . ( count( $data['benchmarks'] ) + 1 ) . ': ' . ( false === $label ? time() : esc_html( $label ) ) . ' -->';
+
         $collector->add_data($label);
+    }
 }
 
 QMX_Benchmark( 'first' );

@@ -45,11 +45,12 @@ class QMX_Output_Html_Benchmarks extends QM_Output_Html {
 
                 foreach ( $data['benchmarks'] as $row ) {
 
-                    foreach ( $row['db_query_types'] as $type_name => $type_count ) {
-                        if ( array_key_exists( $type_name, $this->db_query_types ) )
-                            $type_count += $this->db_query_types[$type_name];
-                        $this->db_query_types[$type_name] = $type_count;
-                    }
+					if ( array_key_exists( 'db_query_types', $row ) )
+	                    foreach ( $row['db_query_types'] as $type_name => $type_count ) {
+	                        if ( array_key_exists( $type_name, $this->db_query_types ) )
+	                            $type_count += $this->db_query_types[$type_name];
+	                        $this->db_query_types[$type_name] = $type_count;
+	                    }
 
                     $db_queries_data = QM_Collectors::get( 'db_queries' )->get_data();
 
@@ -87,7 +88,7 @@ class QMX_Output_Html_Benchmarks extends QM_Output_Html {
                             echo '</span>';
                         echo '</td>';
 
-                        if ( $show_db_cols ) {
+                        if ( $show_db_cols && array_key_exists( 'db_query_time', $row ) ) {
 
                             echo '<td>';
                                 echo esc_html( number_format_i18n( ( $row['db_query_time'] + $this->db_query_time ), 4 ) );
@@ -101,7 +102,8 @@ class QMX_Output_Html_Benchmarks extends QM_Output_Html {
 
                             echo '<td>' . implode( '<br>', array_map( 'esc_html', $db_query_types ) ) . '</td>';
 
-                        }
+                        } else
+							echo '<td>&nbsp;</td><td>&nbsp;</td>';
 
                         echo '<td>';
                             echo esc_html( $row['included_files'] ) . '<span class="qm-info">/' . $included_files . '</span>';
@@ -109,7 +111,8 @@ class QMX_Output_Html_Benchmarks extends QM_Output_Html {
 
                     echo '</tr>';
 
-                    $this->db_query_time += $row['db_query_time'];
+					if ( array_key_exists( 'db_query_time', $row ) )
+                    	$this->db_query_time += $row['db_query_time'];
                 }
 
                 echo '</tbody>';
