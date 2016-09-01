@@ -222,8 +222,8 @@ class cssllc_query_monitor_extend {
 	}
 
 	public static function action_enqueue_scripts() {
-		wp_enqueue_style(  'query-monitor-extend', plugin_dir_url( __FILE__ ) . '/styles.css', array( 'query-monitor' ), 'init' );
-		wp_enqueue_script( 'query-monitor-extend', plugin_dir_url( __FILE__ ) . '/scripts.js', array( 'jquery', 'query-monitor' ), 'init' );
+		wp_enqueue_style(  'query-monitor-extend', plugin_dir_url( __FILE__ ) . 'styles.css', array( 'query-monitor' ), 'init' );
+		wp_enqueue_script( 'query-monitor-extend', plugin_dir_url( __FILE__ ) . 'scripts.js', array( 'jquery', 'query-monitor' ), 'init' );
 	}
 
 	public static function get_format_value( $value, $is_constant = false ) {
