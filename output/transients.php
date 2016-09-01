@@ -96,7 +96,8 @@ class QMX_Output_Html_Transients extends QM_Output_Html_Transients {
 		echo '<tr><td colspan="' . $colspan . '">Total Transients Set: ' . $this->count . '</td></tr>';
 		echo '<tr><td colspan="' . $colspan . '">';
 		echo 'Total Expired Transients: ' . $this->expired_transients;
-		echo '&nbsp;&nbsp;&nbsp;<span title="' . esc_attr( str_replace( array( '_site_transient_', '_transient_' ), '', $this->oldest_transient[0] ) ) . '">Oldest Expired Transient: ' . $this->time_elapsed_string( $this->oldest_transient[1] ) . ' old</span>';
+		if ( 0 !== $this->expired_transients )
+			echo '&nbsp;&nbsp;&nbsp;<span title="' . esc_attr( str_replace( array( '_site_transient_', '_transient_' ), '', $this->oldest_transient[0] ) ) . '">Oldest Expired Transient: ' . $this->time_elapsed_string( $this->oldest_transient[1] ) . ' old</span>';
 		echo '</td></tr>';
 		echo '</tfoot>';
 
