@@ -11,7 +11,7 @@ class QMX_Collector_VarDumps extends QM_Collector {
     public $id = 'qmx-var_dumps';
 
     public function name() {
-        return __( 'Var Dumps (' . count( cssllc_query_monitor_extend::$var_dumps ) . ')', 'query-monitor' );
+        return __( 'Var Dumps (' . count( query_monitor_extend::$var_dumps ) . ')', 'query-monitor' );
     }
 
     public function __construct() {
@@ -22,10 +22,8 @@ class QMX_Collector_VarDumps extends QM_Collector {
 
     }
 
-    public function process() {
-
-        $this->data['qmx-var_dumps'] = cssllc_query_monitor_extend::$var_dumps;
-
+    public function add( $label, $var, $time ) {
+        $this->data['vardumps'][microtime()] = array( 'label' => $label, 'var' => $var, 'timestamp' => $time );
     }
 
 }
@@ -36,5 +34,19 @@ function register_qmx_collector_vardumps( array $collectors, QueryMonitor $qm ) 
 }
 
 add_filter( 'qm/collectors', 'register_qmx_collector_vardumps', 10, 2 );
+
+if ( !function_exists('qmx_dump') ) {
+	function qmx_dump( $var, $label = 'Unknown', $time = false ) {
+        if ( false === $time )
+            $time = time();
+        QM_Collectors::get( 'qmx-var_dumps' )->add( $label, $var, $time );
+	}
+}
+
+if ( !function_exists('qm_dump') ) {
+    function qm_dump( $var, $label = 'Unknown' ) {
+        qmx_dump( $var, $label, time() );
+    }
+}
 
 ?>

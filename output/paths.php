@@ -42,7 +42,7 @@ class QMX_Output_Html_Paths extends QM_Output_Html {
 								echo '<tr>';
 									echo '<th rowspan="' . count( $v ) . '"><a href="https://www.google.com/?gws_rd=ssl#q=site%3Acodex.wordpress.org+OR+developer.wordpress.org+' . esc_url( $k ) . '" target="_blank">' . esc_attr( $k ) . '</a></th>';
 									echo '<td>' . esc_attr( $ks[0] ) . '</td>';
-									echo '<td>' . cssllc_query_monitor_extend::get_format_value( $v[$ks[0]] ) . '</td>';
+									echo '<td>' . query_monitor_extend::get_format_value( $v[$ks[0]] ) . '</td>';
 								echo '</tr>';
 								unset( $v[$ks[0]] );
 
@@ -51,7 +51,7 @@ class QMX_Output_Html_Paths extends QM_Output_Html {
 										$vv = gettype( $vv );
 									echo '<tr>';
 										echo '<th>' . esc_attr( $kk ) . '</th>';
-										echo '<td colspan="2">' . cssllc_query_monitor_extend::get_format_value( $vv ) . '</td>';
+										echo '<td colspan="2">' . query_monitor_extend::get_format_value( $vv ) . '</td>';
 									echo '</tr>';
 								}
 
@@ -59,7 +59,7 @@ class QMX_Output_Html_Paths extends QM_Output_Html {
 
 								echo '<tr>';
 									echo '<th>' . ( !in_array( $k, array( '', '<br />Template (parent)' ) ) && false === strpos( $k, '[' ) && ')' !== $k ? '<a href="https://www.google.com/?gws_rd=ssl#q=site%3Acodex.wordpress.org+OR+developer.wordpress.org+' . esc_attr( $k ) . '" target="_blank">' . esc_attr( $k ) . '</a>' : esc_attr( $k ) ) . '</th>';
-									echo '<td colspan="2">' . cssllc_query_monitor_extend::get_format_value( $v ) . '</td>';
+									echo '<td colspan="2">' . query_monitor_extend::get_format_value( $v ) . '</td>';
 								echo '</tr>';
 
 							}

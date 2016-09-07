@@ -10,38 +10,52 @@ class QMX_Output_Html_VarDumps extends QM_Output_Html {
 
 	public function __construct( QM_Collector $collector ) {
 		parent::__construct( $collector );
+
+        add_filter( 'qm/output/menus', array( $this, 'admin_menu' ), 200 );
 	}
 
 	public function output() {
 
 		$data = $this->collector->get_data();
-		if (!count(cssllc_query_monitor_extend::$var_dumps)) return;
 
 		echo '<span id="' . esc_attr( $this->collector->id() ) . '"></span>';
 
-		foreach ($data['vardumps'] as $id => $var)
-			self::div($id,$var[0]);
+		foreach ( $data['vardumps'] as $id => $array ) {
+
+            echo '<div id="' . esc_attr( $this->collector->id() . '-' . $id ) . '" class="qm">';
+
+            echo '<table cellspacing="0">';
+    		echo '<thead><tr><td>Var Dump: ' . $array['label'] . '</td></tr></thead>';
+            echo '<tbody><tr><td>';
+
+			QM_Output_Html::output_inner( $array['var'] );
+
+            echo '</td></tr></tbody>';
+            echo '</table>';
+            echo '</div>';
+        }
 
 	}
 
-	public function div($id,$var,$sub = '') {
-		$temp = explode('_',$id);
-		$label = $temp[1];
-		unset($temp);
-		echo '<div id="' . esc_attr( $this->collector->id() ) . '_' . $id . str_replace('->','_',str_replace('[','_',str_replace(']','',$sub))) . '" class="qm">';
+    public function admin_menu( array $menu ) {
 
-		echo '<table cellspacing="0">';
-		echo '<header><tr><td>' . $label . $sub . '</td></tr></thead>';
-        echo '<tbody><tr><td>';
+        $data = $this->collector->get_data();
 
-		self::output_inner($var);
+        $add = array(
+            'title' => sprintf(
+                __( 'Var Dumps (%s)', 'query-monitor' ),
+                (
+                    is_array( $data['vardumps'] )
+                    ? count( $data['vardumps'] )
+                    : 0
+                )
+            )
+        );
 
-		echo '</td></tr></tbody>';
-		echo '</table>';
+        $menu[] = $this->menu( $add );
 
-		echo '</div>';
-
-	}
+        return $menu;
+    }
 
 }
 

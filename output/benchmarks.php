@@ -68,8 +68,8 @@ class QMX_Output_Html_Benchmarks extends QM_Output_Html {
                     		echo '<br><span class="qm-info">';
                     		echo esc_html( sprintf(
                     			__( '%1$s%% of %2$ss total', 'query-monitor' ),
-                    			number_format_i18n( ( 100 / $overview_data['time'] ) * $row['time'], 1 ),
-                    			number_format_i18n( $overview_data['time'], 4 )
+                    			number_format_i18n( ( 100 / ( array_key_exists( 'time_taken', $overview_data ) ? $overview_data['time_taken'] : $overview_data['time'] ) ) * $row['time'], 1 ),
+                    			number_format_i18n( ( array_key_exists( 'time_taken', $overview_data ) ? $overview_data['time_taken'] : $overview_data['time'] ), 4 )
                     		) );
                     		echo '</span>';
                         echo '</td>';

@@ -21,8 +21,8 @@ if (
 )
 	return;
 
-new cssllc_query_monitor_extend;
-class cssllc_query_monitor_extend {
+new query_monitor_extend;
+class query_monitor_extend {
 
 	public static $var_dumps = array();
 
@@ -258,12 +258,6 @@ if ( !function_exists( 'is_custom_post_type' ) ) {
 		$post_obj = $wp_query->get_queried_object();
 		$post_type_obj = get_post_type_object($post_obj->post_type);
 		return !$post_type_obj->_builtin;
-	}
-}
-
-if ( !function_exists('QM_dump') ) {
-	function QM_dump( $label, $var ) {
-		cssllc_query_monitor_extend::$var_dumps[time() . '_' . $label] = array( $var );
 	}
 }
 

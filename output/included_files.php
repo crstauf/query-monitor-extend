@@ -329,7 +329,7 @@ class QMX_Output_Html_IncludedFiles extends QM_Output_Html {
 
         $add = array(
             'title' => sprintf(
-                __( 'Included files (%s%s)', 'query-monitor' ),
+                __( 'Included Files (%s%s)', 'query-monitor' ),
                 (
                     is_array( $this->data['files'] )
                     ? count( $this->data['files'] )

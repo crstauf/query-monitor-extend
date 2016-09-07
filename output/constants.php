@@ -8,6 +8,8 @@ if (!defined('ABSPATH') || !function_exists('add_filter')) {
 
 class QMX_Output_Html_Constants extends QM_Output_Html {
 
+	private static $constants = array();
+
 	public function __construct( QM_Collector $collector ) {
 		parent::__construct( $collector );
 		add_filter( 'qm/output/menus', array( $this, 'admin_menu' ), 111 );
@@ -16,14 +18,14 @@ class QMX_Output_Html_Constants extends QM_Output_Html {
 	public function output() {
 
 		$constants = get_defined_constants( true );
-		$data['constants'] = array_keys( $constants['user'] );
+		$data['constants'] = self::$constants = array_keys( $constants['user'] );
 
 		echo '<div id="' . esc_attr( $this->collector->id() ) . '" class="qm qm-clear qm-half">';
 
 			echo '<table cellspacing="0">';
 				echo '<thead>';
 					echo '<tr>';
-						echo '<th colspan="2">Defined Constants</th>';
+						echo '<th colspan="2">User-defined Constants</th>';
 					echo '</tr>';
 				echo '</thead>';
 				echo '<tbody>';
@@ -33,7 +35,7 @@ class QMX_Output_Html_Constants extends QM_Output_Html {
 					foreach ( $data['constants'] as $constant ) {
 
 						echo '<tr>';
-							echo '<th><a href="https://www.google.com/?gws_rd=ssl#q=site%3Acodex.wordpress.org+OR+developer.wordpress.org+' . esc_url( $constant ) . '" target="_blank">' . esc_attr( $constant ) . '</a></th>';
+							echo '<th><a href="https://www.google.com/?gws_rd=ssl#q=site%3Acodex.wordpress.org+OR+developer.wordpress.org+' . esc_attr( $constant ) . '" target="_blank">' . esc_attr( $constant ) . '</a></th>';
 							echo '<td ' .
 								'title="' .
 									( defined( $constant )
@@ -44,7 +46,7 @@ class QMX_Output_Html_Constants extends QM_Output_Html {
 									? ' class="qm-' . ( true === constant( $constant ) ? 'true' : 'false' ) .  '"'
 									: '') .
 							'>' .
-								cssllc_query_monitor_extend::get_format_value( $constant, true ) .
+								query_monitor_extend::get_format_value( $constant, true ) .
 							'</td>';
 						echo '</tr>';
 
@@ -64,22 +66,37 @@ class QMX_Output_Html_Constants extends QM_Output_Html {
 
 	public function admin_menu( array $menu ) {
 		$constants = array();
-		if (defined('W3TC') && W3TC)
-			$constants = array_merge($constants,array(
+
+		if ( defined( 'W3TC' ) && W3TC )
+			$constants = array_merge( $constants, array(
 				'DONOTCACHEPAGE',
 				'DONOTCACHEDB',
 				'DONOTMINIFY',
 				'DONOTCDN',
 				'DONOTCACHCEOBJECT'
-			));
-		foreach (apply_filters('qmx/collect/conditionals/constants',$constants) as $constant) {
-			if (defined($constant) && true === !!constant($constant))
+			) );
+
+		foreach ( apply_filters( 'qmx/collect/conditionals/constants', $constants ) as $constant ) {
+			if ( defined( $constant ) && true === !!constant( $constant ) )
 				$menu[] = $this->menu( array(
 					'title' => esc_html( $constant ),
 					'id'    => 'query-monitor-constant-' . esc_attr( $constant ),
 					'meta'  => array( 'classname' => 'qm-true qm-ltr' )
 				) );
 		}
+
+		$add = array(
+            'title' => sprintf(
+                __( 'User-defined Constants (%s)', 'query-monitor' ),
+                (
+                    is_array( self::$constants )
+                    ? count( self::$constants )
+                    : 0
+                )
+            )
+        );
+
+		$menu[] = $this->menu( $add );
 
 		return $menu;
 	}
