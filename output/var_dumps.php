@@ -20,20 +20,21 @@ class QMX_Output_Html_VarDumps extends QM_Output_Html {
 
 		echo '<span id="' . esc_attr( $this->collector->id() ) . '"></span>';
 
-		foreach ( $data['vardumps'] as $id => $array ) {
+        if ( array_key_exists( 'vardumps', $data ) && is_array( $data['vardumps'] ) && count( $data['vardumps'] ) )
+    		foreach ( $data['vardumps'] as $id => $array ) {
 
-            echo '<div id="' . esc_attr( $this->collector->id() . '-' . $id ) . '" class="qm">';
+                echo '<div id="' . esc_attr( $this->collector->id() . '-' . $id ) . '" class="qm">';
 
-            echo '<table cellspacing="0">';
-    		echo '<thead><tr><td>Var Dump: ' . $array['label'] . '</td></tr></thead>';
-            echo '<tbody><tr><td>';
+                echo '<table cellspacing="0">';
+        		echo '<thead><tr><td>Var Dump: ' . $array['label'] . '</td></tr></thead>';
+                echo '<tbody><tr><td>';
 
-			QM_Output_Html::output_inner( $array['var'] );
+    			QM_Output_Html::output_inner( $array['var'] );
 
-            echo '</td></tr></tbody>';
-            echo '</table>';
-            echo '</div>';
-        }
+                echo '</td></tr></tbody>';
+                echo '</table>';
+                echo '</div>';
+            }
 
 	}
 
@@ -45,7 +46,8 @@ class QMX_Output_Html_VarDumps extends QM_Output_Html {
             'title' => sprintf(
                 __( 'Var Dumps (%s)', 'query-monitor' ),
                 (
-                    is_array( $data['vardumps'] )
+                    array_key_exists( 'vardumps', $data )
+                    && is_array( $data['vardumps'] )
                     ? count( $data['vardumps'] )
                     : 0
                 )
