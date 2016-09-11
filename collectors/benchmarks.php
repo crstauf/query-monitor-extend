@@ -89,6 +89,4 @@ function QMX_Benchmark($label = false) {
     }
 }
 
-QMX_Benchmark( 'first' );
-
 ?>
