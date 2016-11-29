@@ -63,59 +63,63 @@ jQuery(function($) {
 
     var qmx_time_interval = 0;
 
-    var visibility_monitor = VisSense(qmx_time_container).monitor({
-        visible: function() {
-            qmx_time_interval = setInterval(function() {
-                var d = new Date();
-                var UTC_string = d.toUTCString();
-                var server = new Date(d.getTime() + (d.getTimezoneOffset() * 60 * 1000));
-                var wp = new Date(server.valueOf() + (parseInt(qmx_time_wp.attr('data-offset')) * 1000));
+    if (qmx_time_container) {
 
-                qmx_time_utc.html(
-                    qmx_time_days[d.getUTCDay()] + ', '
-                    + qmx_time_months[d.getUTCMonth()] + ' '
-                    + d.getUTCDate() + ', '
-                    + d.getUTCFullYear() + ' '
-                    + (10 > d.getUTCHours() ? '0' : '') + d.getUTCHours()
-                    + ':' + (10 > d.getUTCMinutes() ? '0' : '') + d.getUTCMinutes()
-                    + ':' + (10 > d.getUTCSeconds() ? '0' : '') + d.getUTCSeconds()
-                );
+        var visibility_monitor = VisSense(qmx_time_container).monitor({
+            visible: function() {
+                qmx_time_interval = setInterval(function() {
+                    var d = new Date();
+                    var UTC_string = d.toUTCString();
+                    var server = new Date(d.getTime() + (d.getTimezoneOffset() * 60 * 1000));
+                    var wp = new Date(server.valueOf() + (parseInt(qmx_time_wp.attr('data-offset')) * 1000));
 
-                qmx_time_server.html(
-                    qmx_time_days[server.getDay()] + ', '
-                    + qmx_time_months[server.getMonth()] + ' '
-                    + server.getDate() + ', '
-                    + server.getFullYear() + ' '
-                    + (10 > server.getHours() ? '0' : '') + server.getHours()
-                    + ':' + (10 > server.getMinutes() ? '0' : '') + server.getMinutes()
-                    + ':' + (10 > server.getSeconds() ? '0' : '') + server.getSeconds()
-                );
+                    qmx_time_utc.html(
+                        qmx_time_days[d.getUTCDay()] + ', '
+                        + qmx_time_months[d.getUTCMonth()] + ' '
+                        + d.getUTCDate() + ', '
+                        + d.getUTCFullYear() + ' '
+                        + (10 > d.getUTCHours() ? '0' : '') + d.getUTCHours()
+                        + ':' + (10 > d.getUTCMinutes() ? '0' : '') + d.getUTCMinutes()
+                        + ':' + (10 > d.getUTCSeconds() ? '0' : '') + d.getUTCSeconds()
+                    );
 
-                qmx_time_wp.html(
-                    qmx_time_days[wp.getDay()] + ', '
-                    + qmx_time_months[wp.getMonth()] + ' '
-                    + wp.getDate() + ', '
-                    + wp.getFullYear() + ' '
-                    + (10 > wp.getHours() ? '0' : '') + wp.getHours()
-                    + ':' + (10 > wp.getMinutes() ? '0' : '') + wp.getMinutes()
-                    + ':' + (10 > wp.getSeconds() ? '0' : '') + wp.getSeconds()
-                );
+                    qmx_time_server.html(
+                        qmx_time_days[server.getDay()] + ', '
+                        + qmx_time_months[server.getMonth()] + ' '
+                        + server.getDate() + ', '
+                        + server.getFullYear() + ' '
+                        + (10 > server.getHours() ? '0' : '') + server.getHours()
+                        + ':' + (10 > server.getMinutes() ? '0' : '') + server.getMinutes()
+                        + ':' + (10 > server.getSeconds() ? '0' : '') + server.getSeconds()
+                    );
 
-                qmx_time_browser.html(
-                    qmx_time_days[d.getDay()] + ', '
-                    + qmx_time_months[d.getMonth()] + ' '
-                    + d.getDate() + ', '
-                    + d.getFullYear() + ' '
-                    + (10 > d.getHours() ? '0' : '') + d.getHours()
-                    + ':' + (10 > d.getMinutes() ? '0' : '') + d.getMinutes()
-                    + ':' + (10 > d.getSeconds() ? '0' : '') + d.getSeconds()
-                );
-            },1000);
-        },
-        hidden: function() {
-            clearInterval(qmx_time_interval);
-        }
-    }).start();
+                    qmx_time_wp.html(
+                        qmx_time_days[wp.getDay()] + ', '
+                        + qmx_time_months[wp.getMonth()] + ' '
+                        + wp.getDate() + ', '
+                        + wp.getFullYear() + ' '
+                        + (10 > wp.getHours() ? '0' : '') + wp.getHours()
+                        + ':' + (10 > wp.getMinutes() ? '0' : '') + wp.getMinutes()
+                        + ':' + (10 > wp.getSeconds() ? '0' : '') + wp.getSeconds()
+                    );
+
+                    qmx_time_browser.html(
+                        qmx_time_days[d.getDay()] + ', '
+                        + qmx_time_months[d.getMonth()] + ' '
+                        + d.getDate() + ', '
+                        + d.getFullYear() + ' '
+                        + (10 > d.getHours() ? '0' : '') + d.getHours()
+                        + ':' + (10 > d.getMinutes() ? '0' : '') + d.getMinutes()
+                        + ':' + (10 > d.getSeconds() ? '0' : '') + d.getSeconds()
+                    );
+                },1000);
+            },
+            hidden: function() {
+                clearInterval(qmx_time_interval);
+            }
+        }).start();
+
+    }
 
 });
 
