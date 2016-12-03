@@ -97,3 +97,5 @@
 #qm-qmx-benchmarks tr .qm-info { visibility: hidden; }
 
     #qm-qmx-benchmarks tr:hover .qm-info { visibility: visible; }
+
+#qm-qmx-classes tr:hover > td { background-color: #FFF !important; }

@@ -52,7 +52,8 @@ class query_monitor_extend {
 		add_filter( 'qm/outputter/html', 'register_qmx_output_html_transients', 100, 2 );
 		add_filter( 'qm/outputter/html', 'register_qmx_output_html_php_errors', 110, 2 );
 		add_filter( 'qm/outputter/html', 'register_qmx_output_html_includedfiles', 119, 2 );
-		add_filter( 'qm/outputter/html', 'register_qmx_output_html_time', 149, 2 );
+		add_filter( 'qm/outputter/html', 'register_qmx_output_html_time', 148, 2 );
+		add_filter( 'qm/outputter/html', 'register_qmx_output_html_classes', 149, 2 );
 		add_filter( 'qm/outputter/html', 'register_qmx_output_html_constants', 150, 2 );
 		add_filter( 'qm/outputter/html', 'register_qmx_output_html_paths', 151, 2 );
 		add_filter( 'qm/outputter/html', 'register_qmx_output_html_multisite', 152, 2 );
