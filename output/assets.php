@@ -6,10 +6,11 @@ if (!defined('ABSPATH') || !function_exists('add_filter')) {
 	exit();
 }
 
-/* based on QM v2.12.0 */
 class QMX_Output_Html_Assets extends QM_Output_Html_Assets {
 
-    public function output() {
+	const QM_version = '2.13.2';
+
+	public function output() {
 
 		$data = $this->collector->get_data();
 
@@ -17,43 +18,38 @@ class QMX_Output_Html_Assets extends QM_Output_Html_Assets {
 			return;
 		}
 
-		echo '<div class="qm" id="' . esc_attr( $this->collector->id() ) . '">';
-		echo '<table cellspacing="0">';
+		echo '<div id="' . esc_attr( $this->collector->id() ) . '">';
 
 		$position_labels = array(
+			'missing' => __( 'Missing', 'query-monitor' ),
+			'broken'  => __( 'Broken Dependencies', 'query-monitor' ),
+			'header'  => __( 'Header', 'query-monitor' ),
+			'footer'  => __( 'Footer', 'query-monitor' ),
+		);
+
+		$type_labels = array(
 			'scripts' => array(
-				'missing' => __( 'Missing Scripts', 'query-monitor' ),
-				'broken'  => __( 'Broken Dependencies', 'query-monitor' ),
-				'header'  => __( 'Header Scripts', 'query-monitor' ),
-				'footer'  => __( 'Footer Scripts', 'query-monitor' ),
+				'singular' => __( 'Script', 'query-monitor' ),
+				'plural'   => __( 'Scripts', 'query-monitor' ),
 			),
 			'styles' => array(
-				'missing'  => __( 'Missing Styles', 'query-monitor' ),
-				'broken'   => __( 'Broken Dependencies', 'query-monitor' ),
-				'header'   => __( 'Header Styles', 'query-monitor' ),
-				'footer'   => __( 'Footer Styles', 'query-monitor' ),
+				'singular' => __( 'Style', 'query-monitor' ),
+				'plural'   => __( 'Styles', 'query-monitor' ),
 			),
 		);
 
-		foreach ( array(
-			'scripts' => __( 'Scripts', 'query-monitor' ),
-			'styles'  => __( 'Styles', 'query-monitor' ),
-		) as $type => $type_label ) {
+		foreach ( $type_labels as $type => $type_label ) {
 
+			echo '<div class="qm" id="' . esc_attr( $this->collector->id() ) . '-' . esc_attr( $type ) . '">';
+			echo '<table cellspacing="0">';
+			echo '<caption>' . esc_html( $type_label['plural'] ) . '</caption>';
 			echo '<thead>';
-
-			if ( 'scripts' !== $type ) {
-				echo '<tr class="qm-totally-legit-spacer">';
-				echo '<td colspan="7"></td>';
-				echo '</tr>';
-			}
-
 			echo '<tr>';
-			echo '<th colspan="2">' . esc_html( $type_label ) . '</th>';
-            echo '<th class="qm-num">' . esc_html__( 'Filesize', 'query-monitor' ) . '</th>';
-			echo '<th>' . esc_html__( 'Dependencies', 'query-monitor' ) . '</th>';
-			echo '<th>' . esc_html__( 'Dependents', 'query-monitor' ) . '</th>';
-			echo '<th>' . esc_html__( 'Version', 'query-monitor' ) . '</th>';
+			echo '<th scope="col">' . esc_html__( 'Position', 'query-monitor' ) . '</th>';
+			echo '<th scope="col">' . esc_html( $type_label['singular'] ) . '</th>';
+			echo '<th scope="col">' . esc_html__( 'Dependencies', 'query-monitor' ) . '</th>';
+			echo '<th scope="col">' . esc_html__( 'Dependents', 'query-monitor' ) . '</th>';
+			echo '<th scope="col">' . esc_html__( 'Version', 'query-monitor' ) . '</th>';
 			echo '<th>' . esc_html__( 'Extras', 'query-monitor' ) . '</th>';
 			echo '</tr>';
 			echo '</thead>';
@@ -67,16 +63,17 @@ class QMX_Output_Html_Assets extends QM_Output_Html_Assets {
 			) as $position ) {
 
 				if ( isset( $data[ $position ][ $type ] ) ) {
-					$this->dependency_rows( $data[ $position ][ $type ], $data['raw'][ $type ], $position_labels[ $type ][ $position ], $type );
+					$this->dependency_rows( $data[ $position ][ $type ], $data['raw'][ $type ], $position_labels[ $position ], $type );
 				}
 
 			}
 
 			echo '</tbody>';
+			echo '</table>';
+			echo '</div>';
 
 		}
 
-		echo '</table>';
 		echo '</div>';
 
 	}
@@ -96,14 +93,14 @@ class QMX_Output_Html_Assets extends QM_Output_Html_Assets {
 		foreach ( $handles as $handle ) {
 
 			if ( in_array( $handle, $dependencies->done ) ) {
-				echo '<tr data-qm-subject="' . esc_attr( $type . '-' . $handle ) . '">';
+				echo '<tr data-qm-subject="' . esc_attr( $type . '-' . $handle ) . ' ">';
 			} else {
-				echo '<tr data-qm-subject="' . esc_attr( $type . '-' . $handle ) . '" class="qm-warn">';
+				echo '<tr data-qm-subject="' . esc_attr( $type . '-' . $handle ) . ' " class="qm-warn">';
 			}
 
 			if ( $first ) {
 				$rowspan = count( $handles );
-				echo '<th rowspan="' . esc_attr( $rowspan ) . '" class="qm-nowrap">' . esc_html( $label ) . '</th>';
+				echo '<th scope="row" rowspan="' . esc_attr( $rowspan ) . '" class="qm-nowrap">' . esc_html( $label ) . '</th>';
 			}
 
 			$this->dependency_row( $dependencies->query( $handle ), $dependencies, $type );
@@ -114,7 +111,7 @@ class QMX_Output_Html_Assets extends QM_Output_Html_Assets {
 
 	}
 
-    protected function dependency_row( _WP_Dependency $dependency, WP_Dependencies $dependencies, $type ) {
+	protected function dependency_row( _WP_Dependency $dependency, WP_Dependencies $dependencies, $type ) {
 
 		if ( empty( $dependency->ver ) ) {
 			$ver = '';
@@ -122,13 +119,17 @@ class QMX_Output_Html_Assets extends QM_Output_Html_Assets {
 			$ver = $dependency->ver;
 		}
 
+		$loader = rtrim( $type, 's' );
+
 		/**
-		 * Filter the script loader source.
+		 * Filter the asset loader source.
 		 *
-		 * @param string $src    Script loader source path.
-		 * @param string $handle Script handle.
+		 * The variable {$loader} can be either 'script' or 'style'.
+		 *
+		 * @param string $src    Script or style loader source path.
+		 * @param string $handle Script or style handle.
 		 */
-		$source = apply_filters( 'script_loader_src', $dependency->src, $dependency->handle );
+		$source = apply_filters( "{$loader}_loader_src", $dependency->src, $dependency->handle );
 
 		if ( is_wp_error( $source ) ) {
 			$src = $source->get_error_message();
@@ -157,20 +158,19 @@ class QMX_Output_Html_Assets extends QM_Output_Html_Assets {
 		$highlight_deps       = array_map( array( $this, '_prefix_type' ), $deps );
 		$highlight_dependents = array_map( array( $this, '_prefix_type' ), $dependents );
 
-		echo '<td class="qm-wrap">' . esc_html( $dependency->handle ) . '<br><span class="qm-info">&nbsp;';
+		echo '<th scope="row" class="qm-wrap">' . esc_html( $dependency->handle ) . '<br><span class="qm-info">&nbsp;';
 		if ( is_wp_error( $source ) ) {
 			printf( '<span class="qm-warn">%s</span>',
-				( false === $this->get_relative_src( $src ) ? esc_html( $src ) : esc_html( $this->get_relative_src( $src ) ) )
+				esc_html( $src )
 			);
 		} else {
-			echo ( false === $this->get_relative_src( $src ) ? esc_html( $src ) : esc_html( $this->get_relative_src( $src ) ) );
+			echo esc_html( $src );
 		}
 		echo '</span></td>';
-        echo '<td class="qm-num">' . $this->get_filesize( $src ) . '</td>';
-		echo '<td class="qm-nowrap qm-highlighter" data-qm-highlight="' . esc_attr( implode( ' ', $highlight_deps ) ) . '">' . implode( '<br>', array_map( 'esc_html', $deps ) ) . '</td>';
-		echo '<td class="qm-nowrap qm-highlighter" data-qm-highlight="' . esc_attr( implode( ' ', $highlight_dependents ) ) . '">' . implode( '<br>', array_map( 'esc_html', $dependents ) ) . '</td>';
+		echo '<td class="qm-nowrap qm-highlighter" data-qm-highlight="' . esc_attr( implode( ' ', $highlight_deps ) ) . ' "><ul><li>' . implode( '</li><li>', array_map( 'esc_html', $deps ) ) . '</li></ul></td>';
+		echo '<td class="qm-nowrap qm-highlighter" data-qm-highlight="' . esc_attr( implode( ' ', $highlight_dependents ) ) . ' "><ul><li>' . implode( '</li><li>', array_map( 'esc_html', $dependents ) ) . '</li></ul></td>';
 		echo '<td>' . esc_html( $ver ) . '</td>';
-        echo '<td class="qm-has-inner">';
+		echo '<td class="qm-has-inner">';
 			if ( is_array( $dependency->extra ) && count ( $dependency->extra ) ) {
 				echo '<table cellspacing="0" class="qm-inner"' . ( count( $deps ) > count( $dependency->extra ) || count( $dependents ) > count( $dependency->extra ) ? ' style="border-bottom-style: solid !important; border-bottom-width: 1px;"' : '' ) . '>';
 					foreach ( $dependency->extra as $key => $value ) {
