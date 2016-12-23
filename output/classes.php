@@ -28,7 +28,7 @@ class QMX_Output_Html_Classes extends QM_Output_Html {
 				echo '<caption>Registered Classes</caption>';
 				echo '<tbody>';
 
-					sort( $data['classes'], SORT_STRING | SORT_FLAG_CASE );
+					// sort( $data['classes'], SORT_STRING | SORT_FLAG_CASE );
 
 					foreach ( $data['classes'] as $class ) {
 						$i++;
@@ -37,10 +37,10 @@ class QMX_Output_Html_Classes extends QM_Output_Html {
 							echo '<tr>';
 
 						$reflector = new ReflectionClass( $class );
+						$hasFileName = false !== $reflector && false !== $reflector->getFileName() && !empty( $reflector->getFileName() );
 
-						echo '<td class="qm-ltr"">' .
-							esc_html( $class ) . '<br />' .
-							( false !== $reflector && false !== $reflector->getFileName() && !empty( $reflector->getFileName() ) ? '&nbsp;<span class="qm-info" title="' . esc_attr( $reflector->getFileName() ) . '">' . basename( $reflector->getFileName() ) . '</span><br />' : '' ) . '<br />' .
+						echo '<td class="qm-ltr' . ( !$hasFileName ? ' qm-false' : '' ) . '" title="' . ( $hasFileName ? esc_attr( $reflector->getFileName() ) : '' ) . '">' .
+							esc_html( $class ) .
 						'</td>';
 
 						if ( 0 === $i % self::cols )
