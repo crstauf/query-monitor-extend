@@ -13,6 +13,7 @@ class QMX_Output_Html_Constants extends QM_Output_Html {
 	public function __construct( QM_Collector $collector ) {
 		parent::__construct( $collector );
 		add_filter( 'qm/output/menus', array( $this, 'admin_menu' ), 111 );
+		add_filter( 'qm/output/menus', array( $this, 'admin_menu_conditionals' ), 205 );
 	}
 
 	public function output() {
@@ -65,6 +66,23 @@ class QMX_Output_Html_Constants extends QM_Output_Html {
 	}
 
 	public function admin_menu( array $menu ) {
+		$add = array(
+            'title' => sprintf(
+                __( 'User-defined Constants (%s)', 'query-monitor' ),
+                (
+                    is_array( self::$constants )
+                    ? count( self::$constants )
+                    : 0
+                )
+            )
+        );
+
+		$menu[] = $this->menu( $add );
+
+		return $menu;
+	}
+
+	public function admin_menu_conditionals( array $menu ) {
 		$constants = array();
 
 		if ( defined( 'W3TC' ) && W3TC )
@@ -84,19 +102,6 @@ class QMX_Output_Html_Constants extends QM_Output_Html {
 					'meta'  => array( 'classname' => 'qm-true qm-ltr' )
 				) );
 		}
-
-		$add = array(
-            'title' => sprintf(
-                __( 'User-defined Constants (%s)', 'query-monitor' ),
-                (
-                    is_array( self::$constants )
-                    ? count( self::$constants )
-                    : 0
-                )
-            )
-        );
-
-		$menu[] = $this->menu( $add );
 
 		return $menu;
 	}
