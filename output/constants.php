@@ -13,7 +13,7 @@ class QMX_Output_Html_Constants extends QM_Output_Html {
 	public function __construct( QM_Collector $collector ) {
 		parent::__construct( $collector );
 		add_filter( 'qm/output/menus', array( $this, 'admin_menu' ), 111 );
-		add_filter( 'qm/output/menus', array( $this, 'admin_menu_conditionals' ), 205 );
+		add_filter( 'qm/output/menus', array( $this, 'admin_menu_conditionals' ), 1005 );
 	}
 
 	public function output() {
