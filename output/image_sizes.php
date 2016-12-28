@@ -46,8 +46,7 @@ class QMX_Output_Html_ImageSizes extends QM_Output_Html {
 						'<th class="qm-num qm-imagesize-height">Height' . $this->build_sorter() . '</th>' .
                         '<th class="qm-num qm-imagesize-ratio">Ratio' . $this->build_sorter() . '</th>' .
 						'<th style="width: 65px;">' .
-							'<span style="white-space: nowrap;">Origin</span>' .
-                            $this->build_filter('imagesize-origin',array_keys($origins),'subject') .
+							$this->build_filter('imagesize-origin',array_keys($origins),__( 'Origin', 'query-monitor' ),'subject') .
 						'</th>' .
 					'</tr>' .
 				'</thead>' .
