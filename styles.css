@@ -61,7 +61,6 @@
 
 .qm .qmx-switch .slider + * { padding-left: 3px; }
 
-.qm-hide-imagesize-origin,
 .qm-hide-includedfilespath,
 .qm-hide-includedfilescomponent { display: none !important; }
 
