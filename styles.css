@@ -12,7 +12,7 @@
 
 .qm .qmx-switch {
     position: relative;
-    margin-right: 5px;
+    margin-right: 5px !important;
 }
 
 .qm .qmx-switch + .qmx-switch { margin-left: 10px; }
@@ -93,7 +93,30 @@
 .qmx-includedfiles-filesize { max-width: 160px; min-width: 110px; }
 .qmx-includedfiles-component { max-width: 200px; }
 
+#qm-qmx-benchmarks tbody.compact td.qmx-benchmark-page_time-same,
+#qm-qmx-benchmarks tbody.compact td.qmx-benchmark-memory-same,
+#qm-qmx-benchmarks tbody.compact td.qmx-benchmark-db_time-same,
+#qm-qmx-benchmarks tbody.compact td.qmx-benchmark-db_types-same,
+#qm-qmx-benchmarks tbody.compact td.qmx-benchmark-files-same {
+    line-height: 0 !important;
+    font-size: 0 !important;
+}
+
+    #qm-qmx-benchmarks tbody.compact tr:hover td.qmx-benchmark-page_time-same,
+    #qm-qmx-benchmarks tbody.compact tr:hover td.qmx-benchmark-memory-same,
+    #qm-qmx-benchmarks tbody.compact tr:hover td.qmx-benchmark-db_time-same,
+    #qm-qmx-benchmarks tbody.compact tr:hover td.qmx-benchmark-db_types-same,
+    #qm-qmx-benchmarks tbody.compact tr:hover td.qmx-benchmark-files-same { color: #f9f9f9 !important; }
+
+#qm-qmx-benchmarks tbody.compact td.qmx-benchmark-page_time-same *,
+#qm-qmx-benchmarks tbody.compact td.qmx-benchmark-memory-same *,
+#qm-qmx-benchmarks tbody.compact td.qmx-benchmark-db_time-same *,
+#qm-qmx-benchmarks tbody.compact td.qmx-benchmark-db_types-same *,
+#qm-qmx-benchmarks tbody.compact td.qmx-benchmark-files-same * { color: inherit !important; }
+
 #qm-qmx-benchmarks tr .qm-info { visibility: hidden; }
+
+    #qm-qmx-benchmarks tbody.compact tr .qm-info { display: none; }
 
     #qm-qmx-benchmarks tr:hover .qm-info { visibility: visible; }
 

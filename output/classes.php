@@ -8,7 +8,7 @@ if (!defined('ABSPATH') || !function_exists('add_filter')) {
 
 class QMX_Output_Html_Classes extends QM_Output_Html {
 
-	const cols = 6;
+	const cols = 4;
 
 	private static $classes = array();
 

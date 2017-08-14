@@ -1,5 +1,9 @@
 jQuery(function($) {
 
+    $(document).ready(function() {
+        $("#qm-qmx-benchmarks tbody").addClass('compact');
+    });
+
     $(".qmx-switch input").on('change',function() {
 
         var label  = $(this).closest('label'),
@@ -29,9 +33,16 @@ jQuery(function($) {
             results.find('.qm-items-number').text( QM_i18n.number_format( visible.length, 0 ) );
         }
 
-        if ( visible.length === tr.length )
+        if ( results && results.length && visible.length === tr.length )
             results.addClass('qm-hide');
 
+    });
+
+    $("#qm-qmx-benchmarks .qmx-switch input").on('change',function() {
+        if (jQuery(this).is(':checked'))
+            jQuery("#qm-qmx-benchmarks tbody.compact").removeClass('compact');
+        else
+            jQuery("#qm-qmx-benchmarks tbody").addClass('compact');
     });
 
     $("#qm-qmx-included_files table").on('qm-filtered',function(ev,rows) {

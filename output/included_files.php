@@ -229,7 +229,7 @@ class QMX_Output_Html_IncludedFiles extends QM_Output_Html {
                                 echo '<tr ' .
                                         'data-qm-includedfilespath="' . esc_attr( implode( ' ', array_keys( $details['selectors'] ) ) ) . '" ' .
                                         'data-qm-includedfilescomponent="' . esc_attr( $details['component'] ) . '"' .
-                                        ( 'errors' === $status ? ' class="qm-warn"' : '' ) .
+                                        ( 'errors' === $status ? ' class="qm-warn"' : ' id="qmx-file-' . esc_attr( $details['i'] + 1 ) . '"' ) .
                                     '>' .
                                         '<td class="qm-num" data-qm-sort-weight="' . ( 'errors' === $status ? 0 : ( $details['i'] + 1 ) ) . '">' .
                                             ( 'errors' === $status ? ' ' : ( $details['i'] + 1 ) ) .

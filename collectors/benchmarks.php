@@ -27,14 +27,25 @@ class QMX_Collector_Benchmarks extends QM_Collector {
 
     }
 
-    public function add_data($label = false) {
+    public function add_data($label = false,$file_line = false,$timestamp = null) {
         global $wpdb;
+
+        if ( is_array( $file_line ) )
+            $file_line = str_replace(
+                ABSPATH,
+                './',
+                $file_line[0] . ':' . $file_line[1]
+            );
+
+        if ( empty( $timestamp ) )
+            $timestamp = time();
 
         $now = array();
 
         $now['label'] = $label;
+        $now['file_line'] = $file_line;
         $now['i'] = count( $this->data['benchmarks'] );
-        $now['timestamp'] = time();
+        $now['timestamp'] = $timestamp;
 
         $now['time'] = self::timer_stop_float();
 
@@ -72,21 +83,42 @@ class QMX_Collector_Benchmarks extends QM_Collector {
 
     }
 
+    function add_early_data( $now ) {
+        $this->data['benchmarks'][] = $now;
+    }
+
 }
 
 QM_Collectors::add( new QMX_Collector_Benchmarks );
 
-function QMX_Benchmark($label = false) {
+function QMX_Benchmark($label = false,$file_line = false,$timestamp = null) {
     if ( $collector = QM_Collectors::get( 'qmx-benchmarks' ) ) {
-        $data = $collector->get_data();
-        if ( function_exists( 'wp_get_current_user' ) ) {
-            if ( current_user_can( 'administrator' ) )
-                echo '<!-- QMX Benchmark ' . ( count( $data['benchmarks'] ) + 1 ) . ': ' . ( false === $label ? time() : esc_html( $label ) ) . ' -->';
-        } else
-            echo '<!-- QMX Benchmark ' . ( count( $data['benchmarks'] ) + 1 ) . ': ' . ( false === $label ? time() : esc_html( $label ) ) . ' -->';
 
-        $collector->add_data($label);
+        if ( empty( $timestamp ) )
+            $timestamp = time();
+
+        $data = $collector->get_data();
+
+        if (
+            did_action( 'send_headers' )
+            || did_action( 'admin_init' )
+        ) {
+
+            if ( function_exists( 'wp_get_current_user' ) ) {
+                if ( current_user_can( 'administrator' ) )
+                    echo '<!-- QMX Benchmark ' . ( count( $data['benchmarks'] ) + 1 ) . ': ' . ( false === $label ? $timestamp : esc_html( $label ) ) . ( !empty( $file_line ) ? ', ' . str_replace( ABSPATH, './', $file_line[0] ) . ':' . $file_line[1] : '' ) . ' -->';
+            } else
+                echo '<!-- QMX Benchmark ' . ( count( $data['benchmarks'] ) + 1 ) . ': ' . ( false === $label ? $timestamp : esc_html( $label ) ) . ( !empty( $file_line ) ? ', ' . str_replace( ABSPATH, './', $file_line[0] ) . ':' . $file_line[1] : '' ) . ' -->';
+
+        }
+
+        $collector->add_data($label,$file_line,$timestamp);
     }
+}
+
+function QMX_Early_Benchmark( $now ) {
+    if ( $collector = QM_Collectors::get( 'qmx-benchmarks' ) )
+        $collector->add_early_data( $now );
 }
 
 ?>
