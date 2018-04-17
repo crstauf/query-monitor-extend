@@ -142,7 +142,7 @@ class QMX_Output_Html_Assets extends QM_Output_Html_Assets {
 			$src = $source;
 		}
 
-		$dependents = self::get_dependents( $dependency, $dependencies, $type );
+		$dependents = $this->collector->get_dependents( $dependency, $dependencies );
 		$deps = $dependency->deps;
 		sort( $deps );
 
@@ -175,7 +175,7 @@ class QMX_Output_Html_Assets extends QM_Output_Html_Assets {
 				echo '<table cellspacing="0" class="qm-inner"' . ( count( $deps ) > count( $dependency->extra ) || count( $dependents ) > count( $dependency->extra ) ? ' style="border-bottom-style: solid !important; border-bottom-width: 1px;"' : '' ) . '>';
 					foreach ( $dependency->extra as $key => $value ) {
 						echo '<tr>';
-							echo '<td' . ( !is_array( $value ) && !is_object( $value ) ? ' colspan="2"' : '' ) . '>' . esc_html( $key ) . '</td>';
+							echo '<td' . ( !is_array( $value ) && !is_object( $value ) ? ' colspan="2"' : '' ) . ' style="background: transparent !important;">' . esc_html( $key ) . '</td>';
 							if ( is_array( $value ) )
 								echo '<td>' . count( $value ) . '</td>';
 							else if ( is_object( $value ) )

@@ -142,8 +142,6 @@ class QMX_Output_Html_IncludedFiles extends QM_Output_Html {
     }
 
     public function output() {
-        $this->collect_data();
-
         if (
             (
                 !array_key_exists( 'files', $this->data )
@@ -326,6 +324,7 @@ class QMX_Output_Html_IncludedFiles extends QM_Output_Html {
     }
 
     public function admin_menu( array $menu ) {
+        $this->collect_data();
 
         $add = array(
             'title' => sprintf(
