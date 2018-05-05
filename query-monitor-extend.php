@@ -36,5 +36,7 @@ foreach ( array( 'QueryMonitorExtend', 'Collectors', 'Collector', 'Output' ) as 
 	require_once "{$qmx_dir}/classes/{$qmx_class}.php";
 }
 
+include_once "{$qmx_dir}/output/AdminBar.php";
+
 QueryMonitorExtend::init( __FILE__ );
 ?>
