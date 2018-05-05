@@ -14,9 +14,6 @@ class QMX_Collector_Files extends QMX_Collector {
 	}
 
 	public function process() {
-
-		error_log( print_r( QM_Collectors::get( 'php_errors' )->get_data(), true ) );
-
 		$php_errors = QM_Collectors::get( 'php_errors' )->get_data();
 		$files_with_errors = array();
 
@@ -42,5 +39,3 @@ function register_qmx_collector_files( array $collectors, QueryMonitorExtend $qm
 }
 
 add_filter( 'qmx/collectors', 'register_qmx_collector_files', 10, 2 );
-
-trigger_error( 'Notice' );
