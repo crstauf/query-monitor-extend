@@ -9,7 +9,8 @@ class QMX_Output_Html_Files extends QMX_Output_Html {
 
 	public function __construct( QMX_Collector $collector ) {
 		parent::__construct( $collector );
-		add_filter( 'qm/output/panel_menus', array( &$this, 'panel_menu' ), 60 );
+		add_filter( 'qm/output/title',       array( &$this, 'admin_title' ), 40 );
+		add_filter( 'qm/output/panel_menus', array( &$this, 'panel_menu'  ), 60 );
 	}
 
 	public function output() {
@@ -128,6 +129,19 @@ class QMX_Output_Html_Files extends QMX_Output_Html {
 			}
 
 		echo '</div>';
+	}
+
+	public function admin_title( array $title ) {
+		$data = $this->collector->get_data();
+
+		if ( !empty( $data['files'] ) ) {
+			$_title = sprintf( esc_html_x( '%s F', 'Files count', 'query-monitor-extend' ), number_format_i18n( count( $data['files'] ) ) );
+			$_title = preg_replace( '#\s?([^0-9,\.]+)#', '<small>$1</small>', $_title );
+			$title[] = $_title;
+		}
+
+		return $title;
+
 	}
 
 	public function panel_menu( array $menu ) {
