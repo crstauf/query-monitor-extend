@@ -9,6 +9,9 @@ class QueryMonitorExtend extends QMX_Plugin {
 
 	protected function __construct( $file ) {
 
+		if ( self::is_debugging() )
+			add_action( 'init', function() { $this->_tests(); } );
+
 		add_action( 'plugins_loaded',    array( &$this, 'action__plugins_loaded'    ) );
 		add_action( 'shutdown',          array( &$this, 'action__shutdown'          ), -1 );
 
@@ -102,6 +105,38 @@ class QueryMonitorExtend extends QMX_Plugin {
 		}
 
 		return $instance;
+
+	}
+
+	public static function is_debugging() {
+		return defined( 'QMX_DEBUG' ) && QMX_DEBUG;
+	}
+
+	protected function _tests() {
+		if (
+			defined( 'DOING_AJAX' )
+			&& DOING_AJAX
+		)
+			return;
+
+		if ( 1 ) {
+			global $wpdb;
+
+			$wpdb->query( 'SELECT * FROM `not_a_table`' );
+			$wpdb->query( 'SELECT SLEEP( ' . ( QM_DB_EXPENSIVE + 0.01 ) . ' )' );
+		}
+
+		if ( 1 ) {
+			wp_remote_get( 'http://not-a-server.local', array( 'timeout' => '0.1' ) );
+			wp_remote_get( 'https://httpstat.us/400' );
+		}
+
+		if ( 1 ) trigger_error( 'Notice' );
+		if ( 1 ) trigger_error( 'Warning', E_USER_WARNING );
+		if ( 1 ) trigger_error( 'Deprecated', E_USER_DEPRECATED );
+
+		if ( 1 )
+			wp_enqueue_style( 'does-not-exist', 'https://localhost/no-stylesheet.css', array( 'not-dependency' ) );
 
 	}
 
