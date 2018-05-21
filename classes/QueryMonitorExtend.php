@@ -12,12 +12,14 @@ class QueryMonitorExtend extends QMX_Plugin {
 		if ( self::is_debugging() )
 			add_action( 'init', function() { $this->_tests(); } );
 
-		add_action( 'plugins_loaded',    array( &$this, 'action__plugins_loaded'    ) );
-		add_action( 'shutdown',          array( &$this, 'action__shutdown'          ), -1 );
+		add_action( 'plugins_loaded',          array( &$this, 'action__plugins_loaded'          ) );
+		add_action( 'shutdown',                array( &$this, 'action__shutdown'                ), -1 );
 
 		add_filter( 'plugin_row_meta',         array( &$this, 'filter__plugin_row_meta'         ), 10, 2 );
 		add_filter( 'qm/outputter/html',       array( &$this, 'filter__qm_outputter_html'       ) );
 		add_filter( 'qm/collect/conditionals', array( &$this, 'filter__qm_collect_conditionals' ) );
+
+		add_filter( 'qm/outputter/html', array( &$this, 'register_qmx_output_html_assets__override' ), 79, 2 );
 
 		# Parent setup:
 		parent::__construct( $file );
@@ -138,6 +140,12 @@ class QueryMonitorExtend extends QMX_Plugin {
 		if ( 1 )
 			wp_enqueue_style( 'does-not-exist', 'https://localhost/no-stylesheet.css', array( 'not-dependency' ) );
 
+	}
+
+	function register_qmx_output_html_assets__override( array $output, QM_Collectors $collectors ) {
+		remove_filter( 'qm/outputter/html', 'register_qm_output_html_assets', 80 );
+		require_once $this->plugin_path( 'output/html/overrides/assets.php' );
+		return $output;
 	}
 
 }
