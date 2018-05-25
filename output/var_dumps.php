@@ -27,13 +27,30 @@ class QMX_Output_Html_VarDumps extends QM_Output_Html {
         		echo '<thead><tr><th>Var Dump: ' . $array['label'] . '</th></tr></thead>';
                 echo '<tbody><tr><td>';
 
-    			QM_Output_Html::output_inner( $array['var'] );
+                $var = $this->prepare_output_inner( $array['var'] );
+    			QM_Output_Html::output_inner( $var );
 
                 echo '</td></tr></tbody>';
                 echo '</table>';
                 echo '</div>';
             }
 
+	}
+
+	public function prepare_output_inner( $var ){
+		if( ! is_object( $var ) || ! is_array( $var ) ){
+			if( is_string( $var) ){
+				$var = [ 'string' => $var ];
+			} elseif ( is_int( $var ) ){
+				$var = [ 'integer' => $var ];
+			} elseif ( is_float( $var ) ){
+				$var = [ 'float' => $var ];
+			} elseif ( is_bool( $var ) ){
+				$var = [ 'boolean' => $var ];
+			}
+		}
+
+		return $var;
 	}
 
     public function admin_menu( array $menu ) {
