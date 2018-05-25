@@ -18,15 +18,13 @@ class QMX_Output_Html_VarDumps extends QM_Output_Html {
 
 		$data = $this->collector->get_data();
 
-		echo '<span id="' . esc_attr( $this->collector->id() ) . '"></span>';
-
         if ( array_key_exists( 'vardumps', $data ) && is_array( $data['vardumps'] ) && count( $data['vardumps'] ) )
     		foreach ( $data['vardumps'] as $id => $array ) {
 
-                echo '<div id="' . esc_attr( $this->collector->id() . '-' . $id ) . '" class="qm">';
+                echo '<div id="' . esc_attr( $this->collector->id() ) . '" class="qm">';
 
                 echo '<table cellspacing="0">';
-        		echo '<thead><tr><td>Var Dump: ' . $array['label'] . '</td></tr></thead>';
+        		echo '<thead><tr><th>Var Dump: ' . $array['label'] . '</th></tr></thead>';
                 echo '<tbody><tr><td>';
 
     			QM_Output_Html::output_inner( $array['var'] );
