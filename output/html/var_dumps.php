@@ -48,7 +48,7 @@ class QMX_Output_Html_Var_Dumps extends QMX_Output_Html {
 								echo '<td class="qm-num">' . $i++ . '</td>';
 								echo '<td class="qm-ltr">' . esc_html( $label ) . '</td>';
 								echo '<td>';
-									echo '<textarea class="code" style="width: 100%; height: 200px; background-color: rgba( 255, 255, 255, 0.25 ); font-size: inherit;" readonly="readonly">';
+									echo '<textarea style="font-family: Consolas, Monaco, monospace; width: 100%; height: 200px; background-color: rgba( 255, 255, 255, 0.25 ); font-size: inherit;" readonly="readonly">';
 										print_r( $value );
 									echo '</textarea>';
 								echo '</td>';
@@ -73,7 +73,7 @@ class QMX_Output_Html_Var_Dumps extends QMX_Output_Html {
 		$data = $this->collector->get_data();
 
 		$menu['var_dumps'] = $this->menu( array(
-			'title' => esc_html__( 'Var Dumps' . ( count( $data['vars'] ) ? ' (' . count( $data['vars'] ) . ')' : '' ), 'query-monitor-extend' ),
+			'title' => esc_html__( 'Var Dumps' . ( !empty( $data['vars'] ) ? ' (' . count( $data['vars'] ) . ')' : '' ), 'query-monitor-extend' ),
 			'id'    => 'query-monitor-extend-var-dumps',
 		) );
 
