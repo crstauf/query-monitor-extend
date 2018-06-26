@@ -71,5 +71,3 @@ function register_qmx_output_html_heartbeat( array $output ) {
 }
 
 add_filter( 'qmx/outputter/html', 'register_qmx_output_html_heartbeat', 70 );
-
-do_action( 'qmx/var_dump', wc_get_order( 25 ) );
