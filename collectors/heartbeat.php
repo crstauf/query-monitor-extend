@@ -49,7 +49,17 @@ class QMX_Collector_Heartbeat extends QMX_Collector {
 						return;
 					}
 
-					that.add_table_row( that.get_table_row( ( that._beats.find( 'tr' ).length + 1 ), lub, '', ( 0 == that._prev_dub ? '-' : ( lub - that._prev_dub ) ), '-' ) );
+					that.add_table_row( that.get_table_row(
+						( that._beats.find( 'tr' ).length + 1 ),
+						lub,
+						'',
+						(
+							0 == that._prev_dub
+							? '-'
+							: ( lub - that._prev_dub )
+						),
+						'-'
+					) );
 					that._beat = that._beats.find( 'tr:last-child' );
 				} );
 
@@ -64,8 +74,11 @@ class QMX_Collector_Heartbeat extends QMX_Collector {
 						return;
 					}
 
-					that._beat.find( 'td.dub' ).html( dub - that._start );
-					that._beat.find( 'td.dur' ).html( ( dub - that._start ) - parseFloat( that._beat.find( 'td.lub' ).html() ) );
+					var dub_secs = ( dub - that._start ) / 1000;
+					var duration = ( ( ( dub - that._start ) / 1000 ) - parseFloat( that._beat.find( 'td.lub' ).text() ) );
+
+					that._beat.find( 'td.dub' ).html( dub_secs.toFixed( 3 ) );
+					that._beat.find( 'td.dur' ).html( duration.toFixed( 3 ) );
 					that._prev_dub = dub;
 				} );
 
@@ -82,12 +95,19 @@ class QMX_Collector_Heartbeat extends QMX_Collector {
 			},
 
 			get_table_row: function( index, lub, dub, since_last, duration ) {
+				var lub_diff = ( lub - this._start ) / 1000;
+				var dub_diff = ( dub - this._start ) / 1000;
+				var duration_secs = duration / 1000;
+
+				var since_last_secs = '-' != since_last ? since_last / 1000 : '-';
+				since_last_secs = '-' != since_last_secs ? since_last_secs.toFixed( 3 ) : '-';
+
 				return '<tr>' +
 					'<td class="qm-num">' + index + '</td>' +
-					'<td class="qm-num lub">' + ( lub - this._start ) + '</td>' +
-					'<td class="qm-num dub">' + ( dub - this._start ) + '</td>' +
-					'<td class="qm-num since">' + since_last + '</td>' +
-					'<td class="qm-num dur">' + duration + '</td>' +
+					'<td class="qm-num lub">' + lub_diff.toFixed( 3 ) + '</td>' +
+					'<td class="qm-num dub">' + dub_diff.toFixed( 3 ) + '</td>' +
+					'<td class="qm-num since">' + since_last_secs + '</td>' +
+					'<td class="qm-num dur">' + duration_secs.toFixed( 3 ) + '</td>' +
 				'</tr>';
 			}
 
