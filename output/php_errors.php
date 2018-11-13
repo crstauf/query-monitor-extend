@@ -50,7 +50,9 @@ class QMX_Output_Html_PHP_Errors extends QM_Output_Html_PHP_Errors {
 				$first = true;
 
 				foreach ( $data['errors'][$type] as $error ) {
-
+					if(is_array($error)){
+						$error = (object)$error;
+					}
 					if ( !$first ) {
 						echo '<tr>';
 					}
