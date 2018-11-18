@@ -32,13 +32,19 @@ class QMX_Collector_Time extends QMX_Collector {
 
 	function get_server() {
 		$datetime = date_create( "now", new DateTimeZone( 'UTC' ) );
-		$datetime->setTimezone( new DateTimeZone( ini_get( 'date.timezone' ) ) );
+
+		if ( !empty( ini_get( 'date.timezone' ) ) )
+			$datetime->setTimezone( new DateTimeZone( ini_get( 'date.timezone' ) ) );
+
 		return $datetime->format( 'D, M j, Y H:i:s' );
 	}
 
 	function get_server_offset() {
 		$datetime = date_create( "now", new DateTimeZone( 'UTC' ) );
-		$datetime->setTimezone( new DateTimeZone( ini_get( 'date.timezone' ) ) );
+
+		if ( !empty( ini_get( 'date.timezone' ) ) )
+			$datetime->setTimezone( new DateTimeZone( ini_get( 'date.timezone' ) ) );
+
 		return $datetime->format( 'Z' );
 	}
 
