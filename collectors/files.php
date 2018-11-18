@@ -20,7 +20,7 @@ class QMX_Collector_Files extends QMX_Collector {
 		if ( !empty( $php_errors['errors'] ) )
 			foreach ( $php_errors['errors'] as $type => $errors )
 				foreach ( $errors as $error )
-					$files_with_errors[$error->file] = 1;
+					$files_with_errors[$error['file']] = 1;
 
 		foreach ( get_included_files() as $i => $filepath )
 			$this->data['files'][] = array(
