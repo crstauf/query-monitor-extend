@@ -42,7 +42,7 @@ class QMX_Output_Html_Files extends QMX_Output_Html {
 				}
 
 				echo '<table class="qm-sortable">';
-					echo '<caption>' . esc_html( $this->collector->name() ) . '</caption>';
+					echo '<caption class="qm-screen-reader-text">' . esc_html( $this->collector->name() ) . '</caption>';
 					echo '<thead>';
 						echo '<tr>';
 

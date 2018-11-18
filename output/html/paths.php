@@ -19,7 +19,7 @@ class QMX_Output_Html_Paths extends QMX_Output_Html {
 
 			if ( !empty( $data['paths'] ) ) {
 				echo '<table class="qm-sortable">';
-					echo '<caption>' . esc_html( $this->collector->name() ) . '</caption>';
+					echo '<caption class="qm-screen-reader-text">' . esc_html( $this->collector->name() ) . '</caption>';
 					echo '<thead>';
 						echo '<tr>';
 

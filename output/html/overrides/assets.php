@@ -51,7 +51,7 @@ class QMX_Output_Html_Assets extends QM_Output_Html_Assets {
 
 			echo '<div class="qm" id="' . esc_attr( $this->collector->id() ) . '-' . esc_attr( $type ) . '">';
 			echo '<table>';
-			echo '<caption>' . esc_html( $type_label['plural'] ) . '</caption>';
+			echo '<caption class="qm-screen-reader-text">' . esc_html( $type_label['plural'] ) . '</caption>';
 			echo '<thead>';
 			echo '<tr>';
 			echo '<th scope="col">' . esc_html__( 'Position', 'query-monitor' ) . '</th>';
