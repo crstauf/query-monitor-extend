@@ -25,10 +25,11 @@ $qmx_dir = dirname( __FILE__ );
 require_once "{$qmx_dir}/classes/Plugin.php";
 
 if (
-	!class_exists( 'QueryMonitor' )
-	|| 'cli' === php_sapi_name()
+	   'cli' === php_sapi_name()
 	|| ( defined( 'DOING_CRON'   ) && DOING_CRON   )
+	|| ( defined( 'QM_DISABLED'  ) && QM_DISABLED  )
 	|| ( defined( 'QMX_DISABLED' ) && QMX_DISABLED )
+	|| !class_exists( 'QueryMonitor' )
 )
 	return;
 
