@@ -12,6 +12,7 @@
  * Version: 1.0-alpha
  * Author: Caleb Stauffer
  * Author URI: http://develop.calebstauffer.com
+ * QM tested up to: 3.1.1
 */
 
 if ( !defined( 'ABSPATH' ) || !function_exists( 'add_filter' ) ) {
