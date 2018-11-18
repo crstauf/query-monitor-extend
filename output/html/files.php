@@ -84,7 +84,7 @@ class QMX_Output_Html_Files extends QMX_Output_Html {
 								( !empty( $file['has_error'] ) ? ' class="qm-warn"' : '' ) .
 							'>';
 								echo '<td class="qm-num">' . ( $i + 1 ) . '</td>';
-								echo '<td>' . esc_html( $file['path'] ) . '</td>';
+								echo '<td title="' . esc_attr( $file['path'] ) . '">' . esc_html( str_replace( ABSPATH, '/', $file['path'] ) ) . '</td>';
 								echo '<td data-qm-sort-weight="' . filesize( $file['path'] ) . '">' . $this->human_file_size( filesize( $file['path'] ) ) . '</td>';
 								echo '<td>' . esc_html( $file['component']->name ) . '</td>';
 							echo '</tr>';
