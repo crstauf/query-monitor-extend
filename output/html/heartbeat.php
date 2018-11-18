@@ -17,7 +17,13 @@ class QMX_Output_Html_Heartbeat extends QMX_Output_Html {
 
 		echo '<div class="qm" id="' . esc_attr( $this->collector->id() ) . '">';
 
-			if ( wp_script_is( 'heartbeat', 'done' ) ) {
+			if ( $this->collector->qm_no_jquery() ) {
+
+				echo '<div class="qm-none">';
+				echo '<p>Heartbeat logging requires jQuery, which has been prevented by <code>QM_NO_JQUERY</code>.</p>';
+				echo '</div>';
+
+			} else if ( wp_script_is( 'heartbeat', 'done' ) ) {
 				echo '<table class="qm-sortable">';
 					echo '<caption class="qm-screen-reader-text">' . esc_html( $this->collector->name() ) . '</caption>';
 
@@ -34,9 +40,15 @@ class QMX_Output_Html_Heartbeat extends QMX_Output_Html {
 					echo '</thead>';
 
 					echo '<tbody>';
+						echo '<tr class="listening">';
+							echo '<td colspan="5">';
+								echo '<div class="qm-none"><p>Listening for first heartbeat...</p></div>';
+							echo '</td>';
+						echo '</tr>';
 					echo '</tbody>';
 
 				echo '</table>';
+				echo '<script type="text/javascript">qmx_heartbeat.populate_table();</script>';
 			} else {
 
 				echo '<div class="qm-none">';
@@ -46,8 +58,6 @@ class QMX_Output_Html_Heartbeat extends QMX_Output_Html {
 			}
 
 		echo '</div>';
-
-		echo '<script type="text/javascript">qmx_heartbeat.populate_table();</script>';
 	}
 
 	public function panel_menu( array $menu ) {

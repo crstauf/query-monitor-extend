@@ -12,6 +12,9 @@ class QMX_Collector_Heartbeat extends QMX_Collector {
 	function __construct() {
 		parent::__construct();
 
+		if ( $this->qm_no_jquery() )
+			return;
+
 		add_action( 'wp_enqueue_scripts', array( &$this, 'add_inline_script' ) );
 		add_action( 'admin_enqueue_scripts', array( &$this, 'add_inline_script' ) );
 	}
@@ -45,6 +48,14 @@ class QMX_Collector_Heartbeat extends QMX_Collector {
 					var d = new Date();
 					var lub = d.getTime();
 					var count = ( that._beats.find( 'tr' ).length + 1 );
+
+					if (
+						2 == count
+						&& that._beats.find( 'tr' ).hasClass( 'listening' )
+					) {
+						that._beats.html( '' );
+						count = 1;
+					}
 
 					if ( !that._table_ready ) {
 						that._beat = { lub: lub };
@@ -138,6 +149,10 @@ class QMX_Collector_Heartbeat extends QMX_Collector {
 	}
 
 	public function process() {
+	}
+
+	public function qm_no_jquery() {
+		return defined( 'QM_NO_JQUERY' ) && QM_NO_JQUERY;
 	}
 
 }
