@@ -42,8 +42,12 @@ class QMX_Collector_Image_Sizes extends QMX_Collector {
 			),
 		);
 
-		add_action( 'plugins_loaded',    array( &$this, 'action__plugins_loaded'    ) );
-		add_action( 'after_setup_theme', array( &$this, 'action__after_setup_theme' ) );
+		add_action( 'plugins_loaded',        array( &$this, 'action__plugins_loaded'    ) );
+		add_action( 'after_setup_theme',     array( &$this, 'action__after_setup_theme' ) );
+		add_action( 'wp_enqueue_scripts',    array( &$this, 'add_inline_script' ), -998 );
+		add_action( 'admin_enqueue_scripts', array( &$this, 'add_inline_script' ), -998 );
+		add_action( 'login_enqueue_scripts', array( &$this, 'add_inline_script' ), -998 );
+		add_action( 'enqueue_embed_scripts', array( &$this, 'add_inline_script' ), -998 );
 
 	}
 
@@ -138,6 +142,50 @@ class QMX_Collector_Image_Sizes extends QMX_Collector {
 		);
 
 		return $size;
+	}
+
+	public function add_inline_script() {
+		wp_add_inline_script( 'query-monitor', $this->_inlineScript_queryMonitor() );
+	}
+
+	protected function _inlineScript_queryMonitor() {
+		ob_start();
+		?>
+
+		if ( window.jQuery ) {
+
+			jQuery( function( $ ) {
+
+				$( 'td[data-qmx-image-size-width]' )
+					.on( 'mouseenter', function() { qmx_image_size_highlighter__mouseenter( 'width', this ); } )
+					.on( 'mouseleave', function() { qmx_image_size_highlighter__mouseleave( 'width', this ); } );
+
+				$( 'td[data-qmx-image-size-height]' )
+					.on( 'mouseenter', function() { qmx_image_size_highlighter__mouseenter( 'height', this ); } )
+					.on( 'mouseleave', function() { qmx_image_size_highlighter__mouseleave( 'height', this ); } );
+
+				$( 'td[data-qmx-image-size-ratio]' )
+					.on( 'mouseenter', function() { qmx_image_size_highlighter__mouseenter( 'ratio', this ); } )
+					.on( 'mouseleave', function() { qmx_image_size_highlighter__mouseleave( 'ratio', this ); } );
+
+			} );
+
+			function qmx_image_size_highlighter__mouseenter( prop, el ) {
+				jQuery( el ).addClass( 'qm-highlight' );
+				var tr = jQuery( el ).closest( 'tr' );
+				var value = jQuery( el ).attr( 'data-qmx-image-size-' + prop );
+				var table = jQuery( el ).closest( 'table' ).find( 'tr[data-qmx-image-size-' + prop + '="' + value + '"]' ).not( tr ).addClass( 'qm-highlight' );
+			}
+
+			function qmx_image_size_highlighter__mouseleave( prop, el ) {
+				jQuery( el ).removeClass( 'qm-highlight' );
+				jQuery( el ).closest( 'table' ).find( 'tr.qm-highlight' ).removeClass( 'qm-highlight' );
+			}
+
+		}
+
+		<?php
+		return ob_get_clean();
 	}
 
 }

@@ -73,9 +73,9 @@ class QMX_Output_Html_Image_Sizes extends QMX_Output_Html {
 							echo '<tr data-qmx-image-size-width="' . esc_attr( $row['width'] ) . '" data-qmx-image-size-height="' . esc_attr( $row['height'] ) . '" data-qmx-image-size-ratio="' . esc_attr( $row['ratio'] ) . '">';
 								echo '<td class="qm-num">' . esc_html( $row['num']    ) . '</td>';
 								echo '<td class="qm-ltr">' . esc_html( $id            ) . '</td>';
-								echo '<td class="qm-num">' . esc_html( $row['width']  ) . '</td>';
-								echo '<td class="qm-num">' . esc_html( $row['height'] ) . '</td>';
-								echo '<td class="qm-num" data-qm-sort-weight="' . esc_attr( $row['ratio'] ) . '">' . esc_html( implode( ':', $ratio )  ) . '</td>';
+								echo '<td class="qm-num" data-qmx-image-size-width="'  . esc_attr( $row['width']  ) . '">' . esc_html( $row['width']  ) . '</td>';
+								echo '<td class="qm-num" data-qmx-image-size-height="' . esc_attr( $row['height'] ) . '">' . esc_html( $row['height'] ) . '</td>';
+								echo '<td class="qm-num" data-qmx-image-size-ratio="'  . esc_attr( $row['ratio']  ) . '" data-qm-sort-weight="' . esc_attr( $row['ratio'] ) . '">' . esc_html( implode( ':', $ratio )  ) . '</td>';
 								echo '<td class="qm-num qm-true">' . ( $row['crop'] ? '<span class="dashicons dashicons-yes"></span>' : '' ) . '</td>';
 								echo '<td class="qm-ltr">' . esc_html( $row['source'] ) . '</td>';
 							echo '</tr>';
