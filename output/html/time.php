@@ -23,7 +23,7 @@ class QMX_Output_Html_Time extends QMX_Output_Html {
 					if ( is_callable( array( $this->collector, $function ) ) )
 						echo '<div class="qm-section">' .
 							'<h2>' . esc_html( $label ) . '</h2>' .
-							'<p id="qm-time-' . sanitize_title( $label ) . '">' . $this->collector->$function() . '</p>' .
+							'<p><code id="qm-time-' . sanitize_title( $label ) . '">' . $this->collector->$function() . '</code></p>' .
 						'</div>';
 				}
 
