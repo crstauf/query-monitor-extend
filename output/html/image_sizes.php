@@ -70,7 +70,7 @@ class QMX_Output_Html_Image_Sizes extends QMX_Output_Html {
 							if ( $ratio === array( $row['width'], $row['height'] ) )
 								$ratio = array( '&mdash;' );
 
-							echo '<tr>';
+							echo '<tr data-qmx-image-size-width="' . esc_attr( $row['width'] ) . '" data-qmx-image-size-height="' . esc_attr( $row['height'] ) . '" data-qmx-image-size-ratio="' . esc_attr( $row['ratio'] ) . '">';
 								echo '<td class="qm-num">' . esc_html( $row['num']    ) . '</td>';
 								echo '<td class="qm-ltr">' . esc_html( $id            ) . '</td>';
 								echo '<td class="qm-num">' . esc_html( $row['width']  ) . '</td>';
