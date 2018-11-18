@@ -54,7 +54,7 @@ class QMX_Output_Html_Heartbeat extends QMX_Output_Html {
 		$data = $this->collector->get_data();
 
 		$menu['heartbeat'] = $this->menu( array(
-			'title' => esc_html__( 'Heartbeat' ),
+			'title' => esc_html__( 'Heartbeats (0)' ),
 			'id'    => 'query-monitor-extend-heartbeat',
 		) );
 

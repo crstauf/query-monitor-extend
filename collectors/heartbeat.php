@@ -30,6 +30,7 @@ class QMX_Collector_Heartbeat extends QMX_Collector {
 			_beats: [],
 			_start: 0,
 			_table: null,
+			_tab: null,
 			_table_ready: false,
 
 			_prev_dub: 0,
@@ -43,6 +44,7 @@ class QMX_Collector_Heartbeat extends QMX_Collector {
 				jQuery( document ).on( 'heartbeat-send', function() {
 					var d = new Date();
 					var lub = d.getTime();
+					var count = ( that._beats.find( 'tr' ).length + 1 );
 
 					if ( !that._table_ready ) {
 						that._beat = { lub: lub };
@@ -50,7 +52,7 @@ class QMX_Collector_Heartbeat extends QMX_Collector {
 					}
 
 					that.add_table_row( that.get_table_row(
-						( that._beats.find( 'tr' ).length + 1 ),
+						count,
 						lub,
 						'',
 						(
@@ -60,6 +62,7 @@ class QMX_Collector_Heartbeat extends QMX_Collector {
 						),
 						'-'
 					) );
+					that.update_tab( count );
 					that._beat = that._beats.find( 'tr:last-child' );
 				} );
 
@@ -102,13 +105,24 @@ class QMX_Collector_Heartbeat extends QMX_Collector {
 				var since_last_secs = '-' != since_last ? since_last / 1000 : '-';
 				since_last_secs = '-' != since_last_secs ? since_last_secs.toFixed( 3 ) : '-';
 
-				return '<tr>' +
+				return '<tr' +
+					(
+						1 == ( index % 2 )
+						? ' class="qm-odd"'
+						: ''
+					) +
+				'>' +
 					'<td class="qm-num">' + index + '</td>' +
 					'<td class="qm-num lub">' + lub_diff.toFixed( 3 ) + '</td>' +
 					'<td class="qm-num dub">' + dub_diff.toFixed( 3 ) + '</td>' +
 					'<td class="qm-num since">' + since_last_secs + '</td>' +
 					'<td class="qm-num dur">' + duration_secs.toFixed( 3 ) + '</td>' +
 				'</tr>';
+			},
+
+			update_tab: function( count ) {
+				this._tab = jQuery( '#qm-panel-menu button[data-qm-href=<?php echo json_encode( '#' . esc_attr( $this->id() ) ) ?>]' );
+				this._tab.html( 'Heartbeats (' + count + ')' );
 			}
 
 		};
