@@ -107,7 +107,7 @@ class QMX_Output_Html_Files extends QMX_Output_Html {
 								'Total: <span class="qm-items-number">' . esc_html( number_format_i18n( count( $data['files'] ) ) ) . '</span>' .
 								(
 									!empty( $files_with_errors )
-									? ', With error(s): <span class="qm-items-number">' . esc_html( number_format_i18n( $files_with_errors ) ) . '</span>'
+									? ', With error(s): <span>' . esc_html( number_format_i18n( $files_with_errors ) ) . '</span>'
 									: ''
 								) .
 							'</td>';
