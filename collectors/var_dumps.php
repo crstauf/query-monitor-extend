@@ -12,6 +12,7 @@ class QMX_Collector_Var_Dumps extends QMX_Collector {
 	function __construct() {
 		add_action( 'qmx/var_dump', array( &$this, 'collect' ), 10, 2 );
 		parent::__construct();
+		$this->data['vars'] = array();
 	}
 
 	public function name() {
