@@ -141,6 +141,31 @@ class QueryMonitorExtend extends QMX_Plugin {
 		if ( 1 )
 			wp_enqueue_style( 'does-not-exist', 'https://localhost/no-stylesheet.css', array( 'not-dependency' ) );
 
+		if ( 1 )
+			qm_dump( array(
+				'one' => range( 1, 9 ),
+				'two' => 2,
+				'three' => array( 'a', 'b', 'c', 'd', 'e', ),
+				'four' => array(
+					1 => 'two',
+					3 => 'four',
+				),
+				'five' => true,
+				'six' => null,
+			), 'Test' );
+
+		if ( 1 )
+			qm_dump( ( object ) array(
+				'one' => range( 5, 13 ),
+				'two' => array( 'a', 'b', 'c', 'd' ),
+				'three' => ( object ) array(
+					'a' => 'alpha',
+					'b' => 'beta',
+					'c' => 'charlie',
+					'd' => 'delta',
+				),
+			) );
+
 	}
 
 	function register_qmx_output_html_assets__override( array $output, QM_Collectors $collectors ) {
