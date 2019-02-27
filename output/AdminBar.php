@@ -18,10 +18,11 @@ class QMX_Admin_Bar {
 	protected function __construct() {
 
 		$this->collectors = array(
-			'assets'     => QM_Collectors::get( 'assets'     ),
-			'db_queries' => QM_Collectors::get( 'db_queries' ),
-			'http'       => QM_Collectors::get( 'http'       ),
-			'php_errors' => QM_Collectors::get( 'php_errors' ),
+			'assets_scripts' => QM_Collectors::get( 'assets_scripts' ),
+			'assets_styles'  => QM_Collectors::get( 'assets_styles'  ),
+			'db_queries'     => QM_Collectors::get( 'db_queries'     ),
+			'http'           => QM_Collectors::get( 'http'           ),
+			'php_errors'     => QM_Collectors::get( 'php_errors'     ),
 		);
 
 		add_filter( 'qm/output/menu_class', array( $this, 'filter__qm_output_menu_class' ) );
@@ -58,15 +59,17 @@ class QMX_Admin_Bar {
 			foreach ( $data['errors'] as $type => $errors )
 				$colors[$this->class_to_color[$type]] = count( $errors );
 
-		// count broken assets
-		$data = $this->collectors['assets']->get_data();
+		foreach ( array( 'assets_styles', 'assets_scripts' ) as $assets ) {
+			// count broken assets
+			$data = $this->collectors[$assets]->get_data();
 
-		if ( !empty( $data['broken'] ) )
-			$colors[$this->class_to_color['error']] += count( $data['broken'] );
+			if ( !empty( $data['broken'] ) )
+				$colors[$this->class_to_color['error']] += count( $data['broken'] );
 
-		// count missing assets
-		if ( !empty( $data['missing'] ) )
-			$colors[$this->class_to_color['error']] += count( $data['missing'] );
+			// count missing assets
+			if ( !empty( $data['missing'] ) )
+				$colors[$this->class_to_color['error']] += count( $data['missing'] );
+		}
 
 		// count database query errors
 		$data = $this->collectors['db_queries']->get_errors();

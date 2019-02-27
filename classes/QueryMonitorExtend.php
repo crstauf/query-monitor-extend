@@ -19,9 +19,6 @@ class QueryMonitorExtend extends QMX_Plugin {
 		add_filter( 'qm/outputter/html',       array( &$this, 'filter__qm_outputter_html'       ) );
 		add_filter( 'qm/collect/conditionals', array( &$this, 'filter__qm_collect_conditionals' ) );
 
-		if ( !defined( 'QMX_ASSETS_OUTPUT_OVERRIDE' ) || QMX_ASSETS_OUTPUT_OVERRIDE )
-			add_filter( 'qm/outputter/html', array( &$this, 'register_qmx_output_html_assets__override' ), 79, 2 );
-
 		# Parent setup:
 		parent::__construct( $file );
 
@@ -166,12 +163,6 @@ class QueryMonitorExtend extends QMX_Plugin {
 				),
 			) );
 
-	}
-
-	function register_qmx_output_html_assets__override( array $output, QM_Collectors $collectors ) {
-		remove_filter( 'qm/outputter/html', 'register_qm_output_html_assets', 80 );
-		require_once $this->plugin_path( 'output/html/overrides/assets.php' );
-		return $output;
 	}
 
 }
