@@ -1,52 +1,51 @@
 <?php
+/**
+ * Var dumps collector.
+ *
+ * @package query-monitor-extend
+ */
 
-if (!defined('ABSPATH') || !function_exists('add_filter')) {
-    header( 'Status: 403 Forbidden' );
-    header( 'HTTP/1.1 403 Forbidden' );
-    exit();
-}
+class QMX_Collector_Var_Dumps extends QMX_Collector {
 
-class QMX_Collector_VarDumps extends QM_Collector {
+	public $id = 'var_dumps';
 
-    public $id = 'qmx-var_dumps';
-
-    public function name() {
-        return __( 'Var Dumps (' . count( query_monitor_extend::$var_dumps ) . ')', 'query-monitor' );
-    }
-
-    public function __construct() {
-
-        global $wpdb;
-
-        parent::__construct();
-
-    }
-
-    public function add( $label, $var, $time ) {
-        $this->data['vardumps'][microtime()] = array( 'label' => $label, 'var' => $var, 'timestamp' => $time );
-    }
-
-}
-
-function register_qmx_collector_vardumps( array $collectors, QueryMonitor $qm ) {
-	$collectors['qmx-var_dumps'] = new QMX_Collector_VarDumps;
-	return $collectors;
-}
-
-add_filter( 'qm/collectors', 'register_qmx_collector_vardumps', 10, 2 );
-
-if ( !function_exists('qmx_dump') ) {
-	function qmx_dump( $var, $label = 'Unknown', $time = false ) {
-        if ( false === $time )
-            $time = time();
-        QM_Collectors::get( 'qmx-var_dumps' )->add( $label, $var, $time );
+	function __construct() {
+		add_action( 'qmx/var_dump', array( &$this, 'collect' ), 10, 2 );
+		parent::__construct();
+		$this->data['vars'] = array();
 	}
+
+	public function name() {
+		return __( 'Var Dumps', 'query-monitor-extend' );
+	}
+
+	public function collect( $var, $label = null ) {
+		if ( is_null( $label ) )
+			$label = time();
+		else if ( array_key_exists( $label, $this->data['vars'] ) )
+			$label .= ' (' . time() . ')';
+
+		$this->data['vars'][$label] = $var;
+	}
+
 }
 
-if ( !function_exists('qm_dump') ) {
-    function qm_dump( $var, $label = 'Unknown' ) {
-        qmx_dump( $var, $label, time() );
-    }
+QMX_Collectors::add( new QMX_Collector_Var_Dumps );
+
+// Backwards compatibility
+if ( !function_exists( 'qmx_dump' ) ) {
+
+	function qmx_dump( $var, $label = null ) {
+		if ( QMX_Collectors::get( 'var_dumps' ) )
+			QMX_Collectors::get( 'var_dumps' )->collect( $var, $label );
+	}
+
 }
 
-?>
+if ( !function_exists( 'qm_dump' ) ) {
+
+	function qm_dump( $var, $label = null ) {
+		qmx_dump( $var, $label );
+	}
+
+}
