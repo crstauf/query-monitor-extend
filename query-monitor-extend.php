@@ -20,25 +20,26 @@ if ( !defined( 'ABSPATH' ) || !function_exists( 'add_filter' ) ) {
 	header( 'HTTP/1.1 403 Forbidden' );
 	exit();
 }
+if (  class_exists( '\QM_Plugin' ) ) {
+	$qmx_dir = dirname( __FILE__ );
 
-$qmx_dir = dirname( __FILE__ );
+	require_once "{$qmx_dir}/classes/Plugin.php";
 
-require_once "{$qmx_dir}/classes/Plugin.php";
+	if (
+		   'cli' === php_sapi_name()
+		|| ( defined( 'DOING_CRON'   ) && DOING_CRON   )
+		|| ( defined( 'QM_DISABLED'  ) && QM_DISABLED  )
+		|| ( defined( 'QMX_DISABLED' ) && QMX_DISABLED )
+		|| !class_exists( 'QueryMonitor' )
+	)
+		return;
 
-if (
-	   'cli' === php_sapi_name()
-	|| ( defined( 'DOING_CRON'   ) && DOING_CRON   )
-	|| ( defined( 'QM_DISABLED'  ) && QM_DISABLED  )
-	|| ( defined( 'QMX_DISABLED' ) && QMX_DISABLED )
-	|| !class_exists( 'QueryMonitor' )
-)
-	return;
+	foreach ( array( 'QueryMonitorExtend', 'Collectors', 'Collector', 'Output' ) as $qmx_class ) {
+		require_once "{$qmx_dir}/classes/{$qmx_class}.php";
+	}
 
-foreach ( array( 'QueryMonitorExtend', 'Collectors', 'Collector', 'Output' ) as $qmx_class ) {
-	require_once "{$qmx_dir}/classes/{$qmx_class}.php";
+	include_once "{$qmx_dir}/output/AdminBar.php";
+
+	QueryMonitorExtend::init( __FILE__ );
 }
-
-include_once "{$qmx_dir}/output/AdminBar.php";
-
-QueryMonitorExtend::init( __FILE__ );
 ?>
