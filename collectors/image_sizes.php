@@ -97,6 +97,7 @@ class QMX_Collector_Image_Sizes extends QMX_Collector {
 		$counts = array( 'dimensions' => array(), 'ratios' => array() );
 
 		foreach ( $this->data['sizes'] as $size ) {
+			$size['crop'] = is_array( $size ['crop'] ) ? implode( '_', $size['crop'] ) : $size['crop'];
 			$key = $size['width'] . ':' . $size['height'] . ' - ' . $size['crop'];
 			array_key_exists( $key, $counts['dimensions'] )
 				? $counts['dimensions'][$key]++
