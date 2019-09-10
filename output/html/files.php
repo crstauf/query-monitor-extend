@@ -157,7 +157,7 @@ class QMX_Output_Html_Files extends QMX_Output_Html {
 
 	private function human_file_size( $bytes ) {
 		$filesize_units = 'BKMGTP';
-		$factor = floor( ( strlen( $bytes ) - 1 ) / 3 );
+		$factor = intval( floor( ( strlen( $bytes ) - 1 ) / 3 ) );
 		return sprintf( "%.2f", $bytes / pow( 1024, $factor ) ) . @$filesize_units[$factor];
 	}
 
