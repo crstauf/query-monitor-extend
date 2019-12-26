@@ -47,6 +47,12 @@ class QMX_Collector_Heartbeat extends QMX_Collector {
 				jQuery( document ).on( 'heartbeat-send', function() {
 					var d = new Date();
 					var lub = d.getTime();
+
+					if ( !that._table_ready ) {
+						that._beat = { lub: lub };
+						return;
+					}
+
 					var count = ( that._beats.find( 'tr' ).length + 1 );
 
 					if (
@@ -55,11 +61,6 @@ class QMX_Collector_Heartbeat extends QMX_Collector {
 					) {
 						that._beats.html( '' );
 						count = 1;
-					}
-
-					if ( !that._table_ready ) {
-						that._beat = { lub: lub };
-						return;
 					}
 
 					that.add_table_row( that.get_table_row(
