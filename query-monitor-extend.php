@@ -21,10 +21,6 @@ if ( !defined( 'ABSPATH' ) || !function_exists( 'add_filter' ) ) {
 	exit();
 }
 
-$qmx_dir = dirname( __FILE__ );
-
-require_once "{$qmx_dir}/classes/Plugin.php";
-
 if (
 	   'cli' === php_sapi_name()
 	|| ( defined( 'DOING_CRON'   ) && DOING_CRON   )
@@ -33,6 +29,10 @@ if (
 	|| !class_exists( 'QueryMonitor' )
 )
 	return;
+
+$qmx_dir = dirname( __FILE__ );
+
+require_once "{$qmx_dir}/classes/Plugin.php";
 
 foreach ( array( 'QueryMonitorExtend', 'Collectors', 'Collector', 'Output' ) as $qmx_class ) {
 	require_once "{$qmx_dir}/classes/{$qmx_class}.php";
