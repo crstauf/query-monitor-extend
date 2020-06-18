@@ -63,7 +63,7 @@ class QueryMonitorExtend extends QMX_Plugin {
 		array_unshift(
 			$meta,
 			$first,
-			'Tested up to <a href="https://wordpress.org/plugins/query-monitor/" target="_blank" rel="noopener">Query Monitor</a> <a href="https://github.com/johnbillion/query-monitor/releases/tag/3.3.1" target="_blank" rel="noopener">3.3.1</a>'
+			'Tested up to <a href="https://wordpress.org/plugins/query-monitor/" target="_blank" rel="noopener">Query Monitor</a> <a href="https://github.com/johnbillion/query-monitor/releases/tag/3.6.0" target="_blank" rel="noopener">3.6.0</a>'
 		);
 
 		return $meta;
