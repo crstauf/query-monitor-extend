@@ -44,9 +44,9 @@ class QueryMonitorExtend extends QMX_Plugin {
 	}
 
 	function action__shutdown() {
-		global $qm_dir;
+		$qm_dir = trailingslashit( QueryMonitor::init()->plugin_path() );
 
-		require_once $qm_dir . '/output/Html.php';
+		require_once $qm_dir . 'output/Html.php';
 		require_once $this->plugin_path( 'output/Html.php' );
 
 		foreach ( glob( $this->plugin_path( 'output/html/*.php' ) ) as $file ) {
