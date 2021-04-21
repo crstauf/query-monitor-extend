@@ -26,8 +26,31 @@ if (
 	|| ( defined( 'DOING_CRON'   ) && DOING_CRON   )
 	|| ( defined( 'QM_DISABLED'  ) && QM_DISABLED  )
 	|| ( defined( 'QMX_DISABLED' ) && QMX_DISABLED )
-	|| !class_exists( 'QueryMonitor' )
 )
+	return;
+
+add_filter( 'plugin_row_meta', function ( $meta, $file ) {
+	if ( class_exists( 'QueryMonitor' ) )
+		return $meta;
+
+	if ( 'query-monitor-extend/query-monitor-extend.php' !== $file )
+		return $meta;
+
+	$first = array_shift( $meta );
+
+	array_unshift(
+		$meta,
+		$first,
+		sprintf(
+			'Requires <a href="%1$s" rel="noopener noreferrer">Query Monitor</a>',
+			'https://wordpress.org/plugins/query-monitor/',
+		)
+	);
+
+	return $meta;
+}, 10, 2 );
+
+if ( !class_exists( 'QueryMonitor' ) )
 	return;
 
 $qmx_dir = dirname( __FILE__ );
