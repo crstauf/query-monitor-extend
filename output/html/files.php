@@ -29,6 +29,7 @@ class QMX_Output_Html_Files extends QMX_Output_Html {
 
 				foreach ( $data['files'] as &$file ) {
 					$file['_path_components'] = array();
+
 					foreach ( array_filter( explode( '/', str_replace( ABSPATH, '', dirname( $file['path'] ) ) ) ) as $path_component ) {
 						$path_components[$path_component]
 							= $file['_path_components'][$path_component]
@@ -38,6 +39,13 @@ class QMX_Output_Html_Files extends QMX_Output_Html {
 								= $file['_path_components'][$smaller_path_component]
 								= 1;
 					}
+
+					if ( filesize( $file['path'] ) > $largest_file['size'] )
+						$largest_file = array(
+							'path' => $file['path'],
+							'size' => filesize( $file['path'] ),
+						);
+
 					$components[$file['component']->name] = 1;
 				}
 
@@ -69,11 +77,6 @@ class QMX_Output_Html_Files extends QMX_Output_Html {
 
 						foreach ( $data['files'] as $i => $file ) {
 
-							if ( filesize( $file['path'] ) > $largest_file['size'] )
-								$largest_file = array(
-									'path' => $file['path'],
-									'size' => filesize( $file['path'] ),
-								);
 
 							if ( !empty( $file['has_error'] ) )
 								$files_with_errors++;
@@ -85,7 +88,13 @@ class QMX_Output_Html_Files extends QMX_Output_Html {
 							'>';
 								echo '<td class="qm-num">' . ( $i + 1 ) . '</td>';
 								echo '<td title="' . esc_attr( $file['path'] ) . '">' . esc_html( str_replace( ABSPATH, '/', $file['path'] ) ) . '</td>';
-								echo '<td data-qm-sort-weight="' . filesize( $file['path'] ) . '">' . $this->human_file_size( filesize( $file['path'] ) ) . '</td>';
+
+								echo '<td data-qm-sort-weight="' . filesize( $file['path'] ) . '">';
+									if ( $file['path'] === $largest_file['path'] ) echo '<span class="qm-warn">';
+									echo $this->human_file_size( filesize( $file['path'] ) );
+									if ( $file['path'] === $largest_file['path'] ) echo '</span>';
+								echo '</td>';
+
 								echo '<td>' . esc_html( $file['component']->name ) . '</td>';
 							echo '</tr>';
 						}
