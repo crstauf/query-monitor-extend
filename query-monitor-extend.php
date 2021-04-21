@@ -9,7 +9,7 @@
  * Plugin Name: Query Monitor Extend
  * Plugin URI: https://github.com/crstauf/query-monitor-extend
  * Description: Enhancements and extensions for the awesome Query Monitor plugin by John Blackbourn
- * Version: 1.0
+ * Version: 1.1
  * Author: Caleb Stauffer
  * Author URI: http://develop.calebstauffer.com
  * QM tested up to: 3.6.7
