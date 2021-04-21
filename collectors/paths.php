@@ -65,7 +65,7 @@ class QMX_Collector_Paths extends QMX_Collector {
 			'wp_upload_dir()' => wp_upload_dir(),
 		) );
 
-		ksort( $this->data['paths'] );
+		ksort( $this->data['paths'], SORT_FLAG_CASE | SORT_STRING );
 
 	}
 
