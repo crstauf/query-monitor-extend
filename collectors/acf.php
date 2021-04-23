@@ -10,38 +10,47 @@ class QMX_Collector_ACF extends QMX_Collector {
 	public $id = 'acf';
 
 	protected $data = array(
-		'fields' => array(),
+		'fields'     => array(),
+		'field_keys' => array(),
+		'post_ids'   => array(),
+		'callers'    => array(),
 	);
+
+	protected $store = array();
 
 	function __construct() {
 		parent::__construct();
 		add_filter( 'acf/pre_load_value', array( $this, 'filter__acf_pre_load_value' ), 10, 3 );
 	}
 
-	public function process() {
-
-		// $this->data['local_json'] = array(
-		// 	'save' => $this->remove_abspath( ( string ) apply_filters( 'acf/settings/save_json', array() ) ),
-		// 	'load' => apply_filters( 'acf/settings/load_json', ( array ) acf_get_setting( 'load_json' ) ),
-		// );
-		//
-		// $this->data['local_json']['load'] = array_map( array( $this, 'remove_abspath' ), $this->data['local_json']['load'] );
-		//
-		// $this->data['field_groups'] = acf_get_field_groups();
-
-	}
+	public function process() {}
 
 	function filter__acf_pre_load_value( $short_circuit, $post_id, $field ) {
 		$trace = new QM_Backtrace( array( 'ignore_current_filter' => true ) );
 
-		$field = array(
+		$row = array(
 			'field'   => $field,
 			'post_id' => $post_id,
 			'trace'   => $trace,
-			// 'caller'  => $trace->get_caller()['display']
+			'exists'  => !empty( $field['key'] ),
+			'caller'  => $trace->get_trace()[1],
 		);
 
-		$this->data['fields'][] = $field;
+		$hash = md5( json_encode( $row ) );
+
+		if ( in_array( $hash, $this->store ) )
+			return $short_circuit;
+
+		$this->store[] = $hash;
+		$this->data['fields'][] = $row;
+
+		if ( !empty( $field['key'] ) )
+			$this->data['field_keys'][ $field['name'] ] = $field['name'];
+		else
+			$this->data['field_keys'][ $field['key'] ] = $field['name'];
+
+		$this->data['post_ids'][ ( string ) $post_id ] = $post_id;
+		$this->data['callers'][ $row['caller']['function'] . '()' ] = 1;
 
 		return $short_circuit;
 	}
@@ -75,7 +84,9 @@ class QMX_Collector_ACF extends QMX_Collector {
 		$filters = array(
 			'acf/compatibility',
 			'acf/fields/google_map/api',
+			'acf/is_field_group_key',
 			'acf/is_field_key',
+			'acf/load_field_group',
 			'acf/pre_load_value',
 			'acf/load_value',
 			'acf/format_value',

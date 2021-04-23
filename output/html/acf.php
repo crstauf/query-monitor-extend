@@ -19,18 +19,43 @@ class QMX_Output_Html_ACF extends QMX_Output_Html {
 	public function output() {
 		$data = $this->collector->get_data();
 
+		if ( empty( $data['fields'] ) ) {
+			$this->before_non_tabular_output();
+			echo '<div class="qm-notice"><p>No Advanced Custom Fields.</p></div>';
+			$this->after_non_tabular_output();
+			return;
+		}
+
+		echo '<style>.qm-hide-acf-field, .qm-hide-acf-post, .qm-hide-acf-caller { display: none !important; }</style>';
+
+		natsort( $data['field_keys'] );
+		natsort( $data['post_ids'] );
+		natsort( $data['callers'] );
+
 		$this->before_tabular_output();
 
 		echo '<thead>';
 			echo '<tr>';
 
 				echo '<th scope="col" class="qm-sorted-asc qm-sortable-column" role="columnheader" aria-sort="ascending">';
-				echo $this->build_sorter( '#' ); // WPCS: XSS ok;
+				echo $this->build_sorter( '#' );
 				echo '</th>';
 
-				echo '<th scope="col">' . esc_html__( 'Field name', 'query-monitor' ) . '</th>';
-				echo '<th scope="col">' . esc_html__( 'Post ID', 'query-monitor' ) . '</th>';
-				echo '<th scope="col">' . esc_html__( 'Caller', 'query-monitor' ) . '</th>';
+				echo '<th scope="col" class="qm-filterable-column">';
+				echo $this->build_filter( 'acf-field', $data['field_keys'], __( 'Field', 'query-monitor' ), array(
+					'prepend' => array(
+						'missing' => 'Missing',
+					),
+				) );
+				echo '</th>';
+
+				echo '<th scope="col" class="qm-filterable-column">';
+				echo $this->build_filter( 'acf-post', $data['post_ids'], __( 'Post ID', 'query-monitor' ) );
+				echo '</th>';
+
+				echo '<th scope="col" class="qm-filterable-column">';
+				echo $this->build_filter( 'acf-caller', array_keys( $data['callers'] ), __( 'Caller', 'query-monitor' ) );
+				echo '</th>';
 
 			echo '</tr>';
 		echo '</thead>';
@@ -38,11 +63,37 @@ class QMX_Output_Html_ACF extends QMX_Output_Html {
 		echo '<tbody>';
 
 			foreach ( $data['fields'] as $row_num => $row ) {
-				echo '<tr>';
+				$row_attr = array();
+
+				if ( !$row['exists'] )
+					$row_attr['class'] = 'qm-warn';
+
+				$row_attr['data-qm-acf-field']  = $row['field']['name'] . ' ' . $row['field']['key'];
+				$row_attr['data-qm-acf-post']   = $row['post_id'];
+				$row_attr['data-qm-acf-caller'] = $row['caller']['function'] . '()';
+
+				if ( empty( $row['field']['key'] ) )
+					$row_attr['data-qm-acf-field'] .= ' missing';
+
+				$attr = '';
+
+				foreach ( $row_attr as $a => $v )
+					$attr .= ' ' . $a . '="' . esc_attr( $v ) . '"';
+
+				echo '<tr' . $attr . '>';
+
+					# Number
 					echo '<th scope="row" class="qm-row-num qm-num">' . esc_html( $row_num + 1 ) . '</th>';
-					echo '<td class="qm-ltr">' . esc_html( $row['field']['name'] ) . '</td>';
+
+					# Field name
+					echo '<td class="qm-ltr">';
+					echo esc_html( $row['field']['name'] );
+					echo '</td>';
+
+					# Post ID
 					echo '<td class="qm-ltr">' . esc_html( $row['post_id'] ) . '</td>';
 
+					# Caller
 					echo '<td class="qm-row-caller qm-ltr qm-has-toggle qm-nowrap">';
 					$this->row_caller( $row );
 					echo '</td>';
@@ -58,7 +109,7 @@ class QMX_Output_Html_ACF extends QMX_Output_Html {
 	protected function row_caller( array $row ) {
 		$trace          = $row['trace']->ignore( 1 );
 		$filtered_trace = $trace->get_display_trace();
-		$caller_name    = self::output_filename( $filtered_trace[0]['function'] . '()', $filtered_trace[0]['file'], $filtered_trace[0]['line'] );
+		$caller_name    = self::output_filename( $row['caller']['function'] . '()', $row['caller']['file'], $row['caller']['line'] );
 		$stack          = array();
 		array_shift( $filtered_trace );
 
@@ -78,68 +129,6 @@ class QMX_Output_Html_ACF extends QMX_Output_Html {
 		}
 
 		echo '</ol>';
-	}
-
-	protected function output_local_json() {
-		$data = $this->collector->get_data();
-		$data = $data['local_json'];
-
-		$header_row = '<th scope="row" rowspan="' . esc_attr( count( $data['load'] ) ) . '">load_json</th>';
-
-		echo '<section>';
-			echo '<h3>Local JSON <a href="https://www.advancedcustomfields.com/resources/local-json/" target="_blank" rel="noopener noreferrer" class="qm-external-link">Help</a></h3>';
-			echo '<table>';
-				echo '<tbody>';
-					echo '<tr>';
-						echo '<th scope="row">save_json</th>';
-						echo '<td colspan="2">';
-
-							if ( empty( $data['save'] ) ) {
-								echo '<span class="qm-info">None</span>';
-							} else {
-								echo '<code>' . esc_html( $data['save'] ) . '</code>';
-							}
-
-						echo '</td>';
-					echo '</tr>';
-
-						if ( empty( $data['load'] ) )
-							echo '<tr colspan="2">' . $header_row . '<td class="qm-info">None</td></tr>';
-
-						foreach ( $data['load'] as $i => $path ) {
-							echo '<tr>';
-
-							if ( 0 === $i )
-								echo $header_row;
-
-							echo '<td class="qm-num">' . esc_html( absint( $i ) ) . '</td>';
-
-							echo '<td>';
-								echo '<code>' . esc_html( $path ) . '</code>';
-							echo '</td>';
-
-							echo '</tr>';
-						}
-
-				echo '</tbody>';
-			echo '</table>';
-		echo '</section>';
-	}
-
-	protected function output_field_groups() {
-		$data = $this->collector->get_data();
-		$data = $data['field_groups'];
-
-		echo '<section>';
-			echo '<h3>Field Groups</h3>';
-			echo '<table>';
-				echo '<thead>';
-					echo '<th scope="col">Post ID</th>';
-					echo '<th scope="col">Title</th>';
-					echo '<th scope="col">Key</th>';
-					// echo '<th scope="col">'
-				echo '<tbody>';
-		echo '</section>';
 	}
 
 	public function panel_menu( array $menu ) {
