@@ -14,9 +14,8 @@ class QMX_Collector_ACF extends QMX_Collector {
 		'field_keys' => array(),
 		'post_ids'   => array(),
 		'callers'    => array(),
+		'counts'     => array(),
 	);
-
-	protected $store = array();
 
 	function __construct() {
 		parent::__construct();
@@ -38,11 +37,10 @@ class QMX_Collector_ACF extends QMX_Collector {
 
 		$hash = md5( json_encode( $row ) );
 
-		if ( in_array( $hash, $this->store ) )
+		if ( array_key_exists( $hash, $this->data['counts'] ) ) {
+			$this->data['counts'][ $hash ]++;
 			return $short_circuit;
-
-		$this->store[] = $hash;
-		$this->data['fields'][] = $row;
+		}
 
 		if ( !empty( $field['key'] ) )
 			$this->data['field_keys'][ $field['name'] ] = $field['name'];
@@ -51,6 +49,10 @@ class QMX_Collector_ACF extends QMX_Collector {
 
 		$this->data['post_ids'][ ( string ) $post_id ] = $post_id;
 		$this->data['callers'][ $row['caller']['function'] . '()' ] = 1;
+		$this->data['counts'][ $hash ] = 1;
+
+		$row['hash'] = $hash;
+		$this->data['fields'][] = $row;
 
 		return $short_circuit;
 	}
