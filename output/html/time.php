@@ -76,7 +76,8 @@ class QMX_Output_Html_Time extends QMX_Output_Html {
 									+ server.getFullYear() + ' '
 									+ ( 10 > server.getHours() ? '0' : '' ) + server.getHours()
 									+ ':' + ( 10 > server.getMinutes() ? '0' : '' ) + server.getMinutes()
-									+ ':' + ( 10 > server.getSeconds() ? '0' : '' ) + server.getSeconds();
+									+ ':' + ( 10 > server.getSeconds() ? '0' : '' ) + server.getSeconds()
+									+ ' <?php echo esc_js( $this->collector->get_server_timezone() ) ?>';
 
 								qmx_time_wp.innerHTML =
 									qmx_time_days[wp.getDay()] + ', '
@@ -85,7 +86,8 @@ class QMX_Output_Html_Time extends QMX_Output_Html {
 									+ wp.getFullYear() + ' '
 									+ ( 10 > wp.getHours() ? '0' : '' ) + wp.getHours()
 									+ ':' + ( 10 > wp.getMinutes() ? '0' : '' ) + wp.getMinutes()
-									+ ':' + ( 10 > wp.getSeconds() ? '0' : '' ) + wp.getSeconds();
+									+ ':' + ( 10 > wp.getSeconds() ? '0' : '' ) + wp.getSeconds()
+									+ ' <?php echo esc_js( $this->collector->get_wp_timezone() ) ?>';
 
 								qmx_time_browser.innerHTML =
 									qmx_time_days[d.getDay()] + ', '

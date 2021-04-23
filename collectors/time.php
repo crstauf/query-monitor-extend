@@ -36,7 +36,7 @@ class QMX_Collector_Time extends QMX_Collector {
 		if ( !empty( ini_get( 'date.timezone' ) ) )
 			$datetime->setTimezone( new DateTimeZone( ini_get( 'date.timezone' ) ) );
 
-		return $datetime->format( 'D, M j, Y H:i:s' );
+		return $datetime->format( 'D, M j, Y H:i:s T' );
 	}
 
 	function get_server_offset() {
@@ -48,12 +48,25 @@ class QMX_Collector_Time extends QMX_Collector {
 		return $datetime->format( 'Z' );
 	}
 
+	function get_server_timezone() {
+		$datetime = date_create( "now", new DateTimeZone( 'UTC' ) );
+
+		if ( !empty( ini_get( 'date.timezone' ) ) )
+			$datetime->setTimezone( new DateTimeZone( ini_get( 'date.timezone' ) ) );
+
+		return $datetime->format( 'T' );
+	}
+
 	function get_wp() {
-		return current_time( 'D, M j, Y H:i:s' );
+		return current_time( 'D, M j, Y H:i:s T' );
 	}
 
 	function get_wp_offset() {
 		return get_option( 'gmt_offset' );
+	}
+
+	function get_wp_timezone() {
+		return current_time( 'T' );
 	}
 
 	function get_browser() {
