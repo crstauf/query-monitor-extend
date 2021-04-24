@@ -26,10 +26,11 @@ class QMX_Output_Html_ACF extends QMX_Output_Html {
 			return;
 		}
 
-		echo '<style>.qm-hide-acf-field, .qm-hide-acf-post, .qm-hide-acf-caller { display: none !important; }</style>';
+		echo '<style>.qm-hide-acf-field, .qm-hide-acf-post, .qm-hide-acf-group, .qm-hide-acf-caller { display: none !important; }</style>';
 
 		natsort( $data['field_keys'] );
 		natsort( $data['post_ids'] );
+		natsort( $data['field_groups'] );
 		natsort( $data['callers'] );
 
 		$this->before_tabular_output();
@@ -44,13 +45,17 @@ class QMX_Output_Html_ACF extends QMX_Output_Html {
 				echo '<th scope="col" class="qm-filterable-column">';
 				echo $this->build_filter( 'acf-field', $data['field_keys'], __( 'Field', 'query-monitor' ), array(
 					'prepend' => array(
-						'missing' => 'Missing',
+						'qmx-acf-no-field' => 'Not Found',
 					),
 				) );
 				echo '</th>';
 
 				echo '<th scope="col" class="qm-filterable-column">';
 				echo $this->build_filter( 'acf-post', $data['post_ids'], __( 'Post ID', 'query-monitor' ) );
+				echo '</th>';
+
+				echo '<th scope="col" class="qm-filterable-column">';
+				echo $this->build_filter( 'acf-group', $data['field_groups'], __( 'Group', 'query-monitor' ) );
 				echo '</th>';
 
 				echo '<th scope="col" class="qm-filterable-column">';
@@ -71,9 +76,13 @@ class QMX_Output_Html_ACF extends QMX_Output_Html {
 				$row_attr['data-qm-acf-field']  = $row['field']['name'] . ' ' . $row['field']['key'];
 				$row_attr['data-qm-acf-post']   = $row['post_id'];
 				$row_attr['data-qm-acf-caller'] = $row['caller']['function'] . '()';
+				$row_attr['data-qm-acf-group']  = 'qmx-acf-no-group';
 
 				if ( empty( $row['field']['key'] ) )
-					$row_attr['data-qm-acf-field'] .= ' missing';
+					$row_attr['data-qm-acf-field'] .= ' qmx-acf-no-field';
+
+				if ( !empty( $row['group'] ) )
+					$row_attr['data-qm-acf-group'] = $row['group']['key'];
 
 				$attr = '';
 
@@ -86,16 +95,36 @@ class QMX_Output_Html_ACF extends QMX_Output_Html {
 					echo '<th scope="row" class="qm-row-num qm-num">' . esc_html( $row_num + 1 ) . '</th>';
 
 					# Field name
-					echo '<td class="qm-ltr">';
-					echo esc_html( $row['field']['name'] );
+					echo '<td class="qm-ltr qm-has-toggle qm-nowrap">';
+
+						echo esc_html( $row['field']['name'] );
+
+						if ( $row['exists'] ) {
+							$parent = $row['field']['parent'];
+
+							if ( !empty( $row['group'] ) )
+								$parent = $row['group']['key'];
+
+							echo self::build_toggler();
+							echo '<div class="qm-toggled qm-supplemental qm-info">';
+								echo esc_html( 'Key: ' . $row['field']['key'] );
+								echo '<br />' . esc_html( 'Parent: ' . $parent );
+							echo '</div>';
+						}
+
 					echo '</td>';
 
 					# Post ID
 					echo '<td class="qm-ltr">' . esc_html( $row['post_id'] ) . '</td>';
 
+					# Field group
+					echo '<td class="qm-ltr">';
+					$this->output_column_field_group( $row );
+					echo '</td>';
+
 					# Caller
 					echo '<td class="qm-row-caller qm-ltr qm-has-toggle qm-nowrap">';
-					$this->row_caller( $row );
+					$this->output_column_caller( $row );
 					echo '</td>';
 
 				echo '</tr>';
@@ -106,7 +135,16 @@ class QMX_Output_Html_ACF extends QMX_Output_Html {
 		$this->after_tabular_output();
 	}
 
-	protected function row_caller( array $row ) {
+	protected function output_column_field_group( array $row ) {
+		$group = $row['group'];
+
+		if ( empty( $group ) )
+			return;
+
+		echo $group['title'];
+	}
+
+	protected function output_column_caller( array $row ) {
 		$trace          = $row['trace']->ignore( 1 );
 		$filtered_trace = $trace->get_display_trace();
 		$caller_name    = self::output_filename( $row['caller']['function'] . '()', $row['caller']['file'], $row['caller']['line'] );
@@ -118,11 +156,11 @@ class QMX_Output_Html_ACF extends QMX_Output_Html {
 		}
 
 		if ( ! empty( $stack ) ) {
-			echo self::build_toggler(); // WPCS: XSS ok;
+			echo self::build_toggler();
 		}
 
 		echo '<ol>';
-		echo "<li>{$caller_name}</li>"; // WPCS: XSS ok.
+		echo "<li>{$caller_name}</li>";
 
 		if ( ! empty( $stack ) ) {
 			echo '<div class="qm-toggled"><li>' . implode( '</li><li>', $stack ) . '</li></div>'; // WPCS: XSS ok.

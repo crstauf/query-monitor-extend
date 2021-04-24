@@ -10,11 +10,12 @@ class QMX_Collector_ACF extends QMX_Collector {
 	public $id = 'acf';
 
 	protected $data = array(
-		'fields'     => array(),
-		'field_keys' => array(),
-		'post_ids'   => array(),
-		'callers'    => array(),
-		'counts'     => array(),
+		'fields'       => array(),
+		'field_keys'   => array(),
+		'post_ids'     => array(),
+		'callers'      => array(),
+		'counts'       => array(),
+		'field_groups' => array(),
 	);
 
 	function __construct() {
@@ -24,7 +25,21 @@ class QMX_Collector_ACF extends QMX_Collector {
 
 	public function process() {}
 
-	function filter__acf_pre_load_value( $short_circuit, $post_id, $field ) {
+	public static function get_fields_group( $parent ) {
+		if ( is_null( $parent ) )
+			return null;
+
+		$group = acf_get_field_group( $parent );
+
+		if ( false === $group ) {
+			$field = acf_get_field( $parent );
+			return static::get_fields_group( $field['parent'] );
+		}
+
+		return $group;
+	}
+
+	public function filter__acf_pre_load_value( $short_circuit, $post_id, $field ) {
 		$trace = new QM_Backtrace( array( 'ignore_current_filter' => true ) );
 
 		$row = array(
@@ -33,7 +48,11 @@ class QMX_Collector_ACF extends QMX_Collector {
 			'trace'   => $trace,
 			'exists'  => !empty( $field['key'] ),
 			'caller'  => $trace->get_trace()[1],
+			'group'   => null,
 		);
+
+		if ( !empty( $field['key'] ) )
+			$row['group'] = static::get_fields_group( $field['parent'] );
 
 		$hash = md5( json_encode( $row ) );
 
@@ -46,6 +65,9 @@ class QMX_Collector_ACF extends QMX_Collector {
 			$this->data['field_keys'][ $field['name'] ] = $field['name'];
 		else
 			$this->data['field_keys'][ $field['key'] ] = $field['name'];
+
+		if ( !empty( $row['group'] ) )
+			$this->data['field_groups'][ $row['group']['key'] ] = $row['group']['title'];
 
 		$this->data['post_ids'][ ( string ) $post_id ] = $post_id;
 		$this->data['callers'][ $row['caller']['function'] . '()' ] = 1;
