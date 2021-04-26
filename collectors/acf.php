@@ -128,57 +128,21 @@ class QMX_Collector_ACF extends QMX_Collector {
 			'acf/init',
 		);
 
-		if ( is_admin() ) {
-			$actions = array_merge( $actions, array(
-				'acf/field_group/admin_enqueue_scripts',
-				'acf/field_group/admin_head',
-				'acf/field_group/admin_footer',
-				'acf/input/admin_enqueue_scripts',
-				'acf/input/admin_head',
-				'acf/input/admin_footer',
-				'acf/input/form_data',
-				'acf/render_field',
-				'acf/save_post',
-				'acf/validate_save_post',
-			) );
-		}
-
-		sort( $actions, SORT_STRING );
-
 		return $actions;
 	}
 
 	public function get_concerned_filters() {
 		$filters = array(
-			'acf/compatibility',
-			'acf/fields/google_map/api',
 			'acf/is_field_group_key',
 			'acf/is_field_key',
 			'acf/load_field_group',
 			'acf/pre_load_value',
 			'acf/load_value',
-			'acf/format_value',
 			'acf/settings/load_json',
 		);
 
 		if ( is_admin() ) {
 			$filters = array_merge( $filters, array(
-				'acf/fields/flexible_content/layout_title',
-				'acf/fields/post_object/query',
-				'acf/fields/post_object/result',
-				'acf/fields/relationship/query',
-				'acf/fields/relationship/result',
-				'acf/fields/taxonomy/query',
-				'acf/fields/taxonomy/result',
-				'acf/fields/taxonomy/wp_list_categories',
-				'acf/prepare_field',
-				'acf/register_block_type_args',
-				'acf/update_field',
-				'acf/update_value',
-				'acf/upload_prefilter',
-				'acf/validate_attachment',
-				'acf/validate_value',
-				'acf/pre_save_post',
 				'acf/settings/save_json',
 			) );
 		}

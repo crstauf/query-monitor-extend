@@ -146,6 +146,12 @@ class QMX_Output_Html_ACF extends QMX_Output_Html {
 
 		echo '</tbody>';
 
+		echo '<tfoot>';
+			echo '<tr>';
+				printf( '<td colspan="5">Total: %d</td>', count( $data['fields'] ) );
+			echo '</tr>';
+		echo '</tfoot>';
+
 		echo '</table>';
 		echo '</div>';
 	}
@@ -265,7 +271,6 @@ class QMX_Output_Html_ACF extends QMX_Output_Html {
 			echo '</tbody>';
 		echo '</table>';
 
-		echo '</div>';
 		echo '</div>';
 	}
 
