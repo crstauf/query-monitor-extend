@@ -30,6 +30,14 @@ class QMX_Output_Html_ACF extends QMX_Output_Html {
 	public function output() {
 		$data = $this->collector->get_data();
 
+		$this->output_fields_table();
+		$this->output_local_json();
+		$this->output_concerns();
+	}
+
+	protected function output_fields_table() {
+		$data = $this->collector->get_data();
+
 		if ( empty( $data['fields'] ) ) {
 			$this->before_non_tabular_output();
 			echo '<div class="qm-notice"><p>No Advanced Custom Fields.</p></div>';
@@ -140,71 +148,6 @@ class QMX_Output_Html_ACF extends QMX_Output_Html {
 
 		echo '</table>';
 		echo '</div>';
-
-		$id = 'qm-acf-local_json';
-		$name = 'Advanced Custom Fields: Local JSON';
-
-		printf(
-			'<div class="qm qm-concerns" id="%1$s" role="tabpanel" aria-labelledby="%1$s-caption" tabindex="-1">',
-			esc_attr( $id )
-		);
-
-		echo '<table class="qm-sortable">';
-
-			printf(
-				'<caption><h2 id="%1$s-caption">%2$s<br />%3$s</h2></caption>',
-				esc_attr( $id ),
-				esc_html( $name ),
-				'<a href="https://www.advancedcustomfields.com/resources/local-json/" rel="noopener noreferrer" class="qm-external-link">Documentation</a>'
-			);
-
-			echo '<thead>';
-				echo '<tr>';
-					echo '<th scope="col">Action</th>';
-					echo '<th scope="col">Hook</th>';
-					echo '<th scope="col" colspan="2">Paths</th>';
-				echo '</tr>';
-			echo '</thead>';
-
-			echo '<tbody>';
-
-			if ( !empty( $data['local_json']['save'] ) ) {
-				echo '<tr>';
-					echo '<th scope="row">Save</th>';
-					echo '<td><code>acf/settings/save_json</code></td>';
-					echo '<td colspan="2"><code>' . esc_html( $this->remove_abspath( $data['local_json']['save'] ) ) . '</code></td>';
-				echo '</tr>';
-			}
-
-			if ( !empty( $data['local_json']['load'] ) ) {
-				$i = 0;
-
-				foreach ( $data['local_json']['load'] as $path ) {
-					echo '<tr>';
-
-						if ( 0 === $i ) {
-							echo '<th scope="row" rowspan="' . esc_attr( count( $data['local_json']['load'] ) ) . '">Load</th>';
-							echo '<td rowspan="' . esc_attr( count( $data['local_json']['load'] ) ) . '"><code>acf/settings/load_json</code></td>';
-						}
-
-						echo '<td>' . esc_html( $i ) . '</td>';
-						echo '<td><code>' . esc_html( $this->remove_abspath( $path ) ) . '</code></td>';
-
-					echo '</tr>';
-
-					$i++;
-				}
-			}
-
-			echo '</tbody>';
-		echo '</table>';
-
-		echo '</section>';
-
-		echo '</div>';
-		echo '</div>';
-
-		$this->output_concerns();
 	}
 
 	protected function output_column_field_name( array $row ) {
@@ -260,6 +203,70 @@ class QMX_Output_Html_ACF extends QMX_Output_Html {
 		echo "<li>{$caller_name}</li>";
 		echo '<div class="qm-toggled"><li>' . implode( '</li><li>', $stack ) . '</li></div>';
 		echo '</ol>';
+	}
+
+	protected function output_local_json() {
+		$id = 'qm-acf-local_json';
+		$name = 'Advanced Custom Fields: Local JSON';
+		$data = $this->collector->get_data();
+
+		printf(
+			'<div class="qm qm-concerns" id="%1$s" role="tabpanel" aria-labelledby="%1$s-caption" tabindex="-1">',
+			esc_attr( $id )
+		);
+
+		echo '<table class="qm-sortable">';
+
+			printf(
+				'<caption><h2 id="%1$s-caption">%2$s<br />%3$s</h2></caption>',
+				esc_attr( $id ),
+				esc_html( $name ),
+				'<a href="https://www.advancedcustomfields.com/resources/local-json/" rel="noopener noreferrer" class="qm-external-link">Documentation</a>'
+			);
+
+			echo '<thead>';
+				echo '<tr>';
+					echo '<th scope="col">Action</th>';
+					echo '<th scope="col">Hook</th>';
+					echo '<th scope="col" colspan="2">Paths</th>';
+				echo '</tr>';
+			echo '</thead>';
+
+			echo '<tbody>';
+
+			if ( !empty( $data['local_json']['save'] ) ) {
+				echo '<tr>';
+					echo '<th scope="row">Save</th>';
+					echo '<td><code>acf/settings/save_json</code></td>';
+					echo '<td colspan="2"><code>' . esc_html( $this->remove_abspath( $data['local_json']['save'] ) ) . '</code></td>';
+				echo '</tr>';
+			}
+
+			if ( !empty( $data['local_json']['load'] ) ) {
+				$i = 0;
+
+				foreach ( $data['local_json']['load'] as $path ) {
+					echo '<tr>';
+
+						if ( 0 === $i ) {
+							echo '<th scope="row" rowspan="' . esc_attr( count( $data['local_json']['load'] ) ) . '">Load</th>';
+							echo '<td rowspan="' . esc_attr( count( $data['local_json']['load'] ) ) . '"><code>acf/settings/load_json</code></td>';
+						}
+
+						echo '<td class="qm-num">' . esc_html( $i ) . '</td>';
+						echo '<td><code>' . esc_html( $this->remove_abspath( $path ) ) . '</code></td>';
+
+					echo '</tr>';
+
+					$i++;
+				}
+			}
+
+			echo '</tbody>';
+		echo '</table>';
+
+		echo '</div>';
+		echo '</div>';
 	}
 
 	public function remove_abspath( string $path ) : string {
