@@ -212,9 +212,8 @@ class QMX_Output_Html_ACF extends QMX_Output_Html {
 		echo $group['title'];
 	}
 
-	// TODO: adjust to start with get_field(), have_rows(), get_field_object(), get_sub_field()
 	protected function output_column_caller( array $row ) {
-		$trace          = $row['trace']->ignore( 1 );
+		$trace          = $row['trace'];
 		$filtered_trace = $trace->get_display_trace();
 		$caller_name    = self::output_filename( $row['caller']['function'] . '()', $row['caller']['file'], $row['caller']['line'] );
 		$stack          = array();
@@ -224,17 +223,11 @@ class QMX_Output_Html_ACF extends QMX_Output_Html {
 			$stack[] = self::output_filename( $item['display'], $item['file'], $item['line'] );
 		}
 
-		if ( ! empty( $stack ) ) {
-			echo self::build_toggler();
-		}
+		echo self::build_toggler();
 
 		echo '<ol>';
 		echo "<li>{$caller_name}</li>";
-
-		if ( ! empty( $stack ) ) {
-			echo '<div class="qm-toggled"><li>' . implode( '</li><li>', $stack ) . '</li></div>'; // WPCS: XSS ok.
-		}
-
+		echo '<div class="qm-toggled"><li>' . implode( '</li><li>', $stack ) . '</li></div>';
 		echo '</ol>';
 	}
 

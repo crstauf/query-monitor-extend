@@ -49,26 +49,61 @@ class QMX_Collector_ACF extends QMX_Collector {
 		return $paths;
 	}
 
+	protected static function get_start_trace_functions() {
+		$functions = null;
+
+		if ( !is_null( $functions ) )
+			return $functions;
+
+		$functions = apply_filters( 'qmx/collector/acf/start_trace_functions', array(
+			'get_field',
+			'get_field_object',
+			'have_rows',
+		) );
+
+		return $functions;
+	}
+
 	public function filter__acf_pre_load_value( $short_circuit, $post_id, $field ) {
-		$trace = new QM_Backtrace( array( 'ignore_current_filter' => true ) );
+		$full_stack_trace = apply_filters( 'qmx/collector/acf/full_stack_trace', false, $post_id, $field );
+		$trace = new QM_Backtrace( array( 'ignore_current_filter' => !$full_stack_trace ) );
+
+		if ( false === $full_stack_trace ) {
+			foreach ( $trace->get_trace() as $frame ) {
+				if (
+					in_array( $frame['function'], static::get_start_trace_functions() )
+					&& false === stripos( $frame['file'], ACF_PATH )
+				)
+					break;
+
+				$trace->ignore( 1 );
+			}
+		}
 
 		$row = array(
-			'field'   => $field,
-			'post_id' => $post_id,
-			'trace'   => $trace,
-			'exists'  => !empty( $field['key'] ),
-			'caller'  => $trace->get_trace()[1],
-			'group'   => null,
+			'field'     => $field,
+			'post_id'   => $post_id,
+			'trace'     => $trace,
+			'exists'    => !empty( $field['key'] ),
+			'caller'    => $trace->get_trace()[0],
+			'group'     => null,
+			'hash'      => null,
+			'duplicate' => false,
 		);
 
 		if ( !empty( $field['key'] ) )
 			$row['group'] = static::get_fields_group( $field['parent'] );
 
 		$hash = md5( json_encode( $row ) );
+		$row['hash'] = $hash;
 
 		if ( array_key_exists( $hash, $this->data['counts'] ) ) {
 			$this->data['counts'][ $hash ]++;
-			return $short_circuit;
+
+			if ( apply_filters( 'qmx/collector/acf/hide_duplicates', true ) )
+				return $short_circuit;
+
+			$row['duplicate'] = true;
 		}
 
 		if ( !empty( $field['key'] ) )
@@ -83,7 +118,6 @@ class QMX_Collector_ACF extends QMX_Collector {
 		$this->data['callers'][ $row['caller']['function'] . '()' ] = 1;
 		$this->data['counts'][ $hash ] = 1;
 
-		$row['hash'] = $hash;
 		$this->data['fields'][] = $row;
 
 		return $short_circuit;
