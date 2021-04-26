@@ -65,7 +65,7 @@ class QMX_Collector_ACF extends QMX_Collector {
 	}
 
 	public function filter__acf_pre_load_value( $short_circuit, $post_id, $field ) {
-		$full_stack_trace = apply_filters( 'qmx/collector/acf/full_stack_trace', false, $post_id, $field );
+		$full_stack_trace = apply_filters( 'qmx/collector/acf/full_stack_trace', is_admin(), $post_id, $field );
 		$trace = new QM_Backtrace( array( 'ignore_current_filter' => !$full_stack_trace ) );
 
 		if ( false === $full_stack_trace ) {
