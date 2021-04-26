@@ -16,11 +16,16 @@ class QMX_Collector_ACF extends QMX_Collector {
 		'callers'      => array(),
 		'counts'       => array(),
 		'field_groups' => array(),
+		'local_json'   => array(),
 	);
 
 	function __construct() {
 		parent::__construct();
-		add_filter( 'acf/pre_load_value', array( $this, 'filter__acf_pre_load_value' ), 10, 3 );
+
+		add_filter( 'acf/settings/load_json', array( $this, 'filter__acf_settings_load_json' ), 99999 );
+		add_filter( 'acf/pre_load_value',     array( $this, 'filter__acf_pre_load_value' ), 10, 3 );
+
+		$this->data['local_json']['save'] = apply_filters( 'acf/settings/save_json', get_stylesheet_directory() . '/acf-json' );
 	}
 
 	public function process() {}
@@ -37,6 +42,11 @@ class QMX_Collector_ACF extends QMX_Collector {
 		}
 
 		return $group;
+	}
+
+	public function filter__acf_settings_load_json( $paths ) {
+		$this->data['local_json']['load'] = $paths;
+		return $paths;
 	}
 
 	public function filter__acf_pre_load_value( $short_circuit, $post_id, $field ) {
@@ -114,7 +124,7 @@ class QMX_Collector_ACF extends QMX_Collector {
 			'acf/pre_load_value',
 			'acf/load_value',
 			'acf/format_value',
-			'acf/settings',
+			'acf/settings/load_json',
 		);
 
 		if ( is_admin() ) {
@@ -135,6 +145,7 @@ class QMX_Collector_ACF extends QMX_Collector {
 				'acf/validate_attachment',
 				'acf/validate_value',
 				'acf/pre_save_post',
+				'acf/settings/save_json',
 			) );
 		}
 
@@ -147,10 +158,6 @@ class QMX_Collector_ACF extends QMX_Collector {
 		return array(
 			'ACF_LITE',
 		);
-	}
-
-	public function remove_abspath( string $path ) : string {
-		return str_replace( ABSPATH, '', $path );
 	}
 
 }

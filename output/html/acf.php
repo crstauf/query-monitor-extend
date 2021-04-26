@@ -36,6 +36,7 @@ class QMX_Output_Html_ACF extends QMX_Output_Html {
 		$this->before_tabular_output();
 
 		echo '<thead>';
+
 			echo '<tr>';
 
 				echo '<th scope="col" class="qm-sorted-asc qm-sortable-column" role="columnheader" aria-sort="ascending">';
@@ -63,6 +64,7 @@ class QMX_Output_Html_ACF extends QMX_Output_Html {
 				echo '</th>';
 
 			echo '</tr>';
+
 		echo '</thead>';
 
 		echo '<tbody>';
@@ -132,7 +134,73 @@ class QMX_Output_Html_ACF extends QMX_Output_Html {
 
 		echo '</tbody>';
 
-		$this->after_tabular_output();
+		echo '</table>';
+		echo '</div>';
+
+		$id = 'qm-acf-local_json';
+		$name = 'Advanced Custom Fields: Local JSON';
+
+		printf(
+			'<div class="qm qm-concerns" id="%1$s" role="tabpanel" aria-labelledby="%1$s-caption" tabindex="-1">',
+			esc_attr( $id )
+		);
+
+		echo '<table class="qm-sortable">';
+
+			printf(
+				'<caption><h2 id="%1$s-caption">%2$s<br />%3$s</h2></caption>',
+				esc_attr( $id ),
+				esc_html( $name ),
+				'<a href="https://www.advancedcustomfields.com/resources/local-json/" rel="noopener noreferrer" class="qm-external-link">Documentation</a>'
+			);
+
+			echo '<thead>';
+				echo '<tr>';
+					echo '<th scope="col">Action</th>';
+					echo '<th scope="col">Hook</th>';
+					echo '<th scope="col" colspan="2">Paths</th>';
+				echo '</tr>';
+			echo '</thead>';
+
+			echo '<tbody>';
+
+			if ( !empty( $data['local_json']['save'] ) ) {
+				echo '<tr>';
+					echo '<th scope="row">Save</th>';
+					echo '<td><code>acf/settings/save_json</code></td>';
+					echo '<td colspan="2"><code>' . esc_html( $this->remove_abspath( $data['local_json']['save'] ) ) . '</code></td>';
+				echo '</tr>';
+			}
+
+			if ( !empty( $data['local_json']['load'] ) ) {
+				$i = 0;
+
+				foreach ( $data['local_json']['load'] as $path ) {
+					echo '<tr>';
+
+						if ( 0 === $i ) {
+							echo '<th scope="row" rowspan="' . esc_attr( count( $data['local_json']['load'] ) ) . '">Load</th>';
+							echo '<td rowspan="' . esc_attr( count( $data['local_json']['load'] ) ) . '"><code>acf/settings/load_json</code></td>';
+						}
+
+						echo '<td>' . esc_html( $i ) . '</td>';
+						echo '<td><code>' . esc_html( $this->remove_abspath( $path ) ) . '</code></td>';
+
+					echo '</tr>';
+
+					$i++;
+				}
+			}
+
+			echo '</tbody>';
+		echo '</table>';
+
+		echo '</section>';
+
+		echo '</div>';
+		echo '</div>';
+
+		$this->output_concerns();
 	}
 
 	protected function output_column_field_group( array $row ) {
@@ -144,6 +212,7 @@ class QMX_Output_Html_ACF extends QMX_Output_Html {
 		echo $group['title'];
 	}
 
+	// TODO: adjust to start with get_field(), have_rows(), get_field_object(), get_sub_field()
 	protected function output_column_caller( array $row ) {
 		$trace          = $row['trace']->ignore( 1 );
 		$filtered_trace = $trace->get_display_trace();
@@ -169,12 +238,22 @@ class QMX_Output_Html_ACF extends QMX_Output_Html {
 		echo '</ol>';
 	}
 
+	public function remove_abspath( string $path ) : string {
+		return str_replace( ABSPATH, '', $path );
+	}
+
 	public function panel_menu( array $menu ) {
 
 		$menu['qm-acf'] = $this->menu( array(
 			'title' => esc_html__( 'Advanced Custom Fields', 'query-monitor-extend' ),
 			'id'    => 'query-monitor-extend-acf',
 		) );
+
+		$menu['qm-acf']['children']['local_json'] = array(
+			'title' => esc_html__( 'Local JSON', 'query-monitor-extend' ),
+			'href'  => '#qm-acf-local_json',
+			'id'    => 'query-monitor-extend-acf-local_json',
+		);
 
 		return $menu;
 
