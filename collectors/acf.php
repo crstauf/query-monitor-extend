@@ -100,7 +100,7 @@ class QMX_Collector_ACF extends QMX_Collector {
 		if ( array_key_exists( $hash, $this->data['counts'] ) ) {
 			$this->data['counts'][ $hash ]++;
 
-			if ( apply_filters( 'qmx/collector/acf/hide_duplicates', true ) )
+			if ( apply_filters( 'qmx/collector/acf/hide_duplicates', false ) )
 				return $short_circuit;
 
 			$row['duplicate'] = true;

@@ -16,6 +16,17 @@ class QMX_Output_Html_ACF extends QMX_Output_Html {
 		return __( 'Advanced Custom Fields', 'query-monitor-extend' );
 	}
 
+	protected static function identify_duplicates() {
+		$bool = null;
+
+		if ( !is_null( $bool ) )
+			return $boo;
+
+		$bool = apply_filters( 'qmx/output/acf/identify_duplicates', false );
+
+		return $bool;
+	}
+
 	public function output() {
 		$data = $this->collector->get_data();
 
@@ -70,10 +81,12 @@ class QMX_Output_Html_ACF extends QMX_Output_Html {
 		echo '<tbody>';
 
 			foreach ( $data['fields'] as $row_num => $row ) {
-				$row_attr = array();
+				$row_attr = array(
+					'class' => '',
+				);
 
 				if ( !$row['exists'] )
-					$row_attr['class'] = 'qm-warn';
+					$row_attr['class'] .= ' qm-warn';
 
 				$row_attr['data-qm-acf-field']  = $row['field']['name'] . ' ' . $row['field']['key'];
 				$row_attr['data-qm-acf-post']   = $row['post_id'];
@@ -86,10 +99,16 @@ class QMX_Output_Html_ACF extends QMX_Output_Html {
 				if ( !empty( $row['group'] ) )
 					$row_attr['data-qm-acf-group'] = $row['group']['key'];
 
+				if (
+					!empty( $row['duplicate'] )
+					&& static::identify_duplicates()
+				)
+					$row_attr['class'] .= ' qm-highlight';
+
 				$attr = '';
 
 				foreach ( $row_attr as $a => $v )
-					$attr .= ' ' . $a . '="' . esc_attr( $v ) . '"';
+					$attr .= ' ' . $a . '="' . esc_attr( trim( $v ) ) . '"';
 
 				echo '<tr' . $attr . '>';
 
@@ -98,22 +117,7 @@ class QMX_Output_Html_ACF extends QMX_Output_Html {
 
 					# Field name
 					echo '<td class="qm-ltr qm-has-toggle qm-nowrap">';
-
-						echo esc_html( $row['field']['name'] );
-
-						if ( $row['exists'] ) {
-							$parent = $row['field']['parent'];
-
-							if ( !empty( $row['group'] ) )
-								$parent = $row['group']['key'];
-
-							echo self::build_toggler();
-							echo '<div class="qm-toggled qm-supplemental qm-info">';
-								echo esc_html( 'Key: ' . $row['field']['key'] );
-								echo '<br />' . esc_html( 'Parent: ' . $parent );
-							echo '</div>';
-						}
-
+					$this->output_column_field_name( $row );
 					echo '</td>';
 
 					# Post ID
@@ -201,6 +205,33 @@ class QMX_Output_Html_ACF extends QMX_Output_Html {
 		echo '</div>';
 
 		$this->output_concerns();
+	}
+
+	protected function output_column_field_name( array $row ) {
+		echo esc_html( $row['field']['name'] );
+
+		if ( !$row['exists'] ) {
+			echo ' (Missing)';
+			return;
+		}
+
+		if (
+			!empty( $row['duplicate'] )
+			&& static::identify_duplicates()
+		)
+			echo ' (Duplicate)';
+
+		$parent = $row['field']['parent'];
+
+		if ( !empty( $row['group'] ) )
+			$parent = $row['group']['key'];
+
+		echo self::build_toggler();
+
+		echo '<div class="qm-toggled qm-supplemental qm-info">';
+			echo esc_html( 'Key: ' . $row['field']['key'] );
+			echo '<br />' . esc_html( 'Parent: ' . $parent );
+		echo '</div>';
 	}
 
 	protected function output_column_field_group( array $row ) {
