@@ -82,7 +82,7 @@ class QMX_Collector_ACF extends QMX_Collector {
 
 		$row = array(
 			'field'     => $field,
-			'post_id'   => $post_id,
+			'post_id'   => acf_get_valid_post_id( $post_id ),
 			'trace'     => $trace,
 			'exists'    => !empty( $field['key'] ),
 			'caller'    => $trace->get_trace()[0],
@@ -136,6 +136,8 @@ class QMX_Collector_ACF extends QMX_Collector {
 			'acf/is_field_group_key',
 			'acf/is_field_key',
 			'acf/load_field_group',
+			'acf/pre_load_post_id',
+			'acf/validate_post_id',
 			'acf/pre_load_value',
 			'acf/load_value',
 			'acf/settings/load_json',

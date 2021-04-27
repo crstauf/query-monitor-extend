@@ -65,7 +65,7 @@ class QMX_Output_Html_ACF extends QMX_Output_Html {
 				echo '<th scope="col" class="qm-filterable-column">';
 				echo $this->build_filter( 'acf-field', $data['field_keys'], __( 'Field', 'query-monitor' ), array(
 					'prepend' => array(
-						'qmx-acf-no-field' => 'Not Found',
+						'qmx-acf-no-field' => 'Missing',
 					),
 				) );
 				echo '</th>';
