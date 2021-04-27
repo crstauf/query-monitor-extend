@@ -85,17 +85,15 @@ class QMX_Output_Html_Files extends QMX_Output_Html {
 								$files_with_errors++;
 
 							echo '<tr ' .
-								'data-qm-component="' . esc_attr( $file['component']->name ) . '"' .
-								'data-qm-path="' . esc_attr( implode( ' ', array_keys( $file['_path_components'] ) ) ) . '"' .
+								'data-qm-component="' . esc_attr( $file['component']->name ) . '" ' .
+								'data-qm-path="' . esc_attr( implode( ' ', array_keys( $file['_path_components'] ) ) ) . '" ' .
 								( !empty( $file['has_error'] ) ? ' class="qm-warn"' : '' ) .
 							'>';
 
 								echo '<td class="qm-num">' . ( $i + 1 ) . '</td>';
-								echo '<td>' . QM_Output_Html::output_filename( str_replace( ABSPATH, '', $file['path'] ), $file['path'] ) . '</td>';
+								echo '<th scope="row">' . QM_Output_Html::output_filename( str_replace( ABSPATH, '', $file['path'] ), $file['path'] ) . '</th>';
 								echo '<td data-qm-sort-weight="' . filesize( $file['path'] ) . '">';
-									if ( $file['path'] === $largest_file['path'] ) echo '<span class="qm-warn">';
 									echo $this->human_file_size( filesize( $file['path'] ) );
-									if ( $file['path'] === $largest_file['path'] ) echo '</span>';
 								echo '</td>';
 
 								echo '<td>' . esc_html( $file['component']->name ) . '</td>';
@@ -123,9 +121,7 @@ class QMX_Output_Html_Files extends QMX_Output_Html {
 									: ''
 								) .
 							'</td>';
-							echo '<td>';
-								echo '&#8773;' . $this->human_file_size( $total_file_size ) . ', ';
-								echo '&#8804;<abbr title="' . esc_attr( $largest_file['path'] ) . '">' . $this->human_file_size( $largest_file['size'] ) . '</td>';
+							echo '<td>&#61;' . $this->human_file_size( $total_file_size ) . '</td>';
 							echo '<td>Components: ' . count( $components ) . '</td>';
 						echo '</tr>';
 
