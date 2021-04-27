@@ -91,8 +91,7 @@ class QMX_Output_Html_Files extends QMX_Output_Html {
 							'>';
 
 								echo '<td class="qm-num">' . ( $i + 1 ) . '</td>';
-								echo '<td title="' . esc_attr( $file['path'] ) . '">' . esc_html( str_replace( ABSPATH, '/', $file['path'] ) ) . '</td>';
-
+								echo '<td>' . QM_Output_Html::output_filename( str_replace( ABSPATH, '', $file['path'] ), $file['path'] ) . '</td>';
 								echo '<td data-qm-sort-weight="' . filesize( $file['path'] ) . '">';
 									if ( $file['path'] === $largest_file['path'] ) echo '<span class="qm-warn">';
 									echo $this->human_file_size( filesize( $file['path'] ) );
