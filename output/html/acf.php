@@ -200,6 +200,14 @@ class QMX_Output_Html_ACF extends QMX_Output_Html {
 		array_shift( $filtered_trace );
 
 		foreach ( $filtered_trace as $item ) {
+			$item = wp_parse_args( $item, array(
+				'file' => '',
+				'line' => '',
+			) );
+
+			if ( empty( $item['display'] ) )
+				continue;
+
 			$stack[] = self::output_filename( $item['display'], $item['file'], $item['line'] );
 		}
 
