@@ -211,11 +211,15 @@ class QMX_Output_Html_ACF extends QMX_Output_Html {
 			$stack[] = self::output_filename( $item['display'], $item['file'], $item['line'] );
 		}
 
-		echo self::build_toggler();
+		if ( 1 < count( $stack ) )
+			echo self::build_toggler();
 
 		echo '<ol>';
 		echo "<li>{$caller_name}</li>";
-		echo '<div class="qm-toggled"><li>' . implode( '</li><li>', $stack ) . '</li></div>';
+		
+		if ( 1 < count( $stack ) )
+			echo '<div class="qm-toggled"><li>' . implode( '</li><li>', $stack ) . '</li></div>';
+		
 		echo '</ol>';
 	}
 
