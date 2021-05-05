@@ -43,7 +43,7 @@ add_filter( 'plugin_row_meta', function ( $meta, $file ) {
 		$first,
 		sprintf(
 			'Requires <a href="%1$s" rel="noopener noreferrer">Query Monitor</a>',
-			'https://wordpress.org/plugins/query-monitor/',
+			'https://wordpress.org/plugins/query-monitor/'
 		)
 	);
 
