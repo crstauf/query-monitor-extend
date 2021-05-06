@@ -94,6 +94,7 @@ class QueryMonitorExtend extends QMX_Plugin {
 			'is_account_page',
 			'is_wc_endpoint_url',
 			'has_post_thumbnail',
+			'is_order_received_page'
 		) );
 
 		sort( $conds );
