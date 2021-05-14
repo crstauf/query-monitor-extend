@@ -15,6 +15,7 @@ class QMX_Collector_Image_Sizes extends QMX_Collector {
 			'thumbnail' => array(
 				'width'  => intval( get_option( 'thumbnail_size_w' ) ),
 				'height' => intval( get_option( 'thumbnail_size_h' ) ),
+				  'used' => 0,
 				'source' => 'native',
 				  'crop' => true,
 				   'num' => 1,
@@ -22,6 +23,7 @@ class QMX_Collector_Image_Sizes extends QMX_Collector {
 			'medium' => array(
 				 'width' => intval( get_option( 'medium_size_w' ) ),
 				'height' => intval( get_option( 'medium_size_h' ) ),
+				  'used' => 0,
 				'source' => 'native',
 				  'crop' => false,
 				   'num' => 2,
@@ -29,6 +31,7 @@ class QMX_Collector_Image_Sizes extends QMX_Collector {
 			'medium_large' => array(
 				 'width' => intval( get_option( 'medium_large_size_w' ) ),
 				'height' => intval( get_option( 'medium_large_size_h' ) ),
+				  'used' => 0,
 				'source' => 'native',
 				  'crop' => false,
 				   'num' => 3,
@@ -36,6 +39,7 @@ class QMX_Collector_Image_Sizes extends QMX_Collector {
 			'large' => array(
 				 'width' => intval( get_option( 'large_size_w' ) ),
 				'height' => intval( get_option( 'large_size_h' ) ),
+				  'used' => 0,
 				'source' => 'native',
 				  'crop' => false,
 				   'num' => 4,
@@ -49,6 +53,15 @@ class QMX_Collector_Image_Sizes extends QMX_Collector {
 		add_action( 'login_enqueue_scripts', array( &$this, 'add_inline_script' ), -998 );
 		add_action( 'enqueue_embed_scripts', array( &$this, 'add_inline_script' ), -998 );
 
+		add_action( 'wp', array( $this, 'action__wp' ) );
+		add_filter( 'wp_get_attachment_image_src', array( $this, 'filter__wp_get_attachment_image_src' ), 10, 3 );
+
+	}
+
+	public function get_concerned_filters() {
+		return array(
+			'wp_get_attachment_image_src',
+		);
 	}
 
 	function action__plugins_loaded() {
@@ -65,6 +78,35 @@ class QMX_Collector_Image_Sizes extends QMX_Collector {
 		$this->_process_added_image_sizes( 'theme' );
 	}
 
+	function action__wp() : void {
+		$post = get_queried_object();
+
+		if ( empty( $post ) )
+			return;
+
+		$blocks = parse_blocks( $post->post_content );
+
+		if ( empty( $blocks ) )
+			return;
+
+		foreach ( $blocks as $block ) {
+			if ( 'core/image' !== $block['blockName'] )
+				continue;
+
+			$size = $block['attrs']['sizeSlug'];
+			$this->data['sizes'][ $size ]['used']++;
+		}
+	}
+
+	function filter__wp_get_attachment_image_src( $image, $attachment_id, $size ) {
+		if ( !array_key_exists( $size, $this->data['sizes'] ) )
+			return $image;
+
+		$this->data['sizes'][ $size ]['used']++;
+
+		return $image;
+	}
+
 	protected function _process_added_image_sizes( $source = 'unknown' ) {
 		global $_wp_additional_image_sizes;
 
@@ -79,14 +121,11 @@ class QMX_Collector_Image_Sizes extends QMX_Collector {
 					$this->data['sizes'][$id] = array_merge(
 						array(
 							'num' => ++$num,
-							'source' => apply_filters( 'qmx/image-size/source', $source, $id, $size )
+							'source' => apply_filters( 'qmx/image-size/source', $source, $id, $size ),
+							'used' => 0,
 						),
 						$size
 					);
-	}
-
-	public function name() {
-		return __( 'Image Sizes', 'query-monitor-extend' );
 	}
 
 	public function process() {
