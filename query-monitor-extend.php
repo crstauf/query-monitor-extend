@@ -12,7 +12,7 @@
  * Version: 1.1
  * Author: Caleb Stauffer
  * Author URI: http://develop.calebstauffer.com
- * QM tested up to: 3.6.7
+ * QM tested up to: 3.7.1
 */
 
 if ( !defined( 'ABSPATH' ) || !function_exists( 'add_filter' ) ) {
@@ -20,6 +20,8 @@ if ( !defined( 'ABSPATH' ) || !function_exists( 'add_filter' ) ) {
 	header( 'HTTP/1.1 403 Forbidden' );
 	exit();
 }
+
+define( 'QMX_TESTED_WITH_QM', '3.7.1' );
 
 if (
 	   'cli' === php_sapi_name()

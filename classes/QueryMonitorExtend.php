@@ -65,10 +65,10 @@ class QueryMonitorExtend extends QMX_Plugin {
 			$meta,
 			$first,
 			sprintf(
-				'Tested up to <a href="%1$s" rel="noopener noreferrer">Query Monitor</a> <a href="%2$s" rel="noopener noreferrer">%3$s</a>',
+				'Tested up to <a href="%1$s" rel="noopener noreferrer">Query Monitor</a> <a href="%2$s%3$s" rel="noopener noreferrer">%3$s</a>',
 				'https://wordpress.org/plugins/query-monitor/',
-				'https://github.com/johnbillion/query-monitor/releases/tag/3.6.7',
-				'3.6.7'
+				'https://github.com/johnbillion/query-monitor/releases/tag/',
+				QMX_TESTED_WITH_QM,
 			)
 		);
 
