@@ -115,6 +115,10 @@ class QMX_Collector_Image_Sizes extends QMX_Collector {
 				continue;
 
 			$size = $block['attrs']['sizeSlug'];
+
+			if ( !array_key_exists( $size, $this->data['sizes'] ) )
+				continue;
+
 			$this->data['sizes'][ $size ]['used']++;
 		}
 	}
