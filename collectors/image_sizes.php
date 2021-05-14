@@ -44,6 +44,25 @@ class QMX_Collector_Image_Sizes extends QMX_Collector {
 				  'crop' => false,
 				   'num' => 4,
 			),
+
+			/**
+			 * @see _wp_add_additional_image_sizes()
+			 * @since WP 5.3.0
+			 */
+			'1536x1536' => array(
+				 'width' => 1536,
+				'height' => 1536,
+				'source' => 'native',
+				  'crop' => false,
+				   'num' => 5,
+			),
+			'2048x2048' => array(
+				 'width' => 2048,
+				'height' => 2048,
+				'source' => 'native',
+				  'crop' => false,
+				   'num' => 6,
+			),
 		);
 
 		add_action( 'plugins_loaded',        array( &$this, 'action__plugins_loaded'    ) );
