@@ -12,6 +12,10 @@ class QMX_Output_Html_Image_Sizes extends QMX_Output_Html {
 		add_filter( 'qm/output/panel_menus', array( &$this, 'panel_menu' ), 60 );
 	}
 
+	public function name() {
+		return __( 'Image Sizes', 'query-monitor-extend' );
+	}
+
 	public function output() {
 		$data = $this->collector->get_data();
 
@@ -19,7 +23,7 @@ class QMX_Output_Html_Image_Sizes extends QMX_Output_Html {
 
 			if ( !empty( $data['sizes'] ) ) {
 				echo '<table class="qm-sortable">';
-					echo '<caption class="qm-screen-reader-text">' . esc_html( $this->collector->name() ) . '</caption>';
+					echo '<caption class="qm-screen-reader-text">' . esc_html( $this->name() ) . '</caption>';
 					echo '<thead>';
 						echo '<tr>';
 
@@ -29,6 +33,10 @@ class QMX_Output_Html_Image_Sizes extends QMX_Output_Html {
 
 							echo '<th scope="col" class="qm-sortable-column">';
 								echo $this->build_sorter( __( 'ID', 'query-monitor-extend' ) );
+							echo '</th>';
+
+							echo '<th scope="col" class="qm-sortable-column">';
+								echo $this->build_sorter( __( 'Uses', 'query-monitor-extend' ) );
 							echo '</th>';
 
 							echo '<th scope="col" class="qm-num qm-sortable-column">';
@@ -57,6 +65,7 @@ class QMX_Output_Html_Image_Sizes extends QMX_Output_Html {
 					echo '<tbody>';
 
 						$sources = array();
+						$uses = 0;
 
 						foreach ( $data['sizes'] as $id => $row ) {
 							$ratio = array( $row['width'], $row['height'] );
@@ -70,9 +79,12 @@ class QMX_Output_Html_Image_Sizes extends QMX_Output_Html {
 							if ( $ratio === array( $row['width'], $row['height'] ) )
 								$ratio = array( '&mdash;' );
 
+							$uses += $row['used'];
+
 							echo '<tr data-qmx-image-size-width="' . esc_attr( $row['width'] ) . '" data-qmx-image-size-height="' . esc_attr( $row['height'] ) . '" data-qmx-image-size-ratio="' . esc_attr( $row['ratio'] ) . '">';
 								echo '<td class="qm-num">' . esc_html( $row['num']    ) . '</td>';
 								echo '<td class="qm-ltr">' . esc_html( $id            ) . '</td>';
+								echo '<td class="qm-num" data-qmx-image-size-count="'  . esc_attr( $row['used']   ) . '">' . esc_html( $row['used']   ) . '</td>';
 								echo '<td class="qm-num" data-qmx-image-size-width="'  . esc_attr( $row['width']  ) . '">' . esc_html( $row['width']  ) . '</td>';
 								echo '<td class="qm-num" data-qmx-image-size-height="' . esc_attr( $row['height'] ) . '">' . esc_html( $row['height'] ) . '</td>';
 								echo '<td class="qm-num" data-qmx-image-size-ratio="'  . esc_attr( $row['ratio']  ) . '" data-qm-sort-weight="' . esc_attr( $row['ratio'] ) . '">' . esc_html( implode( ':', $ratio )  ) . '</td>';
@@ -90,8 +102,8 @@ class QMX_Output_Html_Image_Sizes extends QMX_Output_Html {
 							$sources = array_map( function( $k, $v ) { return ucwords( $k ) . ': ' . $v; }, array_keys( $sources ), $sources );
 
 						echo '<tr>';
-							echo '<td class="qm-num">Total: <span class="qm-items-number">' . esc_html( number_format_i18n( count( $data['sizes'] ) ) ) . '</span></td>';
-							echo '<td>&nbsp;</td>';
+							echo '<td colspan="2">Total: <span class="qm-items-number">' . esc_html( number_format_i18n( count( $data['sizes'] ) ) ) . '</span></td>';
+							echo '<td>Uses: <span class="qm-items-number">' . esc_html( number_format_i18n( $uses ) ) . '</span></td>';
 							echo '<td colspan="2">Duplicates: <span class="qm-items-number">' . esc_html( number_format_i18n( array_sum( $data['_duplicates']['dimensions'] ) ) ) . '</span></td>';
 							echo '<td colspan="2">Duplicates: <span class="qm-items-number">' . esc_html( number_format_i18n( array_sum( $data['_duplicates']['ratios'] ) ) ) . '</span></td>';
 							echo '<td>' . implode( ', ', $sources ) . '</td>';
@@ -109,11 +121,16 @@ class QMX_Output_Html_Image_Sizes extends QMX_Output_Html {
 			}
 
 		echo '</div>';
+
+		$this->current_id = 'qm-image_sizes';
+		$this->current_name = 'Image Sizes';
+
+		$this->output_concerns();
 	}
 
 	public function panel_menu( array $menu ) {
 
-		$menu['image_sizes'] = $this->menu( array(
+		$menu['qm-image_sizes'] = $this->menu( array(
 			'title' => esc_html__( 'Image Sizes', 'query-monitor-extend' ),
 			'id'    => 'query-monitor-extend-image_sizes',
 		) );
