@@ -52,6 +52,7 @@ class QMX_Collector_Image_Sizes extends QMX_Collector {
 			'1536x1536' => array(
 				 'width' => 1536,
 				'height' => 1536,
+				  'used' => 0,
 				'source' => 'native',
 				  'crop' => false,
 				   'num' => 5,
@@ -59,6 +60,7 @@ class QMX_Collector_Image_Sizes extends QMX_Collector {
 			'2048x2048' => array(
 				 'width' => 2048,
 				'height' => 2048,
+				  'used' => 0,
 				'source' => 'native',
 				  'crop' => false,
 				   'num' => 6,
