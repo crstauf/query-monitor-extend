@@ -124,6 +124,12 @@ class QMX_Collector_Image_Sizes extends QMX_Collector {
 	}
 
 	function filter__wp_get_attachment_image_src( $image, $attachment_id, $size ) {
+
+		# If specifying custom dimensions, bail.
+		if ( is_array( $size ) )
+			return $image;
+
+		# If size is not registered, bail.
 		if ( !array_key_exists( $size, $this->data['sizes'] ) )
 			return $image;
 
