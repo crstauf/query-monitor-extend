@@ -84,17 +84,31 @@ class QueryMonitorExtend extends QMX_Plugin {
 	function filter__qm_collect_conditionals( $conds ) {
 
 		$conds = array_merge( $conds, array(
+			'has_post_thumbnail',
+
+			/**
+			 * WooCommerce
+			 *
+			 * @link https://woocommerce.github.io/code-reference/files/woocommerce-includes-wc-conditional-functions.html
+			 */
+			'is_account_page',
+			'is_add_payment_method_page',
 			'is_cart',
 			'is_checkout',
-			'is_shop',
-			'is_woocommerce',
+			'is_checkout_pay_page',
+			'is_edit_account_page',
+			'is_lost_password_page',
+			'is_order_received_page',
+			'is_product',
 			'is_product_category',
 			'is_product_tag',
-			'is_product',
-			'is_account_page',
+			'is_product_taxonomy',
+			'is_shop',
+			'is_store_notice_showing',
+			'is_view_order_page',
 			'is_wc_endpoint_url',
-			'has_post_thumbnail',
-			'is_order_received_page'
+			'is_woocommerce',
+
 		) );
 
 		sort( $conds );
