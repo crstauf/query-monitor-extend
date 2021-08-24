@@ -78,8 +78,6 @@ class QMX_Collector_ACF extends QMX_Collector {
 
 				if ( !empty( $trace->get_trace()[1] ) )
 					$trace->ignore( 1 );
-
-				$caller = $trace->get_trace()[0];
 			}
 		}
 
@@ -88,7 +86,7 @@ class QMX_Collector_ACF extends QMX_Collector {
 			'post_id'   => acf_get_valid_post_id( $post_id ),
 			'trace'     => $trace,
 			'exists'    => !empty( $field['key'] ),
-			'caller'    => $caller,
+			'caller'    => $trace->get_trace()[0],
 			'group'     => null,
 			'hash'      => null,
 			'duplicate' => false,
