@@ -5,10 +5,17 @@
  * @package query-monitor-extend
  */
 
-add_action( 'plugin_loaded', static function ( string $file ) {
+add_action( 'plugin_loaded', 'load_qmx_acf_collector' );
+
+function load_qmx_acf_collector( string $file ) {
 
     if ( 'query-monitor/query-monitor.php' !== plugin_basename( $file ) )
         return;
+
+	remove_action( 'plugin_loaded', __FUNCTION__ );
+
+	if ( !class_exists( 'QueryMonitor' ) )
+		return;
 
     class QMX_Collector_ACF extends QM_Collector
     {
@@ -180,4 +187,4 @@ add_action( 'plugin_loaded', static function ( string $file ) {
     }
 
     QM_Collectors::add( new QMX_Collector_ACF );
-} );
+}
