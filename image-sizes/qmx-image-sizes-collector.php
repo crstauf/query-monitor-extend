@@ -10,9 +10,9 @@
 
 defined( 'WPINC' ) || die();
 
-add_action( 'plugin_loaded', 'load_qmx_imagesizes_collector' );
+add_action( 'plugin_loaded', 'load_qmx_image_sizes_collector' );
 
-function load_qmx_imagesizes_collector( string $file ) {
+function load_qmx_image_sizes_collector( string $file ) {
 
 	if ( 'query-monitor/query-monitor.php' !== plugin_basename( $file ) )
 		return;
