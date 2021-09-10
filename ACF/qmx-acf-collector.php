@@ -1,6 +1,6 @@
 <?php
 /**
- * Plugin URI: https://github.com/crstauf/query-monitor-extend/tree/master/ACF
+ * Plugin URI: https://github.com/crstauf/query-monitor-extend/tree/master/acf
  * Description: Query Monitor collector for Advanced Custom Fields.
  * Version: 1.0
  * Author: Caleb Stauffer

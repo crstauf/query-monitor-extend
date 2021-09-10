@@ -1,6 +1,6 @@
 <?php
 /**
- * Plugin URI: https://github.com/crstauf/query-monitor-extend/tree/master/Time
+ * Plugin URI: https://github.com/crstauf/query-monitor-extend/tree/master/time
  * Description: Query Monitor collector for time.
  * Version: 1.0
  * Author: Caleb Stauffer

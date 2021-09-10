@@ -1,7 +1,7 @@
 <?php
 /**
  * Plugin Name: QMX: Time output
- * Plugin URI: https://github.com/crstauf/query-monitor-extend/tree/master/Time
+ * Plugin URI: https://github.com/crstauf/query-monitor-extend/tree/master/time
  * Description: Query Monitor output for time collector.
  * Version: 1.0
  * Author: Caleb Stauffer

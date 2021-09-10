@@ -1,6 +1,6 @@
 <?php
 /**
- * Plugin URI: https://github.com/crstauf/query-monitor-extend/tree/master/Image%20sizes
+ * Plugin URI: https://github.com/crstauf/query-monitor-extend/tree/master/image-sizes
  * Description: Query Monitor collector for image sizes.
  * Version: 1.0
  * Author: Caleb Stauffer

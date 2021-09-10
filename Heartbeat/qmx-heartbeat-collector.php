@@ -1,6 +1,6 @@
 <?php
 /**
- * Plugin URI: https://github.com/crstauf/query-monitor-extend/tree/master/Heartbeat
+ * Plugin URI: https://github.com/crstauf/query-monitor-extend/tree/master/heartbeat
  * Description: Query Monitor collector for heartbeats.
  * Version: 1.0
  * Author: Caleb Stauffer

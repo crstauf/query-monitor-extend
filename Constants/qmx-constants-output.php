@@ -1,6 +1,6 @@
 <?php
 /**
- * Plugin URI: https://github.com/crstauf/query-monitor-extend/tree/master/Constants
+ * Plugin URI: https://github.com/crstauf/query-monitor-extend/tree/master/constants
  * Description: Query Monitor output for constants collector.
  * Version: 1.0
  * Author: Caleb Stauffer

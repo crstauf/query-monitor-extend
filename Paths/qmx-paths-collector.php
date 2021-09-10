@@ -1,6 +1,6 @@
 <?php
 /**
- * Plugin URI: https://github.com/crstauf/query-monitor-extend/tree/master/Paths
+ * Plugin URI: https://github.com/crstauf/query-monitor-extend/tree/master/paths
  * Description: Query Monitor collector for paths.
  * Version: 1.0
  * Author: Caleb Stauffer
