@@ -1,20 +1,23 @@
 <?php
 /**
- * ACF collector.
- *
- * @package query-monitor-extend
+ * Query Monitor ACF collector.
  */
+
+defined( 'WPINC' ) || die();
 
 add_action( 'plugin_loaded', 'load_qmx_acf_collector' );
 
 function load_qmx_acf_collector( string $file ) {
 
-    if ( 'query-monitor/query-monitor.php' !== plugin_basename( $file ) )
-        return;
+	if ( 'query-monitor/query-monitor.php' !== plugin_basename( $file ) )
+		return;
 
 	remove_action( 'plugin_loaded', __FUNCTION__ );
 
 	if ( !class_exists( 'QueryMonitor' ) )
+		return;
+
+	if ( defined( 'QMX_DISABLE' ) && QMX_DISABLE )
 		return;
 
     class QMX_Collector_ACF extends QM_Collector

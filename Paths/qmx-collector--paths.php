@@ -3,6 +3,8 @@
  * Query Monitor Paths collector.
  */
 
+defined( 'WPINC' ) || die();
+
 add_action( 'plugin_loaded', 'load_qmx_paths_collector' );
 
 function load_qmx_paths_collector( string $file ) {
@@ -13,6 +15,9 @@ function load_qmx_paths_collector( string $file ) {
 	remove_action( 'plugin_loaded', __FUNCTION__ );
 
 	if ( !class_exists( 'QueryMonitor' ) )
+		return;
+
+	if ( defined( 'QMX_DISABLE' ) && QMX_DISABLE )
 		return;
 
 	class QMX_Collector_Paths extends QM_Collector {
