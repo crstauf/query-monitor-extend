@@ -1,7 +1,14 @@
 <?php
 /**
- * Query Monitor Files output for HTML pages.
+ * Plugin URI: https://github.com/crstauf/query-monitor-extend/tree/master/Files
+ * Description: Query Monitor output for files collector.
+ * Version: 1.0
+ * Author: Caleb Stauffer
+ * Author URI: https://develop.calebstauffer.com
+ * Update URI: false
  */
+
+defined( 'WPINC' ) || die();
 
 add_action( 'shutdown', static function () {
 

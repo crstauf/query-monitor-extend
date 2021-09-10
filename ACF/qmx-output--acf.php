@@ -1,9 +1,14 @@
 <?php
 /**
- * ACF output for HTML pages.
- *
- * @package query-monitor-extend
+ * Plugin URI: https://github.com/crstauf/query-monitor-extend/tree/master/ACF
+ * Description: Query Monitor output for ACF collector.
+ * Version: 1.0
+ * Author: Caleb Stauffer
+ * Author URI: https://develop.calebstauffer.com
+ * Update URI: false
  */
+
+defined( 'WPINC' ) || die();
 
 add_action( 'shutdown', static function () {
 

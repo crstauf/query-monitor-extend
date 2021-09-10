@@ -1,7 +1,15 @@
 <?php
 /**
- * Query Monitor Paths output for HTML pages.
+ * Plugin Name: QMX: Time output
+ * Plugin URI: https://github.com/crstauf/query-monitor-extend/tree/master/Time
+ * Description: Query Monitor output for time collector.
+ * Version: 1.0
+ * Author: Caleb Stauffer
+ * Author URI: https://develop.calebstauffer.com
+ * Update URI: false
  */
+
+defined( 'WPINC' ) || die();
 
 add_action( 'shutdown', static function () {
 

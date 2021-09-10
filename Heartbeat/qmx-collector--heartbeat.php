@@ -1,6 +1,11 @@
 <?php
 /**
- * Query Monitor Heartbeat collector.
+ * Plugin URI: https://github.com/crstauf/query-monitor-extend/tree/master/Heartbeat
+ * Description: Query Monitor collector for heartbeats.
+ * Version: 1.0
+ * Author: Caleb Stauffer
+ * Author URI: https://develop.calebstauffer.com
+ * Update URI: false
  */
 
 defined( 'WPINC' ) || die();

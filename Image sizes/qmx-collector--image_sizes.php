@@ -1,6 +1,11 @@
 <?php
 /**
- * Query Monitor Image sizes collector.
+ * Plugin URI: https://github.com/crstauf/query-monitor-extend/tree/master/Image%20sizes
+ * Description: Query Monitor collector for image sizes.
+ * Version: 1.0
+ * Author: Caleb Stauffer
+ * Author URI: https://develop.calebstauffer.com
+ * Update URI: false
  */
 
 defined( 'WPINC' ) || die();

@@ -1,6 +1,11 @@
 <?php
 /**
- * Query Monitor ACF collector.
+ * Plugin URI: https://github.com/crstauf/query-monitor-extend/tree/master/ACF
+ * Description: Query Monitor collector for Advanced Custom Fields.
+ * Version: 1.0
+ * Author: Caleb Stauffer
+ * Author URI: https://develop.calebstauffer.com
+ * Update URI: false
  */
 
 defined( 'WPINC' ) || die();
