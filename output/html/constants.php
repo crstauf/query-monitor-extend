@@ -51,7 +51,7 @@ class QMX_Output_Html_Constants extends QMX_Output_Html {
 							echo '<tr>';
 								echo '<td class="qm-num">' . $i++ . '</td>';
 								echo '<td class="qm-ltr" data-qm-sort-weight="' . strtolower( esc_attr( $constant ) ) . '"><code style="user-select: all;">' . esc_html( $constant ) . '</code></td>';
-								echo '<td ' . ( is_bool( $value ) ? ' class="qm-' . $bools[$value] . '"' : '' ) . '>' . ( is_bool( $value ) ? strtoupper( $bools[$value] ) : esc_html( $value ) ) . '</td>';
+								echo '<td ' . ( is_bool( $value ) ? ' class="qm-' . $bools[$value] . '"' : '' ) . '>' . esc_html( QM_Util::display_variable( $value ) ) . '</td>';
 								echo '<td class="qm-ltr">' . esc_html( gettype( $value ) ) . '</td>';
 							echo '</tr>';
 						}
