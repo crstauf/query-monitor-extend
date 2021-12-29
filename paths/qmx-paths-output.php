@@ -25,6 +25,10 @@ add_action( 'shutdown', static function () {
 			add_filter( 'qm/output/panel_menus', array( &$this, 'panel_menu' ), 60 );
 		}
 
+		public function name() {
+			return __( 'Paths', 'query-monitor-extend' );
+		}
+
 		public function output() {
 			$data = $this->collector->get_data();
 
@@ -82,11 +86,16 @@ add_action( 'shutdown', static function () {
 				}
 
 			echo '</div>';
+
+			$this->current_id = 'qm-paths';
+			$this->current_name = 'Paths';
+
+			$this->output_concerns();
 		}
 
 		public function panel_menu( array $menu ) {
 
-			$menu['paths'] = $this->menu( array(
+			$menu['qm-paths'] = $this->menu( array(
 				'title' => esc_html__( 'Paths', 'query-monitor-extend' ),
 				'id'    => 'query-monitor-extend-paths',
 			) );

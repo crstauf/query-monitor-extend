@@ -91,6 +91,64 @@ function load_qmx_paths_collector( string $file ) {
 
 		}
 
+		public function get_concerned_filters() {
+			return array(
+				'admin_url',
+				'content_url',
+				'home_url',
+				'includes_url',
+				'plugins_url',
+				'network_admin_url',
+				'network_home_url',
+				'network_site_url',
+				'site_url',
+				'stylesheet_directory',
+				'stylesheet_directory_uri',
+				'stylesheet_uri',
+				'template_directory',
+				'template_directory_uri',
+				'theme_file_path',
+				'theme_file_uri',
+				'theme_root',
+				'theme_root_uri',
+				'upload_dir',
+			);
+		}
+
+		public function get_concerned_constants() {
+			return array(
+				'ABSPATH',
+				'COOKIEPATH',
+				'SITECOOKIEPATH',
+				'DOMAIN_CURRENT_SITE',
+				'PATH_CURRENT_SITE',
+				'WP_SITEURL',
+				'WP_HOME',
+				'WP_CONTENT_URL',
+				'WP_CONTENT_DIR',
+				'WP_PLUGIN_URL',
+				'WP_PLUGIN_DIR',
+				'PLUGINS_COOKIE_PATH',
+				'WPMU_PLUGIN_DIR',
+				'WPMU_PLUGIN_URL',
+				'TEMPLATEPATH',
+				'STYLESHEETPATH',
+				'ADMIN_COOKIE_PATH',
+				'WPINC',
+				'WP_LANG_DIR',
+				'BLOGUPLOADDIR',
+				'UPLOADBLOGSDIR',
+				'UPLOADS',
+			);
+		}
+
+		public function get_concerned_options() {
+			return array(
+				'siteurl',
+				'home',
+			);
+		}
+
 	}
 
 	add_filter( 'qm/collectors', static function ( array $collectors ) : array {
