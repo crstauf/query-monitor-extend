@@ -83,6 +83,8 @@ function load_qmx_paths_collector( string $file ) {
 				'UPLOADBLOGSDIR' => defined( 'UPLOADBLOGSDIR' ) ? UPLOADBLOGSDIR : 'undefined',
 				'UPLOADS' => defined( 'UPLOADS' ) ? UPLOADS : 'undefined',
 				'wp_upload_dir()' => wp_upload_dir(),
+				'get_theme_file_path()' => get_theme_file_path(),
+				'get_theme_file_uri()' => get_theme_file_uri(),
 			) );
 
 			ksort( $this->data['paths'], SORT_FLAG_CASE | SORT_STRING );
