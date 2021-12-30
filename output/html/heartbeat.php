@@ -30,10 +30,10 @@ class QMX_Output_Html_Heartbeat extends QMX_Output_Html {
 					echo '<thead>';
 						echo '<tr>';
 
-							echo '<th scope="col" class="qm-num qm-sorted-asc qm-sortable-column"></th>';
+							echo '<th scope="col" class="qm-num"></th>';
 							echo '<th scope="col">Lub</th>';
 							echo '<th scope="col">Dub</th>';
-							echo '<th scope="col">Time since last</th>';
+							echo '<th scope="col">Time since previous</th>';
 							echo '<th scope="col">Duration</th>';
 
 						echo '</tr>';
