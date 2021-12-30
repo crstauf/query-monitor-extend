@@ -95,7 +95,7 @@ function load_qmx_heartbeat_collector( string $file ) {
 							'-'
 						) );
 						that.update_tab( count );
-						that._beat = that._beats.find( 'tr:last-child' );
+						that._beat = that._beats.find( 'tr:first-child' );
 					} );
 
 					jQuery( document ).on( 'heartbeat-tick', function() {
@@ -126,13 +126,23 @@ function load_qmx_heartbeat_collector( string $file ) {
 				},
 
 				add_table_row: function( tr ) {
-					this._table.find( 'tbody:last-child' ).append( tr );
+					this._table.find( 'tbody' ).prepend( tr );
 				},
 
 				get_table_row: function( index, lub, dub, since_last, duration ) {
 					var lub_diff = ( lub - this._start ) / 1000;
-					var dub_diff = ( dub - this._start ) / 1000;
-					var duration_secs = duration / 1000;
+					var dub_diff = '-';
+					var duration_secs = '-';
+
+					if ( '' !== dub ) {
+						dub_diff = ( dub - this._start ) / 1000;
+						dub_diff = dub_diff.toFixed( 3 );
+					}
+
+					if ( !isNaN( duration ) ) {
+						duration_secs = duration / 1000;
+						duration_secs = duration_secs.toFixed( 3 );
+					}
 
 					var since_last_secs = '-' != since_last ? since_last / 1000 : '-';
 					since_last_secs = '-' != since_last_secs ? since_last_secs.toFixed( 3 ) : '-';
@@ -146,9 +156,9 @@ function load_qmx_heartbeat_collector( string $file ) {
 					'>' +
 						'<td class="qm-num">' + index + '</td>' +
 						'<td class="qm-num lub">' + lub_diff.toFixed( 3 ) + '</td>' +
-						'<td class="qm-num dub">' + dub_diff.toFixed( 3 ) + '</td>' +
+						'<td class="qm-num dub">' + dub_diff + '</td>' +
 						'<td class="qm-num since">' + since_last_secs + '</td>' +
-						'<td class="qm-num dur">' + duration_secs.toFixed( 3 ) + '</td>' +
+						'<td class="qm-num dur">' + duration_secs + '</td>' +
 					'</tr>';
 				},
 
