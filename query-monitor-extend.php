@@ -1,41 +1,49 @@
 <?php
 /**
- * Query Monitor Extend plugin for WordPress
- *
- * @package query-monitor-extend
- * @link    https://github.com/crstauf/query-monitor-extend
- * @author  Caleb Stauffer <develop@calebstauffer.com>
- *
  * Plugin Name: Query Monitor Extend
  * Plugin URI: https://github.com/crstauf/query-monitor-extend
- * Description: Enhancements and extensions for the awesome Query Monitor plugin by John Blackbourn
- * Version: 1.2
+ * Description: Additional collectors for Query Monitor by John Blackbourn
+ * Version: 1.3
  * Author: Caleb Stauffer
- * Author URI: http://develop.calebstauffer.com
+ * Author URI: https://develop.calebstauffer.com
+ * Update URI: false
+ *
  * QM tested up to: 3.7.1
-*/
+ */
 
-if ( !defined( 'ABSPATH' ) || !function_exists( 'add_filter' ) ) {
-	header( 'Status: 403 Forbidden' );
-	header( 'HTTP/1.1 403 Forbidden' );
-	exit();
-}
+defined( 'WPINC' ) || die();
+defined( 'QMX_DISABLED' ) || define( 'QMX_DISABLED', false );
 
 define( 'QMX_TESTED_WITH_QM', '3.7.1' );
 
-if (
-	   'cli' === php_sapi_name()
-	|| ( defined( 'DOING_CRON'   ) && DOING_CRON   )
-	|| ( defined( 'QM_DISABLED'  ) && QM_DISABLED  )
-	|| ( defined( 'QMX_DISABLED' ) && QMX_DISABLED )
-)
-	return;
-
-add_filter( 'plugin_row_meta', function ( $meta, $file ) {
-	if ( class_exists( 'QueryMonitor' ) )
+/**
+ * Filter: plugin_row_meta
+ *
+ * - add "Tested up to" notice
+ * - add "Requires QM" notice
+ *
+ * @param array $meta
+ * @param string $file
+ * @return string[]
+ */
+add_filter( 'plugin_row_meta', static function ( array $meta, string $file ) : array {
+	if ( 'query-monitor-extend/query-monitor-extend.php' !== $file )
 		return $meta;
 
-	if ( 'query-monitor-extend/query-monitor-extend.php' !== $file )
+	$first = array_shift( $meta );
+
+	array_unshift(
+		$meta,
+		$first,
+		sprintf(
+			'Tested up to <a href="%1$s" rel="noopener noreferrer">Query Monitor</a> <a href="%2$s%3$s" rel="noopener noreferrer">%3$s</a>',
+			'https://wordpress.org/plugins/query-monitor/',
+			'https://github.com/johnbillion/query-monitor/releases/tag/',
+			QMX_TESTED_WITH_QM,
+		)
+	);
+
+	if ( class_exists( 'QueryMonitor' ) )
 		return $meta;
 
 	$first = array_shift( $meta );
@@ -55,15 +63,30 @@ add_filter( 'plugin_row_meta', function ( $meta, $file ) {
 if ( !class_exists( 'QueryMonitor' ) )
 	return;
 
-$qmx_dir = dirname( __FILE__ );
+$collector_names = array(
+	'acf',
+	'constants',
+	'files',
+	'heartbeat',
+	'image-sizes',
+	'paths',
+	'time',
+);
 
-require_once "{$qmx_dir}/classes/Plugin.php";
+$dir = trailingslashit( __DIR__ );
 
-foreach ( array( 'QueryMonitorExtend', 'Collectors', 'Collector', 'Output' ) as $qmx_class ) {
-	require_once "{$qmx_dir}/classes/{$qmx_class}.php";
+# Include all collector and outputters.
+foreach ( $collector_names as $collector_name ) {
+	include_once sprintf( '%1$s%2$s/qmx-%2$s-collector.php', $dir, $collector_name );
+	include_once sprintf( '%1$s%2$s/qmx-%2$s-output.php',    $dir, $collector_name );
+
+	$function_name = sprintf( 'load_qmx_%s_collector', str_replace( '-', '_', $collector_name ) );
+
+	if ( !function_exists( $function_name ) )
+		continue;
+
+	$function_name( 'query-monitor/query-monitor.php' );
 }
 
-include_once "{$qmx_dir}/output/AdminBar.php";
-
-QueryMonitorExtend::init( __FILE__ );
-?>
+# Include additional conditionals.
+include_once $dir . 'qmx-conditionals.php';
