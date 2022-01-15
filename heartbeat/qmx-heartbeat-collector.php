@@ -186,6 +186,12 @@ function load_qmx_heartbeat_collector( string $file ) {
 			return defined( 'QM_NO_JQUERY' ) && QM_NO_JQUERY;
 		}
 
+		public function get_concerned_filters() : array {
+			return array(
+				'heartbeat_received',
+			);
+		}
+
 	}
 
 	add_filter( 'qm/collectors', static function ( array $collectors ) : array {

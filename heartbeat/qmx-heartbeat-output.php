@@ -25,6 +25,10 @@ add_action( 'shutdown', static function () {
 			add_filter( 'qm/output/panel_menus', array( &$this, 'panel_menu' ), 60 );
 		}
 
+		public function name() : string {
+			return __( 'Heartbeat', 'query-monitor-extend' );
+		}
+
 		public function output() {
 			$data = $this->collector->get_data();
 
@@ -71,12 +75,15 @@ add_action( 'shutdown', static function () {
 				}
 
 			echo '</div>';
+
+			$this->current_id = 'qm-heartbeat';
+			$this->current_name = 'Heartbeat';
+
+			$this->output_concerns();
 		}
 
 		public function panel_menu( array $menu ) {
-			$data = $this->collector->get_data();
-
-			$menu['heartbeat'] = $this->menu( array(
+			$menu['qm-heartbeat'] = $this->menu( array(
 				'title' => esc_html__( 'Heartbeats (0)' ),
 				'id'    => 'query-monitor-extend-heartbeat',
 			) );
