@@ -87,6 +87,9 @@ function load_qmx_paths_collector( string $file ) {
 				'get_theme_file_uri()' => get_theme_file_uri(),
 			) );
 
+			if ( defined( 'WP_DEBUG_LOG' ) && is_string( WP_DEBUG_LOG ) )
+				$this->data['paths']['WP_DEBUG_LOG'] = WP_DEBUG_LOG;
+
 			ksort( $this->data['paths'], SORT_FLAG_CASE | SORT_STRING );
 
 		}
