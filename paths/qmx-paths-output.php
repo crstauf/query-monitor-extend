@@ -59,7 +59,16 @@ add_action( 'shutdown', static function () {
 
 									if ( is_string( $value ) ) {
 
-										echo '<td>' . esc_html( $value ) . '</td>';
+										# Remove ABSPATH and add back to support paths without ABSPATH.
+										$possible_path = str_replace( ABSPATH, '', $value );
+										$possible_path = ABSPATH . $possible_path;
+
+										if ( file_exists( $possible_path ) )
+											$value = QM_Output_Html::output_filename( $value, $possible_path );
+										else
+											$value = esc_html( $value );
+
+										echo '<td>' . $value . '</td>';
 
 									} else {
 
