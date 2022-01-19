@@ -29,11 +29,17 @@ function load_qmx_time_collector( string $file ) {
 
 		public $id = 'time';
 
+		protected $data = array(
+			'functions' => array(),
+		);
+
 		public function name() {
 			return __( 'Time', 'query-monitor-extend' );
 		}
 
 		function process() {
+			if ( did_action( 'qm/cease' ) )
+				return;
 
 			$this->data['functions'] = array(
 				'UTC'       => 'get_utc',

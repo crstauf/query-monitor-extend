@@ -60,7 +60,7 @@ add_filter( 'plugin_row_meta', static function ( array $meta, string $file ) : a
 	return $meta;
 }, 10, 2 );
 
-if ( !class_exists( 'QueryMonitor' ) )
+if ( !class_exists( 'QueryMonitor' ) || did_action( 'qm/cease' ) )
 	return;
 
 $collector_names = array(

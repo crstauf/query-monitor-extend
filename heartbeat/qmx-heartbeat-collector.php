@@ -40,6 +40,9 @@ function load_qmx_heartbeat_collector( string $file ) {
 		}
 
 		public function add_inline_script() {
+			if ( did_action( 'qm/cease' ) )
+				return;
+
 			wp_add_inline_script( 'heartbeat', $this->_inlineScript_heartbeat() );
 		}
 

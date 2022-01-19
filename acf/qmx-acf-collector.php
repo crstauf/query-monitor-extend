@@ -71,6 +71,9 @@ function load_qmx_acf_collector( string $file ) {
 
         public function filter__acf_settings_load_json($paths)
         {
+            if ( did_action( 'qm/cease' ) )
+                return $paths;
+
             $this->data['local_json']['load'] = $paths;
             return $paths;
         }
@@ -93,6 +96,9 @@ function load_qmx_acf_collector( string $file ) {
 
         public function filter__acf_pre_load_value($short_circuit, $post_id, $field)
         {
+            if ( did_action( 'qm/cease' ) )
+                return $short_circuit;
+
             $full_stack_trace = apply_filters('qmx/collector/acf/full_stack_trace', is_admin(), $post_id, $field);
             $trace = new QM_Backtrace(array('ignore_current_filter' => !$full_stack_trace));
 
