@@ -106,20 +106,23 @@ function load_qmx_image_sizes_collector( string $file ) {
 		}
 
 		function action__plugins_loaded() {
-			if ( 'plugins_loaded' !== current_action() )
+			if ( 'plugins_loaded' !== current_action() || did_action( 'qm/cease' ) )
 				return;
 
 			$this->_process_added_image_sizes( 'plugin' );
 		}
 
 		function action__after_setup_theme() {
-			if ( 'after_setup_theme' !== current_action() )
+			if ( 'after_setup_theme' !== current_action() || did_action( 'qm/cease' ) )
 				return;
 
 			$this->_process_added_image_sizes( 'theme' );
 		}
 
 		function action__wp() : void {
+			if ( did_action( 'qm/cease' ) )
+				return;
+
 			$post = get_queried_object();
 
 			if ( empty( $post ) )
@@ -144,6 +147,8 @@ function load_qmx_image_sizes_collector( string $file ) {
 		}
 
 		function filter__wp_get_attachment_image_src( $image, $attachment_id, $size ) {
+			if ( did_action( 'qm/cease' ) )
+				return $image;
 
 			# If specifying custom dimensions, bail.
 			if ( is_array( $size ) )
@@ -180,6 +185,9 @@ function load_qmx_image_sizes_collector( string $file ) {
 		}
 
 		public function process() {
+			if ( did_action( 'qm/cease' ) )
+				return;
+
 			$this->_process_added_image_sizes();
 
 			$this->data['sizes'] = array_map( array( &$this, 'add_ratio' ), $this->data['sizes'] );
@@ -235,6 +243,9 @@ function load_qmx_image_sizes_collector( string $file ) {
 		}
 
 		public function add_inline_script() {
+			if ( did_action( 'qm/cease' ) )
+				return;
+
 			wp_add_inline_script( 'query-monitor', $this->_inlineScript_queryMonitor() );
 		}
 

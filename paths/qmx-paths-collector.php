@@ -29,11 +29,17 @@ function load_qmx_paths_collector( string $file ) {
 
 		public $id = 'paths';
 
+		protected $data = array(
+			'paths' => array(),
+		);
+
 		public function name() {
 			return __( 'Paths', 'query-monitor-extend' );
 		}
 
 		function process() {
+			if ( did_action( 'qm/cease' ) )
+				return;
 
 			$this->data['paths'] = apply_filters( 'qmx/collector/paths', array(
 				'ABSPATH' => ABSPATH,

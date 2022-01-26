@@ -29,11 +29,17 @@ function load_qmx_constants_collector( string $file ) {
 
 		public $id = 'constants';
 
+		protected $data = array(
+			'constants' => array(),
+		);
+
 		public function name() {
 			return __( 'Constants', 'query-monitor-extend' );
 		}
 
 		public function process() {
+			if ( did_action( 'qm/cease' ) )
+				return;
 
 			$constants = get_defined_constants( true );
 			$this->data['constants'] = $constants['user'];

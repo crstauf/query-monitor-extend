@@ -29,11 +29,18 @@ function load_qmx_files_collector( string $file ) {
 
 		public $id = 'files';
 
+		protected $data = array(
+			'files' => array(),
+		);
+
 		public function name() {
 			return __( 'Files', 'query-monitor-extend' );
 		}
 
 		public function process() {
+			if ( did_action( 'qm/cease' ) )
+				return;
+
 			$php_errors = QM_Collectors::get( 'php_errors' )->get_data();
 			$files_with_errors = array();
 
