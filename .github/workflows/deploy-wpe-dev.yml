@@ -1,0 +1,49 @@
+name: Deploy to Dev
+
+on: workflow_dispatch
+
+env:
+  INSTALL:  cssllcqmx
+  SSH_HOST: cssllcqmx.ssh.wpengine.net
+
+jobs:
+
+  backup-plugins:
+    runs-on: ubuntu-latest
+    steps:
+
+    - name: Install SSH key
+      uses: shimataro/ssh-key-action@v2
+      with:
+        key: ${{ secrets.WPENGINE_SSH_KEY_PRIVATE }}
+        name: deploy-wpengine
+        known_hosts: ${{ secrets.KNOWN_HOSTS }}
+
+    - name: Backup plugins
+      run: ssh -i ~/.ssh/deploy-wpengine $INSTALL@$SSH_HOST 'zip -r --filesync --test --display-bytes --display-counts sites/${{ env.INSTALL }}/_wpeprivate/backup-plugins.zip sites/${{ env.INSTALL }}/wp-content/plugins'
+
+  deploy-plugins:
+    runs-on: ubuntu-latest
+    needs: [ backup-plugins ]
+
+    steps:
+    - uses: actions/checkout@v2
+      with:
+        fetch-depth: '0'
+
+    - name: Install SSH key
+      uses: shimataro/ssh-key-action@v2
+      with:
+        key: ${{ secrets.WPENGINE_SSH_KEY_PRIVATE }}
+        name: deploy-wpengine
+        known_hosts: ${{ secrets.KNOWN_HOSTS }}
+
+    - name: Deploy plugins
+      run: |
+        rsync -chavP --delete --stats \
+          -e 'ssh -i ~/.ssh/deploy-wpengine' \
+          --exclude /.git/ \
+          --exclude /.github/ \
+          --exclude /.gitignore \
+          --exclude /.ssh/ \
+          ./ "$INSTALL@$SSH_HOST:/sites/$INSTALL/wp-content/plugins/query-monitor-extend"
