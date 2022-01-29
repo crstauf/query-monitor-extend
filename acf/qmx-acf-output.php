@@ -216,7 +216,7 @@ add_action( 'shutdown', static function () {
             $url = add_query_arg( array(
                 'post' => $group['ID'],
                 'action' => 'edit',
-            ) );
+            ), admin_url( 'post.php' ) );
 
             echo '<a href="' . esc_url( $url ) . '">' . esc_html( $group['title'] ) . '</a>';
         }
