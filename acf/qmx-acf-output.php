@@ -59,7 +59,7 @@ add_action( 'shutdown', static function () {
 
             if (empty($data['fields'])) {
                 $this->before_non_tabular_output();
-                echo '<div class="qm-notice"><p>No Advanced Custom Fields.</p></div>';
+                echo '<div class="qm-notice"><p>No Advanced Custom Fields found.</p></div>';
                 $this->after_non_tabular_output();
                 return;
             }
