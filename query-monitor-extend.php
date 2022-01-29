@@ -14,7 +14,7 @@
 defined( 'WPINC' ) || die();
 defined( 'QMX_DISABLED' ) || define( 'QMX_DISABLED', false );
 
-define( 'QMX_TESTED_WITH_QM', '3.7.1' );
+define( 'QMX_TESTED_WITH_QM', '3.8.2' );
 
 /**
  * Filter: plugin_row_meta
