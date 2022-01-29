@@ -210,7 +210,15 @@ add_action( 'shutdown', static function () {
             if (empty($group))
                 return;
 
-            echo $group['title'];
+            if ( !current_user_can( 'edit_post', $group['ID'] ) )
+                echo esc_html( $group['title'] );
+
+            $url = add_query_arg( array(
+                'post' => $group['ID'],
+                'action' => 'edit',
+            ) );
+
+            echo '<a href="' . esc_url( $url ) . '">' . esc_html( $group['title'] ) . '</a>';
         }
 
         protected function output_column_caller(array $row)
