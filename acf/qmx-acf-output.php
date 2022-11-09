@@ -12,10 +12,14 @@ defined( 'WPINC' ) || die();
 
 add_action( 'shutdown', static function () {
 
-	if ( !class_exists( 'QMX_Collector_ACF' ) )
-		return;
+    if ( ! class_exists( 'QMX_Collector_ACF' ) )
+        return;
 
     $qm_dir = trailingslashit( QueryMonitor::init()->plugin_path() );
+
+    if ( ! file_exists( $qm_dir . 'output/Html.php' ) )
+        return;
+
     require_once $qm_dir . 'output/Html.php';
 
     class QMX_Output_Html_ACF extends QM_Output_Html
@@ -341,12 +345,11 @@ add_action( 'shutdown', static function () {
         }
 
     }
+	add_filter( 'qm/outputter/html', static function( array $output ) : array {
+		if ( $collector = QM_Collectors::get( 'acf' ) )
+			$output['acf'] = new QMX_Output_Html_ACF( $collector );
 
-}, -1 );
+		return $output;
+	}, 70 );
 
-add_filter( 'qm/outputter/html', static function( array $output ) : array {
-    if ( $collector = QM_Collectors::get( 'acf' ) )
-        $output['acf'] = new QMX_Output_Html_ACF( $collector );
-
-    return $output;
-}, 70 );
+}, 9 );
