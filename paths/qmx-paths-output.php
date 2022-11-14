@@ -16,6 +16,10 @@ add_action( 'shutdown', static function () {
 		return;
 
 	$qm_dir = trailingslashit( QueryMonitor::init()->plugin_path() );
+
+	if ( ! file_exists( $qm_dir . 'output/Html.php' ) )
+		return;
+
 	require_once $qm_dir . 'output/Html.php';
 
 	class QMX_Output_Html_Paths extends QM_Output_Html {
@@ -122,4 +126,4 @@ add_action( 'shutdown', static function () {
 		return $output;
 	}, 70 );
 
-}, -1 );
+}, 9 );

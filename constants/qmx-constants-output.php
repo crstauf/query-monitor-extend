@@ -16,6 +16,10 @@ add_action( 'shutdown', static function () {
 		return;
 
 	$qm_dir = trailingslashit( QueryMonitor::init()->plugin_path() );
+
+	if ( ! file_exists( $qm_dir . 'output/Html.php' ) )
+		return;
+
 	require_once $qm_dir . 'output/Html.php';
 
 	class QMX_Output_Html_Constants extends QM_Output_Html {
@@ -96,11 +100,12 @@ add_action( 'shutdown', static function () {
 		}
 
 	}
-}, -1 );
 
-add_filter( 'qm/outputter/html', static function ( array $output ) : array {
-	if ( $collector = QM_Collectors::get( 'constants' ) )
-		$output['constants'] = new QMX_Output_Html_Constants( $collector );
+	add_filter( 'qm/outputter/html', static function ( array $output ) : array {
+		if ( $collector = QM_Collectors::get( 'constants' ) )
+			$output['constants'] = new QMX_Output_Html_Constants( $collector );
 
-	return $output;
-}, 70 );
+		return $output;
+	}, 70 );
+
+}, 9 );
