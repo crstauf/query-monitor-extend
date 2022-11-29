@@ -53,8 +53,12 @@ add_action( 'shutdown', static function () {
             $data = $this->collector->get_data();
 
             $this->output_fields_table();
-            $this->output_local_json();
+			$this->output_local_json();
             $this->output_concerns();
+
+			if ( is_admin() ) {
+				$this->output_field_groups_table();
+			}
         }
 
         protected function output_fields_table()
@@ -179,6 +183,88 @@ add_action( 'shutdown', static function () {
             echo '</div>';
         }
 
+		protected function output_field_groups_table() {
+			$id = 'qm-acf-loaded_field_groups';
+			$name = 'Advanced Custom Fields: Loaded Field Groups';
+			$data = $this->collector->get_data();
+
+			printf(
+				'<div class="qm qm-concerns" id="%1$s" role="tabpanel" aria-labelledby="%1$s-caption" tabindex="-1">',
+				esc_attr($id)
+			);
+
+			echo '<table class="qm-sortable">';
+
+			printf(
+				'<caption><h2 id="%1$s-caption">%2$s</h2></caption>',
+				esc_attr($id),
+				esc_html($name)
+			);
+
+			echo '<thead>';
+
+			echo '<tr>';
+
+			echo '<th scope="col" class="qm-sorted-asc qm-sortable-column" role="columnheader" aria-sort="ascending">';
+			echo $this->build_sorter('#');
+			echo '</th>';
+
+			echo '<th scope="col">';
+			echo esc_html__( 'Field Group', 'query-monitor-extend' );
+			echo '</th>';
+
+			echo '<th scope="col">';
+			echo esc_html__( 'Key', 'query-monitor-extend' );
+			echo '</th>';
+
+			echo '<th scope="col">';
+			echo esc_html__( 'Rules', 'query-monitor-extend' );
+			echo '</th>';
+
+			echo '</tr>';
+
+			echo '</thead>';
+
+			echo '<tbody>';
+
+			$row_num = 0;
+
+			foreach ($data['loaded_field_groups'] as $row) {
+				echo '<tr>';
+
+				# Number
+				echo '<th scope="row" class="qm-row-num qm-num">' . esc_html(++$row_num) . '</th>';
+
+				# Field group name
+				echo '<td class="qm-ltr qm-nowrap">';
+				$this->output_column_field_group_title($row);
+				echo '</td>';
+
+				# Field group key
+				echo '<td class="qm-ltr">';
+				$this->output_column_field_group_key($row);
+				echo '</td>';
+
+				# Field group rules
+				echo '<td class="qm-ltr qm-nowrap qm-has-inner">';
+				$this->output_column_field_group_rules($row);
+				echo '</td>';
+
+				echo '</tr>';
+			}
+
+			echo '</tbody>';
+
+			echo '<tfoot>';
+			echo '<tr>';
+			printf('<td colspan="5">Total: %d</td>', count($data['loaded_field_groups']));
+			echo '</tr>';
+			echo '</tfoot>';
+
+			echo '</table>';
+			echo '</div>';
+		}
+
         protected function output_column_field_name(array $row)
         {
             echo esc_html($row['field']['name']);
@@ -207,15 +293,45 @@ add_action( 'shutdown', static function () {
             echo '</div>';
         }
 
-        protected function output_column_field_group(array $row)
-        {
-            $group = $row['group'];
+		protected function output_column_field_group_title( array $row ) {
+			$title = $row['title'];
+
+			if ( empty( $title ) ) {
+				return;
+			}
+
+			if ( ! current_user_can( 'edit_post', $row['id'] ) ) {
+				echo esc_html( $title );
+				return;
+			}
+
+			$url = add_query_arg( array(
+				'post' => $row['id'],
+				'action' => 'edit',
+			), admin_url( 'post.php' ) );
+
+			echo '<a href="' . esc_url( $url ) . '">' . esc_html( $title ) . '</a>';
+		}
+
+		protected function output_column_field_group_key( array $row ) {
+			$group = $row['group'];
+
+			if (empty($group))
+				return;
+
+			echo esc_html( $group );
+		}
+
+		protected function output_column_field_group( array $row ) {
+			$group = $row['group'];
 
             if (empty($group))
                 return;
 
-            if ( !current_user_can( 'edit_post', $group['ID'] ) )
+            if ( !current_user_can( 'edit_post', $group['ID'] ) ) {
                 echo esc_html( $group['title'] );
+				return;
+			}
 
             $url = add_query_arg( array(
                 'post' => $group['ID'],
@@ -224,6 +340,16 @@ add_action( 'shutdown', static function () {
 
             echo '<a href="' . esc_url( $url ) . '">' . esc_html( $group['title'] ) . '</a>';
         }
+
+		protected function output_column_field_group_rules( array $row ) {
+			$rules = $row['rules'];
+
+			if ( empty( $rules ) ) {
+				return;
+			}
+
+			self::output_inner( $rules );
+		}
 
         protected function output_column_caller(array $row)
         {
@@ -333,6 +459,14 @@ add_action( 'shutdown', static function () {
                 'title' => esc_html__('Advanced Custom Fields', 'query-monitor-extend'),
                 'id' => 'query-monitor-extend-acf',
             ));
+
+			if ( is_admin() ) {
+				$menu['qm-acf']['children']['loaded_field_groups'] = array(
+					'title' => esc_html__( 'Field Groups', 'query-monitor-extend' ),
+					'href' => '#qm-acf-loaded_field_groups',
+					'id' => 'query-monitor-extend-acf-loaded_field_groups',
+				);
+			}
 
             $menu['qm-acf']['children']['local_json'] = array(
                 'title' => esc_html__('Local JSON', 'query-monitor-extend'),
