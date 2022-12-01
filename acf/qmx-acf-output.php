@@ -205,10 +205,6 @@ add_action( 'shutdown', static function () {
 
 			echo '<tr>';
 
-			echo '<th scope="col" class="qm-sorted-asc qm-sortable-column" role="columnheader" aria-sort="ascending">';
-			echo $this->build_sorter('#');
-			echo '</th>';
-
 			echo '<th scope="col">';
 			echo esc_html__( 'Field Group', 'query-monitor-extend' );
 			echo '</th>';
@@ -227,13 +223,16 @@ add_action( 'shutdown', static function () {
 
 			echo '<tbody>';
 
-			$row_num = 0;
+			$row_num = 1;
 
 			foreach ($data['loaded_field_groups'] as $row) {
-				echo '<tr>';
+				$class = '';
 
-				# Number
-				echo '<th scope="row" class="qm-row-num qm-num">' . esc_html(++$row_num) . '</th>';
+				if ( 1 === $row_num % 2 ) {
+					$class = ' class="qm-odd"';
+				}
+
+				echo '<tr' . $class . '>';
 
 				# Field group name
 				echo '<td class="qm-ltr qm-nowrap">';
@@ -257,7 +256,7 @@ add_action( 'shutdown', static function () {
 
 			echo '<tfoot>';
 			echo '<tr>';
-			printf('<td colspan="5">Total: %d</td>', count($data['loaded_field_groups']));
+			printf('<td colspan="3">Total: %d</td>', count($data['loaded_field_groups']));
 			echo '</tr>';
 			echo '</tfoot>';
 
@@ -461,8 +460,10 @@ add_action( 'shutdown', static function () {
             ));
 
 			if ( is_admin() ) {
+				$data = $this->collector->get_data();
+
 				$menu['qm-acf']['children']['loaded_field_groups'] = array(
-					'title' => esc_html__( 'Field Groups', 'query-monitor-extend' ),
+					'title' => esc_html__( 'Field Groups', 'query-monitor-extend' ) . sprintf( ' (%d)', count( $data['loaded_field_groups'] ) ),
 					'href' => '#qm-acf-loaded_field_groups',
 					'id' => 'query-monitor-extend-acf-loaded_field_groups',
 				);
