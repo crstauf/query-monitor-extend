@@ -38,6 +38,7 @@ function load_qmx_acf_collector( string $file ) {
             'counts' => array(),
             'field_groups' => array(),
             'local_json' => array(),
+			'loaded_field_groups' => array(),
         );
 
         function __construct()
@@ -46,6 +47,7 @@ function load_qmx_acf_collector( string $file ) {
 
             add_filter('acf/settings/load_json', array($this, 'filter__acf_settings_load_json'), 99999);
             add_filter('acf/pre_load_value', array($this, 'filter__acf_pre_load_value'), 10, 3);
+			add_filter('acf/load_field_groups', array($this, 'filter__acf_load_field_groups') );
 
             $this->data['local_json']['save'] = apply_filters('acf/settings/save_json', get_stylesheet_directory() . '/acf-json');
         }
@@ -158,6 +160,35 @@ function load_qmx_acf_collector( string $file ) {
             return $short_circuit;
         }
 
+		public function filter__acf_load_field_groups( $field_groups ) {
+			static $processed = array();
+
+			$hash = wp_hash( json_encode( $field_groups ) );
+
+			if ( in_array( $hash, $processed ) ) {
+				return;
+			}
+
+			$processed[] = $hash;
+
+			foreach ( $field_groups as $field_group ) {
+				$key = wp_hash( json_encode( $field_group ) );
+
+				if ( array_key_exists( $key, $this->data['loaded_field_groups'] ) ) {
+					continue;
+				}
+
+				$this->data['loaded_field_groups'][ $key ] = array(
+					'id' => $field_group['ID'],
+					'group' => $field_group['key'],
+					'title' => $field_group['title'],
+					'rules' => $field_group['location'],
+				);
+			}
+
+			return $field_groups;
+		}
+
         public function get_concerned_actions()
         {
             $actions = array(
@@ -183,6 +214,7 @@ function load_qmx_acf_collector( string $file ) {
             if (is_admin()) {
                 $filters = array_merge($filters, array(
                     'acf/settings/save_json',
+					'acf/load_field_groups',
                 ));
             }
 
