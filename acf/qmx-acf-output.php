@@ -347,7 +347,9 @@ add_action( 'shutdown', static function () {
 				return;
 			}
 
-			self::output_inner( $rules );
+			echo '<pre>';
+			print_r( $rules );
+			echo '</pre>';
 		}
 
         protected function output_column_caller(array $row)
