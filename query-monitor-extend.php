@@ -3,18 +3,18 @@
  * Plugin Name: Query Monitor Extend
  * Plugin URI: https://github.com/crstauf/query-monitor-extend
  * Description: Additional collectors for Query Monitor by John Blackbourn
- * Version: 1.3
+ * Version: 1.4.1
  * Author: Caleb Stauffer
  * Author URI: https://develop.calebstauffer.com
  * Update URI: false
  *
- * QM tested up to: 3.7.1
+ * QM tested up to: 3.11.1
  */
 
 defined( 'WPINC' ) || die();
 defined( 'QMX_DISABLED' ) || define( 'QMX_DISABLED', false );
 
-define( 'QMX_TESTED_WITH_QM', '3.8.2' );
+define( 'QMX_TESTED_WITH_QM', '3.11.1' );
 
 /**
  * Filter: plugin_row_meta
