@@ -25,13 +25,14 @@ function load_qmx_image_sizes_collector( string $file ) {
 	if ( defined( 'QMX_DISABLE' ) && QMX_DISABLE )
 		return;
 
-	class QMX_Collector_Image_Sizes extends QM_Collector {
+	class QMX_Collector_Image_Sizes extends QM_DataCollector {
 
 		public $id = 'image_sizes';
 
 		public function __construct() {
+			parent::__construct();
 
-			$this->data['sizes'] = array(
+			$this->data->sizes = array(
 				'thumbnail' => array(
 					'width'  => intval( get_option( 'thumbnail_size_w' ) ),
 					'height' => intval( get_option( 'thumbnail_size_h' ) ),
@@ -99,6 +100,11 @@ function load_qmx_image_sizes_collector( string $file ) {
 
 		}
 
+		public function get_storage(): QM_Data {
+			require_once 'qmx-image-sizes-data.php';
+			return new QMX_Data_Image_Sizes();
+		}
+
 		public function get_concerned_filters() {
 			return array(
 				'wp_get_attachment_image_src',
@@ -139,10 +145,10 @@ function load_qmx_image_sizes_collector( string $file ) {
 
 				$size = $block['attrs']['sizeSlug'];
 
-				if ( !array_key_exists( $size, $this->data['sizes'] ) )
+				if ( !array_key_exists( $size, $this->data->sizes ) )
 					continue;
 
-				$this->data['sizes'][ $size ]['used']++;
+				$this->data->sizes[ $size ]['used']++;
 			}
 		}
 
@@ -155,10 +161,10 @@ function load_qmx_image_sizes_collector( string $file ) {
 				return $image;
 
 			# If size is not registered, bail.
-			if ( !array_key_exists( $size, $this->data['sizes'] ) )
+			if ( !array_key_exists( $size, $this->data->sizes ) )
 				return $image;
 
-			$this->data['sizes'][ $size ]['used']++;
+			$this->data->sizes[ $size ]['used']++;
 
 			return $image;
 		}
@@ -166,15 +172,15 @@ function load_qmx_image_sizes_collector( string $file ) {
 		protected function _process_added_image_sizes( $source = 'unknown' ) {
 			global $_wp_additional_image_sizes;
 
-			$num = count( $this->data['sizes'] );
+			$num = count( $this->data->sizes );
 
 			if (
 				 is_array( $_wp_additional_image_sizes )
 				&& !empty( $_wp_additional_image_sizes )
 			)
 				foreach ( $_wp_additional_image_sizes as $id => $size )
-					if ( !array_key_exists( $id, $this->data['sizes'] ) )
-						$this->data['sizes'][$id] = array_merge(
+					if ( !array_key_exists( $id, $this->data->sizes ) )
+						$this->data->sizes[$id] = array_merge(
 							array(
 								'num' => ++$num,
 								'source' => apply_filters( 'qmx/image-size/source', $source, $id, $size ),
@@ -190,11 +196,11 @@ function load_qmx_image_sizes_collector( string $file ) {
 
 			$this->_process_added_image_sizes();
 
-			$this->data['sizes'] = array_map( array( &$this, 'add_ratio' ), $this->data['sizes'] );
+			$this->data->sizes = array_map( array( &$this, 'add_ratio' ), $this->data->sizes );
 
 			$counts = array( 'dimensions' => array(), 'ratios' => array() );
 
-			foreach ( $this->data['sizes'] as $size ) {
+			foreach ( $this->data->sizes as $size ) {
 				$key = $size['width'] . ':' . $size['height'] . ' - ' . ( bool ) $size['crop'];
 				array_key_exists( $key, $counts['dimensions'] )
 					? $counts['dimensions'][$key]++
@@ -210,7 +216,7 @@ function load_qmx_image_sizes_collector( string $file ) {
 			foreach ( array( 'dimensions', 'ratios' ) as $type )
 				$counts[$type] = array_filter( $counts[$type], function( $v ) { return $v > 1; } );
 
-			$this->data['_duplicates'] = $counts;
+			$this->data->duplicates = $counts;
 
 		}
 

@@ -25,7 +25,7 @@ function load_qmx_paths_collector( string $file ) {
 	if ( defined( 'QMX_DISABLE' ) && QMX_DISABLE )
 		return;
 
-	class QMX_Collector_Paths extends QM_Collector {
+	class QMX_Collector_Paths extends QM_DataCollector {
 
 		public $id = 'paths';
 
