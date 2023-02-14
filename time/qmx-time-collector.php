@@ -25,16 +25,17 @@ function load_qmx_time_collector( string $file ) {
 	if ( defined( 'QMX_DISABLE' ) && QMX_DISABLE )
 		return;
 
-	class QMX_Collector_Time extends QM_Collector {
+	class QMX_Collector_Time extends QM_DataCollector {
 
 		public $id = 'time';
 
-		protected $data = array(
-			'functions' => array(),
-		);
-
 		public function name() {
 			return __( 'Time', 'query-monitor-extend' );
+		}
+
+		public function get_storage(): QM_Data {
+			require_once 'qmx-time-data.php';
+			return new QMX_Data_Time();
 		}
 
 		function process() {
