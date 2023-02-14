@@ -36,7 +36,7 @@ add_action( 'shutdown', static function () {
 
 			echo '<div class="qm" id="' . esc_attr( $this->collector->id() ) . '">';
 
-				if ( !empty( $data['files'] ) ) {
+				if ( !empty( $data->files ) ) {
 					$files_with_errors = 0;
 					$path_components = $components = array();
 
@@ -45,7 +45,7 @@ add_action( 'shutdown', static function () {
 						'size' => 0
 					);
 
-					foreach ( $data['files'] as &$file ) {
+					foreach ( $data->files as &$file ) {
 						$file['_path_components'] = array();
 
 						foreach ( array_filter( explode( '/', str_replace( ABSPATH, '', dirname( $file['path'] ) ) ) ) as $path_component ) {
@@ -95,7 +95,7 @@ add_action( 'shutdown', static function () {
 
 							$total_file_size = 0;
 
-							foreach ( $data['files'] as $i => $file ) {
+							foreach ( $data->files as $i => $file ) {
 
 								$total_file_size += filesize( $file['path'] );
 
@@ -125,14 +125,14 @@ add_action( 'shutdown', static function () {
 								echo '<td colspan="4">';
 								printf(
 									esc_html__( 'Files in filter: %s', 'query-monitor-extend' ),
-									'<span class="qm-items-number">' . esc_html( number_format_i18n( count( $data['files']) ) ) . '</span>'
+									'<span class="qm-items-number">' . esc_html( number_format_i18n( count( $data->files) ) ) . '</span>'
 								);
 								echo '</td>';
 							echo '</tr>';
 
 							echo '<tr>';
 								echo '<td colspan="2">' .
-									'Total: <span class="qm-items-number">' . esc_html( number_format_i18n( count( $data['files'] ) ) ) . '</span>' .
+									'Total: <span class="qm-items-number">' . esc_html( number_format_i18n( count( $data->files ) ) ) . '</span>' .
 									(
 										!empty( $files_with_errors )
 										? ', With error(s): <span>' . esc_html( number_format_i18n( $files_with_errors ) ) . '</span>'
@@ -162,8 +162,8 @@ add_action( 'shutdown', static function () {
 		public function admin_title( array $title ) {
 			$data = $this->collector->get_data();
 
-			if ( !empty( $data['files'] ) ) {
-				$_title = sprintf( esc_html_x( '%s F', 'Files count', 'query-monitor-extend' ), number_format_i18n( count( $data['files'] ) ) );
+			if ( !empty( $data->files ) ) {
+				$_title = sprintf( esc_html_x( '%s F', 'Files count', 'query-monitor-extend' ), number_format_i18n( count( $data->files ) ) );
 				$_title = preg_replace( '#\s?([^0-9,\.]+)#', '<small>$1</small>', $_title );
 				$title[] = $_title;
 			}

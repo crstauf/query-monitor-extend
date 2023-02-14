@@ -38,7 +38,7 @@ add_action( 'shutdown', static function () {
 
 			echo '<div class="qm" id="' . esc_attr( $this->collector->id() ) . '">';
 
-				if ( !empty( $data['paths'] ) ) {
+				if ( !empty( $data->paths ) ) {
 					echo '<table class="qm-sortable">';
 						echo '<caption class="qm-screen-reader-text">' . esc_html( $this->collector->name() ) . '</caption>';
 						echo '<thead>';
@@ -57,7 +57,7 @@ add_action( 'shutdown', static function () {
 
 						echo '<tbody>';
 
-							foreach ( $data['paths'] as $var => $value ) {
+							foreach ( $data->paths as $var => $value ) {
 								echo '<tr>';
 									echo '<td class="qm-ltr"><code style="user-select: all;">' . esc_html( $var ) . '</code></td>';
 

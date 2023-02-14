@@ -65,7 +65,7 @@ add_action( 'shutdown', static function () {
         {
             $data = $this->collector->get_data();
 
-            if (empty($data['fields'])) {
+            if (empty($data->fields)) {
                 $this->before_non_tabular_output();
                 echo '<div class="qm-notice"><p>No Advanced Custom Fields found.</p></div>';
                 $this->after_non_tabular_output();
@@ -74,10 +74,10 @@ add_action( 'shutdown', static function () {
 
             echo '<style>.qm-hide-acf-field, .qm-hide-acf-post, .qm-hide-acf-group, .qm-hide-acf-caller { display: none !important; }</style>';
 
-            natsort($data['field_keys']);
-            natsort($data['post_ids']);
-            natsort($data['field_groups']);
-            natsort($data['callers']);
+            natsort($data->field_keys);
+            natsort($data->post_ids);
+            natsort($data->field_groups);
+            natsort($data->callers);
 
             $this->before_tabular_output();
 
@@ -90,7 +90,7 @@ add_action( 'shutdown', static function () {
             echo '</th>';
 
             echo '<th scope="col" class="qm-filterable-column">';
-            echo $this->build_filter('acf-field', $data['field_keys'], __('Field', 'query-monitor'), array(
+            echo $this->build_filter('acf-field', $data->field_keys, __('Field', 'query-monitor'), array(
                 'prepend' => array(
                     'qmx-acf-no-field' => 'Missing',
                 ),
@@ -98,15 +98,15 @@ add_action( 'shutdown', static function () {
             echo '</th>';
 
             echo '<th scope="col" class="qm-filterable-column">';
-            echo $this->build_filter('acf-post', $data['post_ids'], __('Post ID', 'query-monitor'));
+            echo $this->build_filter('acf-post', $data->post_ids, __('Post ID', 'query-monitor'));
             echo '</th>';
 
             echo '<th scope="col" class="qm-filterable-column">';
-            echo $this->build_filter('acf-group', $data['field_groups'], __('Group', 'query-monitor'));
+            echo $this->build_filter('acf-group', $data->field_groups, __('Group', 'query-monitor'));
             echo '</th>';
 
             echo '<th scope="col" class="qm-filterable-column">';
-            echo $this->build_filter('acf-caller', array_keys($data['callers']), __('Caller', 'query-monitor'));
+            echo $this->build_filter('acf-caller', array_keys($data->callers), __('Caller', 'query-monitor'));
             echo '</th>';
 
             echo '</tr>';
@@ -115,7 +115,7 @@ add_action( 'shutdown', static function () {
 
             echo '<tbody>';
 
-            foreach ($data['fields'] as $row_num => $row) {
+            foreach ($data->fields as $row_num => $row) {
                 $row_attr = array(
                     'class' => '',
                 );
@@ -175,7 +175,7 @@ add_action( 'shutdown', static function () {
 
             echo '<tfoot>';
             echo '<tr>';
-            printf('<td colspan="5">Total: %d</td>', count($data['fields']));
+            printf('<td colspan="5">Total: %d</td>', count($data->fields));
             echo '</tr>';
             echo '</tfoot>';
 
@@ -225,7 +225,7 @@ add_action( 'shutdown', static function () {
 
 			$row_num = 1;
 
-			foreach ($data['loaded_field_groups'] as $row) {
+			foreach ($data->loaded_field_groups as $row) {
 				$class = '';
 
 				if ( 1 === $row_num % 2 ) {
@@ -256,7 +256,7 @@ add_action( 'shutdown', static function () {
 
 			echo '<tfoot>';
 			echo '<tr>';
-			printf('<td colspan="3">Total: %d</td>', count($data['loaded_field_groups']));
+			printf('<td colspan="3">Total: %d</td>', count($data->loaded_field_groups));
 			echo '</tr>';
 			echo '</tfoot>';
 
@@ -414,23 +414,23 @@ add_action( 'shutdown', static function () {
 
             echo '<tbody>';
 
-            if (!empty($data['local_json']['save'])) {
+            if (!empty($data->local_json['save'])) {
                 echo '<tr>';
                 echo '<th scope="row">Save</th>';
                 echo '<td><code>acf/settings/save_json</code></td>';
-                echo '<td colspan="2"><code>' . esc_html($this->remove_abspath($data['local_json']['save'])) . '</code></td>';
+                echo '<td colspan="2"><code>' . esc_html($this->remove_abspath($data->local_json['save'])) . '</code></td>';
                 echo '</tr>';
             }
 
-            if (!empty($data['local_json']['load'])) {
+            if (!empty($data->local_json['load'])) {
                 $i = 0;
 
-                foreach ($data['local_json']['load'] as $path) {
+                foreach ($data->local_json['load'] as $path) {
                     echo '<tr>';
 
                     if (0 === $i) {
-                        echo '<th scope="row" rowspan="' . esc_attr(count($data['local_json']['load'])) . '">Load</th>';
-                        echo '<td rowspan="' . esc_attr(count($data['local_json']['load'])) . '"><code>acf/settings/load_json</code></td>';
+                        echo '<th scope="row" rowspan="' . esc_attr(count($data->local_json['load'])) . '">Load</th>';
+                        echo '<td rowspan="' . esc_attr(count($data->local_json['load'])) . '"><code>acf/settings/load_json</code></td>';
                     }
 
                     echo '<td class="qm-num">' . esc_html($i) . '</td>';
@@ -465,7 +465,7 @@ add_action( 'shutdown', static function () {
 				$data = $this->collector->get_data();
 
 				$menu['qm-acf']['children']['loaded_field_groups'] = array(
-					'title' => esc_html__( 'Field Groups', 'query-monitor-extend' ) . sprintf( ' (%d)', count( $data['loaded_field_groups'] ) ),
+					'title' => esc_html__( 'Field Groups', 'query-monitor-extend' ) . sprintf( ' (%d)', count( $data->loaded_field_groups ) ),
 					'href' => '#qm-acf-loaded_field_groups',
 					'id' => 'query-monitor-extend-acf-loaded_field_groups',
 				);

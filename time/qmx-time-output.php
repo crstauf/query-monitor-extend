@@ -37,7 +37,7 @@ add_action( 'shutdown', static function () {
 			echo '<div class="qm qm-non-tabular" id="' . esc_attr( $this->collector->id() ) . '">' .
 				'<div class="qm-boxed">';
 
-					foreach ( $data['functions'] as $label => $function ) {
+					foreach ( $data->functions as $label => $function ) {
 						if ( is_callable( array( $this->collector, $function ) ) )
 							echo '<div class="qm-section">' .
 								'<h2>' . esc_html( $label ) . '</h2>' .
