@@ -29,12 +29,13 @@ function load_qmx_files_collector( string $file ) {
 
 		public $id = 'files';
 
-		protected $data = array(
-			'files' => array(),
-		);
-
 		public function name() {
 			return __( 'Files', 'query-monitor-extend' );
+		}
+
+		public function get_storage(): QM_Data {
+			require_once 'qmx-files-data.php';
+			return new QMX_Data_Files();
 		}
 
 		public function process() {
@@ -50,7 +51,7 @@ function load_qmx_files_collector( string $file ) {
 						$files_with_errors[$error['file']] = 1;
 
 			foreach ( get_included_files() as $i => $filepath )
-				$this->data['files'][] = array(
+				$this->data->files[] = array(
 					'path' => $filepath,
 					'component' => QM_Util::get_file_component( $filepath ),
 					'has_error' => array_key_exists( $filepath, $files_with_errors ),

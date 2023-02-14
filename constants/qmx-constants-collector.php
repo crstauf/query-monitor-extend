@@ -29,12 +29,13 @@ function load_qmx_constants_collector( string $file ) {
 
 		public $id = 'constants';
 
-		protected $data = array(
-			'constants' => array(),
-		);
-
 		public function name() {
 			return __( 'Constants', 'query-monitor-extend' );
+		}
+
+		public function get_storage(): QM_Data {
+			require_once 'qmx-constants-data.php';
+			return new QMX_Data_Constants();
 		}
 
 		public function process() {

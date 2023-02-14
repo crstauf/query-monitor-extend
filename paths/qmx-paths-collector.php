@@ -29,19 +29,20 @@ function load_qmx_paths_collector( string $file ) {
 
 		public $id = 'paths';
 
-		protected $data = array(
-			'paths' => array(),
-		);
-
 		public function name() {
 			return __( 'Paths', 'query-monitor-extend' );
+		}
+
+		public function get_storage(): QM_Data {
+			require_once 'qmx-paths-data.php';
+			return new QMX_Data_Paths();
 		}
 
 		function process() {
 			if ( did_action( 'qm/cease' ) )
 				return;
 
-			$this->data['paths'] = apply_filters( 'qmx/collector/paths', array(
+			$this->data->paths = apply_filters( 'qmx/collector/paths', array(
 				'ABSPATH' => ABSPATH,
 				'COOKIEPATH' => COOKIEPATH,
 				'SITECOOKIEPATH' => SITECOOKIEPATH,
@@ -94,9 +95,9 @@ function load_qmx_paths_collector( string $file ) {
 			) );
 
 			if ( defined( 'WP_DEBUG_LOG' ) && is_string( WP_DEBUG_LOG ) )
-				$this->data['paths']['WP_DEBUG_LOG'] = WP_DEBUG_LOG;
+				$this->data->paths['WP_DEBUG_LOG'] = WP_DEBUG_LOG;
 
-			ksort( $this->data['paths'], SORT_FLAG_CASE | SORT_STRING );
+			ksort( $this->data->paths, SORT_FLAG_CASE | SORT_STRING );
 
 		}
 

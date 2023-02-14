@@ -25,7 +25,7 @@ function load_qmx_acf_collector( string $file ) {
 	if ( defined( 'QMX_DISABLE' ) && QMX_DISABLE )
 		return;
 
-    class QMX_Collector_ACF extends QM_Collector
+    class QMX_Collector_ACF extends QM_DataCollector
     {
 
         public $id = 'acf';
@@ -49,8 +49,13 @@ function load_qmx_acf_collector( string $file ) {
             add_filter('acf/pre_load_value', array($this, 'filter__acf_pre_load_value'), 10, 3);
 			add_filter('acf/load_field_groups', array($this, 'filter__acf_load_field_groups') );
 
-            $this->data['local_json']['save'] = apply_filters('acf/settings/save_json', get_stylesheet_directory() . '/acf-json');
+            $this->data->local_json['save'] = apply_filters('acf/settings/save_json', get_stylesheet_directory() . '/acf-json');
         }
+
+		public function get_storage(): QM_Data {
+			require_once 'qmx-acf-data.php';
+			return new QMX_Data_ACF();
+		}
 
         public function process()
         {
@@ -76,7 +81,7 @@ function load_qmx_acf_collector( string $file ) {
             if ( did_action( 'qm/cease' ) )
                 return $paths;
 
-            $this->data['local_json']['load'] = $paths;
+            $this->data->local_json['load'] = $paths;
             return $paths;
         }
 
@@ -134,8 +139,8 @@ function load_qmx_acf_collector( string $file ) {
             $hash = md5(json_encode($row));
             $row['hash'] = $hash;
 
-            if (array_key_exists($hash, $this->data['counts'])) {
-                $this->data['counts'][$hash]++;
+            if (array_key_exists($hash, $this->data->counts)) {
+                $this->data->counts[ $hash ]++;
 
                 if (apply_filters('qmx/collector/acf/hide_duplicates', false))
                     return $short_circuit;
@@ -144,18 +149,18 @@ function load_qmx_acf_collector( string $file ) {
             }
 
             if (!empty($field['key']))
-                $this->data['field_keys'][$field['name']] = $field['name'];
+                $this->data->field_keys[$field['name']] = $field['name'];
             else
-                $this->data['field_keys'][$field['key']] = $field['name'];
+                $this->data->field_keys[$field['key']] = $field['name'];
 
             if (!empty($row['group']))
-                $this->data['field_groups'][$row['group']['key']] = $row['group']['title'];
+                $this->data->field_groups[$row['group']['key']] = $row['group']['title'];
 
-            $this->data['post_ids'][( string )$post_id] = $post_id;
-            $this->data['callers'][$row['caller']['function'] . '()'] = 1;
-            $this->data['counts'][$hash] = 1;
+            $this->data->post_ids[( string )$post_id] = $post_id;
+            $this->data->callers[$row['caller']['function'] . '()'] = 1;
+            $this->data->counts[$hash] = 1;
 
-            $this->data['fields'][] = $row;
+            $this->data->fields[] = $row;
 
             return $short_circuit;
         }
@@ -174,11 +179,11 @@ function load_qmx_acf_collector( string $file ) {
 			foreach ( $field_groups as $field_group ) {
 				$key = wp_hash( json_encode( $field_group ) );
 
-				if ( array_key_exists( $key, $this->data['loaded_field_groups'] ) ) {
+				if ( array_key_exists( $key, $this->data->loaded_field_groups ) ) {
 					continue;
 				}
 
-				$this->data['loaded_field_groups'][ $key ] = array(
+				$this->data->loaded_field_groups[ $key ] = array(
 					'id' => $field_group['ID'],
 					'group' => $field_group['key'],
 					'title' => $field_group['title'],
