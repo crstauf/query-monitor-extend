@@ -167,6 +167,10 @@ function load_qmx_acf_collector( string $file ) {
 
 		public function filter__acf_load_field_groups( $field_groups ) {
 			static $processed = array();
+			
+			if ( empty( $field_groups ) ) {
+				return $field_groups;
+			}
 
 			$hash = wp_hash( json_encode( $field_groups ) );
 
