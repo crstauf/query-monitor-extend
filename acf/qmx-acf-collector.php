@@ -184,7 +184,7 @@ function load_qmx_acf_collector( string $file ) {
 				}
 
 				$this->data->loaded_field_groups[ $key ] = array(
-					'id' => $field_group['ID'],
+					'id'    => $field_group['ID'],
 					'group' => $field_group['key'],
 					'title' => $field_group['title'],
 					'rules' => $field_group['location'],

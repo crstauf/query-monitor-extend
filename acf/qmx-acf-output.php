@@ -308,17 +308,22 @@ add_action( 'shutdown', static function () {
 				return;
 			}
 
-			if ( ! current_user_can( 'edit_post', $row['id'] ) ) {
+			if ( empty( $row['id'] ) || ! current_user_can( 'edit_post', $row['id'] ) ) {
 				echo esc_html( $title );
 				return;
 			}
 
 			$url = add_query_arg( array(
-				'post' => $row['id'],
+				'post'   => $row['id'],
 				'action' => 'edit',
 			), admin_url( 'post.php' ) );
 
-			echo '<a href="' . esc_url( $url ) . '">' . esc_html( $title ) . '</a>';
+			printf(
+				'<a href="%1$s" class="qm-edit-link">%2$s%3$s</a>',
+				esc_url( $url ),
+				esc_html( $title ),
+				QueryMonitor::icon( 'edit' )
+			);
 		}
 
 		protected function output_column_field_group_key( array $row ) {
@@ -338,17 +343,22 @@ add_action( 'shutdown', static function () {
 				return;
 			}
 
-			if ( ! current_user_can( 'edit_post', $group['ID'] ) ) {
+			if ( empty( $group['id'] ) || ! current_user_can( 'edit_post', $group['id'] ) ) {
 				echo esc_html( $group['title'] );
 				return;
 			}
 
 			$url = add_query_arg( array(
-				'post'   => $group['ID'],
+				'post'   => $group['id'],
 				'action' => 'edit',
 			), admin_url( 'post.php' ) );
 
-			echo '<a href="' . esc_url( $url ) . '">' . esc_html( $group['title'] ) . '</a>';
+			printf(
+				'<a href="%1$s" class="qm-edit-link">%2$s%3$s</a>',
+				esc_url( $url ),
+				esc_html( $group['title'] ),
+				QueryMonitor::icon( 'edit' )
+			);
 		}
 
 		protected function output_column_field_group_rules( array $row ) {
@@ -427,10 +437,11 @@ add_action( 'shutdown', static function () {
 			echo '<tbody>';
 
 			if ( ! empty( $data->local_json['save'] ) ) {
+				$directory = apply_filters( 'acf/settings/save_json', $data->local_json['save'] );
 				echo '<tr>';
 				echo '<th scope="row">Save</th>';
 				echo '<td><code>acf/settings/save_json</code></td>';
-				echo '<td colspan="2"><code>' . esc_html( $this->remove_abspath( apply_filters( 'acf/settings/save_json', $data->local_json['save'] ) ) ) . '</code></td>';
+				echo '<td colspan="2">' . QM_Output_Html::output_filename( $this->remove_abspath( $directory ), $directory ) . '</td>';
 				echo '</tr>';
 			}
 
@@ -446,7 +457,7 @@ add_action( 'shutdown', static function () {
 					}
 
 					echo '<td class="qm-num">' . esc_html( $i ) . '</td>';
-					echo '<td><code>' . esc_html( $this->remove_abspath( $path ) ) . '</code></td>';
+					echo '<td>' . QM_Output_Html::output_filename( $this->remove_abspath( $path ), $path ) . '</td>';
 
 					echo '</tr>';
 
@@ -469,7 +480,7 @@ add_action( 'shutdown', static function () {
 			$menu['qm-acf'] = $this->menu( array(
 				'title' => esc_html__( 'Advanced Custom Fields', 'query-monitor-extend' ),
 				'id'    => 'query-monitor-extend-acf',
-			));
+			) );
 
 			if ( is_admin() ) {
 				$data = $this->collector->get_data();
