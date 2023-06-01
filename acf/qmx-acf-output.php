@@ -430,7 +430,7 @@ add_action( 'shutdown', static function () {
 				echo '<tr>';
 				echo '<th scope="row">Save</th>';
 				echo '<td><code>acf/settings/save_json</code></td>';
-				echo '<td colspan="2"><code>' . esc_html( $this->remove_abspath( $data->local_json['save'] ) ) . '</code></td>';
+				echo '<td colspan="2"><code>' . esc_html( $this->remove_abspath( apply_filters( 'acf/settings/save_json', $data->local_json['save'] ) ) ) . '</code></td>';
 				echo '</tr>';
 			}
 

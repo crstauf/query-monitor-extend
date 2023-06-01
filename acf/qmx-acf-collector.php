@@ -32,25 +32,15 @@ function load_qmx_acf_collector( string $file ) {
 
 		public $id = 'acf';
 
-		protected $data = array(
-			'fields' => array(),
-			'field_keys' => array(),
-			'post_ids' => array(),
-			'callers' => array(),
-			'counts' => array(),
-			'field_groups' => array(),
-			'local_json' => array(),
-			'loaded_field_groups' => array(),
-		);
-
 		function __construct() {
 			parent::__construct();
 
-			add_filter('acf/settings/load_json', array( $this, 'filter__acf_settings_load_json' ), 99999 );
-			add_filter('acf/pre_load_value', array( $this, 'filter__acf_pre_load_value' ), 10, 3);
-			add_filter('acf/load_field_groups', array( $this, 'filter__acf_load_field_groups' ) );
+			add_filter( 'acf/settings/load_json', array( $this, 'filter__acf_settings_load_json' ), 99999 );
+			add_filter( 'acf/pre_load_value', array( $this, 'filter__acf_pre_load_value' ), 10, 3);
+			add_filter( 'acf/load_field_groups', array( $this, 'filter__acf_load_field_groups' ) );
 
-			$this->data->local_json['save'] = apply_filters('acf/settings/save_json', get_stylesheet_directory() . '/acf-json');
+			// Set default value. Filter applied in output.
+			$this->data->local_json['save'] = get_stylesheet_directory() . '/acf-json';
 		}
 
 		public function get_storage(): QM_Data {
@@ -65,7 +55,7 @@ function load_qmx_acf_collector( string $file ) {
 				return null;
 			}
 
-			$group = acf_get_field_group($parent);
+			$group = acf_get_field_group( $parent );
 
 			if ( false === $group ) {
 				$field = acf_get_field( $parent );
@@ -125,13 +115,13 @@ function load_qmx_acf_collector( string $file ) {
 			}
 
 			$row = array(
-				'field' => $field,
-				'post_id' => acf_get_valid_post_id( $post_id ),
-				'trace' => $trace,
-				'exists' => ! empty( $field['key'] ),
-				'caller' => $trace->get_trace()[0],
-				'group' => null,
-				'hash' => null,
+				'field'     => $field,
+				'post_id'   => acf_get_valid_post_id( $post_id ),
+				'trace'     => $trace,
+				'exists'    => ! empty( $field['key'] ),
+				'caller'    => $trace->get_trace()[0],
+				'group'     => null,
+				'hash'      => null,
 				'duplicate' => false,
 			);
 
@@ -153,13 +143,13 @@ function load_qmx_acf_collector( string $file ) {
 			}
 
 			if ( ! empty( $field['key'] ) ) {
-				$this->data->field_keys[$field['name']] = $field['name'];
+				$this->data->field_keys[ $field['key'] ] = $field['name'];
 			} else {
-				$this->data->field_keys[$field['key']] = $field['name'];
+				$this->data->field_keys[ $field['name'] ] = $field['name'];
 			}
 
 			if ( ! empty( $row['group'] ) ) {
-				$this->data->field_groups[$row['group']['key']] = $row['group']['title'];
+				$this->data->field_groups[ $row['group']['key'] ] = $row['group']['title'];
 			}
 
 			$this->data->post_ids[ ( string ) $post_id ] = $post_id;
