@@ -12,176 +12,184 @@ defined( 'WPINC' ) || die();
 
 add_action( 'shutdown', static function () {
 
-    if ( ! class_exists( 'QMX_Collector_ACF' ) )
-        return;
+	if ( ! class_exists( 'QMX_Collector_ACF' ) ) {
+		return;
+	}
 
-    $qm_dir = trailingslashit( QueryMonitor::init()->plugin_path() );
+	$qm_dir = trailingslashit( QueryMonitor::init()->plugin_path() );
 
-    if ( ! file_exists( $qm_dir . 'output/Html.php' ) )
-        return;
+	if ( ! file_exists( $qm_dir . 'output/Html.php' ) ) {
+		return;
+	}
 
-    require_once $qm_dir . 'output/Html.php';
+	require_once $qm_dir . 'output/Html.php';
 
-    class QMX_Output_Html_ACF extends QM_Output_Html
-    {
+	class QMX_Output_Html_ACF extends QM_Output_Html {
 
-        public function __construct(QM_Collector $collector)
-        {
-            parent::__construct($collector);
-            add_filter('qm/output/panel_menus', array(&$this, 'panel_menu'), 60);
-        }
+		public function __construct( QM_Collector $collector ) {
+			parent::__construct( $collector );
 
-        public function name()
-        {
-            return __('Advanced Custom Fields', 'query-monitor-extend');
-        }
+			add_filter( 'qm/output/panel_menus', array( $this, 'panel_menu' ), 60 );
+		}
 
-        protected static function identify_duplicates()
-        {
-            $bool = null;
+		public function name() {
+			return __( 'Advanced Custom Fields', 'query-monitor-extend' );
+		}
 
-            if (!is_null($bool))
-                return $bool;
+		protected static function identify_duplicates() {
+			$bool = null;
 
-            $bool = apply_filters('qmx/output/acf/identify_duplicates', false);
+			if ( ! is_null( $bool) ) {
+				return $bool;
+			}
 
-            return $bool;
-        }
+			$bool = apply_filters( 'qmx/output/acf/identify_duplicates', false );
 
-        public function output()
-        {
-            $data = $this->collector->get_data();
+			return $bool;
+		}
 
-            $this->output_fields_table();
+		public function output() {
+			$data = $this->collector->get_data();
+
+			$this->output_fields_table();
 			$this->output_local_json();
-            $this->output_concerns();
+			$this->output_concerns();
 
 			if ( is_admin() ) {
 				$this->output_field_groups_table();
 			}
-        }
+		}
 
-        protected function output_fields_table()
-        {
-            $data = $this->collector->get_data();
+		protected function output_fields_table() {
+			$data = $this->collector->get_data();
 
-            if (empty($data->fields)) {
-                $this->before_non_tabular_output();
-                echo '<div class="qm-notice"><p>No Advanced Custom Fields found.</p></div>';
-                $this->after_non_tabular_output();
-                return;
-            }
+			if ( empty( $data->fields ) ) {
+				$this->before_non_tabular_output();
+				echo '<div class="qm-notice"><p>No Advanced Custom Fields found.</p></div>';
+				$this->after_non_tabular_output();
+				return;
+			}
 
-            echo '<style>.qm-hide-acf-field, .qm-hide-acf-post, .qm-hide-acf-group, .qm-hide-acf-caller { display: none !important; }</style>';
+			echo '<style>.qm-hide-acf-field, .qm-hide-acf-post, .qm-hide-acf-group, .qm-hide-acf-caller { display: none !important; }</style>';
 
-            natsort($data->field_keys);
-            natsort($data->post_ids);
-            natsort($data->field_groups);
-            natsort($data->callers);
+			natsort( $data->field_keys );
+			natsort( $data->post_ids );
+			natsort( $data->field_groups );
+			natsort( $data->callers );
 
-            $this->before_tabular_output();
+			$this->before_tabular_output();
 
-            echo '<thead>';
+			echo '<thead>';
 
-            echo '<tr>';
+			echo '<tr>';
 
-            echo '<th scope="col" class="qm-sorted-asc qm-sortable-column" role="columnheader" aria-sort="ascending">';
-            echo $this->build_sorter('#');
-            echo '</th>';
+			echo '<th scope="col" class="qm-sorted-asc qm-sortable-column" role="columnheader" aria-sort="ascending">';
+			echo $this->build_sorter( '#' );
+			echo '</th>';
 
-            echo '<th scope="col" class="qm-filterable-column">';
-            echo $this->build_filter('acf-field', $data->field_keys, __('Field', 'query-monitor'), array(
-                'prepend' => array(
-                    'qmx-acf-no-field' => 'Missing',
-                ),
-            ));
-            echo '</th>';
+			echo '<th scope="col" class="qm-filterable-column">';
+			echo $this->build_filter(
+				'acf-field',
+				$data->field_keys,
+				__( 'Field', 'query-monitor' ),
+				array(
+					'prepend' => array(
+						'qmx-acf-no-field' => 'Missing',
+					),
+				)
+			);
+			echo '</th>';
 
-            echo '<th scope="col" class="qm-filterable-column">';
-            echo $this->build_filter('acf-post', $data->post_ids, __('Post ID', 'query-monitor'));
-            echo '</th>';
+			echo '<th scope="col" class="qm-filterable-column">';
+			echo $this->build_filter( 'acf-post', $data->post_ids, __( 'Post ID', 'query-monitor' ) );
+			echo '</th>';
 
-            echo '<th scope="col" class="qm-filterable-column">';
-            echo $this->build_filter('acf-group', $data->field_groups, __('Group', 'query-monitor'));
-            echo '</th>';
+			echo '<th scope="col" class="qm-filterable-column">';
+			echo $this->build_filter( 'acf-group', $data->field_groups, __( 'Group', 'query-monitor' ) );
+			echo '</th>';
 
-            echo '<th scope="col" class="qm-filterable-column">';
-            echo $this->build_filter('acf-caller', array_keys($data->callers), __('Caller', 'query-monitor'));
-            echo '</th>';
+			echo '<th scope="col" class="qm-filterable-column">';
+			echo $this->build_filter( 'acf-caller', array_keys( $data->callers ), __( 'Caller', 'query-monitor' ) );
+			echo '</th>';
 
-            echo '</tr>';
+			echo '</tr>';
 
-            echo '</thead>';
+			echo '</thead>';
 
-            echo '<tbody>';
+			echo '<tbody>';
 
-            foreach ($data->fields as $row_num => $row) {
-                $row_attr = array(
-                    'class' => '',
-                );
+			foreach ( $data->fields as $row_num => $row ) {
+				$row_attr = array(
+					'class' => '',
+				);
 
-                if (!$row['exists'])
-                    $row_attr['class'] .= ' qm-warn';
+				if ( ! $row['exists'] ) {
+					$row_attr['class'] .= ' qm-warn';
+				}
 
-                $row_attr['data-qm-acf-field'] = $row['field']['name'] . ' ' . $row['field']['key'];
-                $row_attr['data-qm-acf-post'] = $row['post_id'];
-                $row_attr['data-qm-acf-caller'] = $row['caller']['function'] . '()';
-                $row_attr['data-qm-acf-group'] = 'qmx-acf-no-group';
+				$row_attr['data-qm-acf-field'] = $row['field']['name'] . ' ' . $row['field']['key'];
+				$row_attr['data-qm-acf-post'] = $row['post_id'];
+				$row_attr['data-qm-acf-caller'] = $row['caller']['function'] . '()';
+				$row_attr['data-qm-acf-group'] = 'qmx-acf-no-group';
 
-                if (empty($row['field']['key']))
-                    $row_attr['data-qm-acf-field'] .= ' qmx-acf-no-field';
+				if ( empty( $row['field']['key'] ) ) {
+					$row_attr['data-qm-acf-field'] .= ' qmx-acf-no-field';
+				}
 
-                if (!empty($row['group']))
-                    $row_attr['data-qm-acf-group'] = $row['group']['key'];
+				if ( ! empty( $row['group'] ) ) {
+					$row_attr['data-qm-acf-group'] = $row['group']['key'];
+				}
 
-                if (
-                    !empty($row['duplicate'])
-                    && static::identify_duplicates()
-                )
-                    $row_attr['class'] .= ' qm-highlight';
+				if (
+					! empty( $row['duplicate'] )
+					&& static::identify_duplicates()
+				) {
+					$row_attr['class'] .= ' qm-highlight';
+				}
 
-                $attr = '';
+				$attr = '';
 
-                foreach ($row_attr as $a => $v)
-                    $attr .= ' ' . $a . '="' . esc_attr(trim($v)) . '"';
+				foreach ( $row_attr as $a => $v ) {
+					$attr .= ' ' . $a . '="' . esc_attr( trim( $v ) ) . '"';
+				}
 
-                echo '<tr' . $attr . '>';
+				echo '<tr' . $attr . '>';
 
-                # Number
-                echo '<th scope="row" class="qm-row-num qm-num">' . esc_html($row_num + 1) . '</th>';
+				# Number
+				echo '<th scope="row" class="qm-row-num qm-num">' . esc_html( $row_num + 1 ) . '</th>';
 
-                # Field name
-                echo '<td class="qm-ltr qm-has-toggle qm-nowrap">';
-                $this->output_column_field_name($row);
-                echo '</td>';
+				# Field name
+				echo '<td class="qm-ltr qm-has-toggle qm-nowrap">';
+				$this->output_column_field_name( $row );
+				echo '</td>';
 
-                # Post ID
-                echo '<td class="qm-ltr">' . esc_html($row['post_id']) . '</td>';
+				# Post ID
+				echo '<td class="qm-ltr">' . esc_html( $row['post_id'] ) . '</td>';
 
-                # Field group
-                echo '<td class="qm-ltr">';
-                $this->output_column_field_group($row);
-                echo '</td>';
+				# Field group
+				echo '<td class="qm-ltr">';
+				$this->output_column_field_group( $row );
+				echo '</td>';
 
-                # Caller
-                echo '<td class="qm-row-caller qm-ltr qm-has-toggle qm-nowrap">';
-                $this->output_column_caller($row);
-                echo '</td>';
+				# Caller
+				echo '<td class="qm-row-caller qm-ltr qm-has-toggle qm-nowrap">';
+				$this->output_column_caller( $row );
+				echo '</td>';
 
-                echo '</tr>';
-            }
+				echo '</tr>';
+			}
 
-            echo '</tbody>';
+			echo '</tbody>';
 
-            echo '<tfoot>';
-            echo '<tr>';
-            printf('<td colspan="5">Total: %d</td>', count($data->fields));
-            echo '</tr>';
-            echo '</tfoot>';
+			echo '<tfoot>';
+			echo '<tr>';
+			printf( '<td colspan="5">Total: %d</td>', count( $data->fields ) );
+			echo '</tr>';
+			echo '</tfoot>';
 
-            echo '</table>';
-            echo '</div>';
-        }
+			echo '</table>';
+			echo '</div>';
+		}
 
 		protected function output_field_groups_table() {
 			$id = 'qm-acf-loaded_field_groups';
@@ -190,15 +198,15 @@ add_action( 'shutdown', static function () {
 
 			printf(
 				'<div class="qm qm-concerns" id="%1$s" role="tabpanel" aria-labelledby="%1$s-caption" tabindex="-1">',
-				esc_attr($id)
+				esc_attr( $id )
 			);
 
 			echo '<table class="qm-sortable">';
 
 			printf(
 				'<caption><h2 id="%1$s-caption">%2$s</h2></caption>',
-				esc_attr($id),
-				esc_html($name)
+				esc_attr( $id ),
+				esc_html( $name )
 			);
 
 			echo '<thead>';
@@ -225,7 +233,7 @@ add_action( 'shutdown', static function () {
 
 			$row_num = 1;
 
-			foreach ($data->loaded_field_groups as $row) {
+			foreach ( $data->loaded_field_groups as $row ) {
 				$class = '';
 
 				if ( 1 === $row_num % 2 ) {
@@ -236,17 +244,17 @@ add_action( 'shutdown', static function () {
 
 				# Field group name
 				echo '<td class="qm-ltr qm-nowrap">';
-				$this->output_column_field_group_title($row);
+				$this->output_column_field_group_title( $row );
 				echo '</td>';
 
 				# Field group key
 				echo '<td class="qm-ltr">';
-				$this->output_column_field_group_key($row);
+				$this->output_column_field_group_key( $row );
 				echo '</td>';
 
 				# Field group rules
 				echo '<td class="qm-ltr qm-nowrap qm-has-inner">';
-				$this->output_column_field_group_rules($row);
+				$this->output_column_field_group_rules( $row );
 				echo '</td>';
 
 				echo '</tr>';
@@ -256,7 +264,7 @@ add_action( 'shutdown', static function () {
 
 			echo '<tfoot>';
 			echo '<tr>';
-			printf('<td colspan="3">Total: %d</td>', count($data->loaded_field_groups));
+			printf( '<td colspan="3">Total: %d</td>', count( $data->loaded_field_groups ) );
 			echo '</tr>';
 			echo '</tfoot>';
 
@@ -264,33 +272,34 @@ add_action( 'shutdown', static function () {
 			echo '</div>';
 		}
 
-        protected function output_column_field_name(array $row)
-        {
-            echo esc_html($row['field']['name']);
+		protected function output_column_field_name( array $row ) {
+			echo esc_html( $row['field']['name'] );
 
-            if (!$row['exists']) {
-                echo ' (Missing)';
-                return;
-            }
+			if ( ! $row['exists'] ) {
+				echo ' (Missing)';
+				return;
+			}
 
-            if (
-                !empty($row['duplicate'])
-                && static::identify_duplicates()
-            )
-                echo ' (Duplicate)';
+			if (
+				! empty( $row['duplicate'] )
+				&& static::identify_duplicates()
+			) {
+				echo ' (Duplicate)';
+			}
 
-            $parent = $row['field']['parent'];
+			$parent = $row['field']['parent'];
 
-            if (!empty($row['group']))
-                $parent = $row['group']['key'];
+			if ( ! empty( $row['group'] ) ) {
+				$parent = $row['group']['key'];
+			}
 
-            echo self::build_toggler();
+			echo self::build_toggler();
 
-            echo '<div class="qm-toggled qm-supplemental qm-info">';
-            echo esc_html('Key: ' . $row['field']['key']);
-            echo '<br />' . esc_html('Parent: ' . $parent);
-            echo '</div>';
-        }
+			echo '<div class="qm-toggled qm-supplemental qm-info">';
+			echo esc_html( 'Key: ' . $row['field']['key'] );
+			echo '<br />' . esc_html( 'Parent: ' . $parent );
+			echo '</div>';
+		}
 
 		protected function output_column_field_group_title( array $row ) {
 			$title = $row['title'];
@@ -315,8 +324,9 @@ add_action( 'shutdown', static function () {
 		protected function output_column_field_group_key( array $row ) {
 			$group = $row['group'];
 
-			if (empty($group))
+			if ( empty( $group ) ) {
 				return;
+			}
 
 			echo esc_html( $group );
 		}
@@ -324,21 +334,22 @@ add_action( 'shutdown', static function () {
 		protected function output_column_field_group( array $row ) {
 			$group = $row['group'];
 
-            if (empty($group))
-                return;
-
-            if ( !current_user_can( 'edit_post', $group['ID'] ) ) {
-                echo esc_html( $group['title'] );
+			if ( empty( $group ) ) {
 				return;
 			}
 
-            $url = add_query_arg( array(
-                'post' => $group['ID'],
-                'action' => 'edit',
-            ), admin_url( 'post.php' ) );
+			if ( ! current_user_can( 'edit_post', $group['ID'] ) ) {
+				echo esc_html( $group['title'] );
+				return;
+			}
 
-            echo '<a href="' . esc_url( $url ) . '">' . esc_html( $group['title'] ) . '</a>';
-        }
+			$url = add_query_arg( array(
+				'post'   => $group['ID'],
+				'action' => 'edit',
+			), admin_url( 'post.php' ) );
+
+			echo '<a href="' . esc_url( $url ) . '">' . esc_html( $group['title'] ) . '</a>';
+		}
 
 		protected function output_column_field_group_rules( array $row ) {
 			$rules = $row['rules'];
@@ -352,139 +363,140 @@ add_action( 'shutdown', static function () {
 			echo '</pre>';
 		}
 
-        protected function output_column_caller(array $row)
-        {
-            $trace = $row['trace'];
-            $filtered_trace = $trace->get_display_trace();
-            $caller_name = self::output_filename($row['caller']['function'] . '()', $row['caller']['file'], $row['caller']['line']);
-            $stack = array();
-            array_shift($filtered_trace);
+		protected function output_column_caller( array $row ) {
+			$trace = $row['trace'];
+			$filtered_trace = $trace->get_display_trace();
+			$caller_name = self::output_filename( $row['caller']['function'] . '()', $row['caller']['file'], $row['caller']['line'] );
+			$stack = array();
+			array_shift( $filtered_trace );
 
-            foreach ($filtered_trace as $item) {
-                $item = wp_parse_args($item, array(
-                    'file' => '',
-                    'line' => '',
-                ));
+			foreach ( $filtered_trace as $item ) {
+				$item = wp_parse_args( $item, array(
+					'file' => '',
+					'line' => '',
+				) );
 
-                if (empty($item['display']))
-                    continue;
+				if ( empty( $item['display'] ) ) {
+					continue;
+				}
 
-                $stack[] = self::output_filename($item['display'], $item['file'], $item['line']);
-            }
+				$stack[] = self::output_filename( $item['display'], $item['file'], $item['line'] );
+			}
 
-            if (1 < count($stack))
-                echo self::build_toggler();
+			if ( 1 < count( $stack ) ) {
+				echo self::build_toggler();
+				}
 
-            echo '<ol>';
-            echo "<li>{$caller_name}</li>";
+			echo '<ol>';
+			printf( '<li>%s</li>', $caller_name );
 
-            if (1 < count($stack))
-                echo '<div class="qm-toggled"><li>' . implode('</li><li>', $stack) . '</li></div>';
+			if ( 1 < count( $stack ) ) {
+				echo '<div class="qm-toggled"><li>' . implode( '</li><li>', $stack ) . '</li></div>';
+			}
 
-            echo '</ol>';
-        }
+			echo '</ol>';
+		}
 
-        protected function output_local_json()
-        {
-            $id = 'qm-acf-local_json';
-            $name = 'Advanced Custom Fields: Local JSON';
-            $data = $this->collector->get_data();
+		protected function output_local_json() {
+			$id = 'qm-acf-local_json';
+			$name = 'Advanced Custom Fields: Local JSON';
+			$data = $this->collector->get_data();
 
-            printf(
-                '<div class="qm qm-concerns" id="%1$s" role="tabpanel" aria-labelledby="%1$s-caption" tabindex="-1">',
-                esc_attr($id)
-            );
+			printf(
+				'<div class="qm qm-concerns" id="%1$s" role="tabpanel" aria-labelledby="%1$s-caption" tabindex="-1">',
+				esc_attr( $id )
+			);
 
-            echo '<table class="qm-sortable">';
+			echo '<table class="qm-sortable">';
 
-            printf(
-                '<caption><h2 id="%1$s-caption">%2$s<br />%3$s</h2></caption>',
-                esc_attr($id),
-                esc_html($name),
-                '<a href="https://www.advancedcustomfields.com/resources/local-json/" rel="noopener noreferrer" class="qm-external-link">Documentation</a>'
-            );
+			printf(
+				'<caption><h2 id="%1$s-caption">%2$s<br />%3$s</h2></caption>',
+				esc_attr( $id ),
+				esc_html( $name ),
+				'<a href="https://www.advancedcustomfields.com/resources/local-json/" rel="noopener noreferrer" class="qm-external-link">Documentation</a>'
+			);
 
-            echo '<thead>';
-            echo '<tr>';
-            echo '<th scope="col">Action</th>';
-            echo '<th scope="col">Hook</th>';
-            echo '<th scope="col" colspan="2">Paths</th>';
-            echo '</tr>';
-            echo '</thead>';
+			echo '<thead>';
+			echo '<tr>';
+			echo '<th scope="col">Action</th>';
+			echo '<th scope="col">Hook</th>';
+			echo '<th scope="col" colspan="2">Paths</th>';
+			echo '</tr>';
+			echo '</thead>';
 
-            echo '<tbody>';
+			echo '<tbody>';
 
-            if (!empty($data->local_json['save'])) {
-                echo '<tr>';
-                echo '<th scope="row">Save</th>';
-                echo '<td><code>acf/settings/save_json</code></td>';
-                echo '<td colspan="2"><code>' . esc_html($this->remove_abspath($data->local_json['save'])) . '</code></td>';
-                echo '</tr>';
-            }
+			if ( ! empty( $data->local_json['save'] ) ) {
+				echo '<tr>';
+				echo '<th scope="row">Save</th>';
+				echo '<td><code>acf/settings/save_json</code></td>';
+				echo '<td colspan="2"><code>' . esc_html( $this->remove_abspath( apply_filters( 'acf/settings/save_json', $data->local_json['save'] ) ) ) . '</code></td>';
+				echo '</tr>';
+			}
 
-            if (!empty($data->local_json['load'])) {
-                $i = 0;
+			if ( ! empty( $data->local_json['load'] ) ) {
+				$i = 0;
 
-                foreach ($data->local_json['load'] as $path) {
-                    echo '<tr>';
+				foreach ( $data->local_json['load'] as $path ) {
+					echo '<tr>';
 
-                    if (0 === $i) {
-                        echo '<th scope="row" rowspan="' . esc_attr(count($data->local_json['load'])) . '">Load</th>';
-                        echo '<td rowspan="' . esc_attr(count($data->local_json['load'])) . '"><code>acf/settings/load_json</code></td>';
-                    }
+					if ( 0 === $i ) {
+						echo '<th scope="row" rowspan="' . esc_attr( count( $data->local_json['load'] ) ) . '">Load</th>';
+						echo '<td rowspan="' . esc_attr( count( $data->local_json['load'] ) ) . '"><code>acf/settings/load_json</code></td>';
+					}
 
-                    echo '<td class="qm-num">' . esc_html($i) . '</td>';
-                    echo '<td><code>' . esc_html($this->remove_abspath($path)) . '</code></td>';
+					echo '<td class="qm-num">' . esc_html( $i ) . '</td>';
+					echo '<td><code>' . esc_html( $this->remove_abspath( $path ) ) . '</code></td>';
 
-                    echo '</tr>';
+					echo '</tr>';
 
-                    $i++;
-                }
-            }
+					$i++;
+				}
+			}
 
-            echo '</tbody>';
-            echo '</table>';
+			echo '</tbody>';
+			echo '</table>';
 
-            echo '</div>';
-        }
+			echo '</div>';
+		}
 
-        public function remove_abspath(string $path): string
-        {
-            return str_replace(ABSPATH, '', $path);
-        }
+		public function remove_abspath( string $path ) : string {
+			return str_replace( ABSPATH, '', $path );
+		}
 
-        public function panel_menu(array $menu)
-        {
+		public function panel_menu( array $menu ) {
 
-            $menu['qm-acf'] = $this->menu(array(
-                'title' => esc_html__('Advanced Custom Fields', 'query-monitor-extend'),
-                'id' => 'query-monitor-extend-acf',
-            ));
+			$menu['qm-acf'] = $this->menu( array(
+				'title' => esc_html__( 'Advanced Custom Fields', 'query-monitor-extend' ),
+				'id'    => 'query-monitor-extend-acf',
+			));
 
 			if ( is_admin() ) {
 				$data = $this->collector->get_data();
 
 				$menu['qm-acf']['children']['loaded_field_groups'] = array(
 					'title' => esc_html__( 'Field Groups', 'query-monitor-extend' ) . sprintf( ' (%d)', count( $data->loaded_field_groups ) ),
-					'href' => '#qm-acf-loaded_field_groups',
-					'id' => 'query-monitor-extend-acf-loaded_field_groups',
+					'href'  => '#qm-acf-loaded_field_groups',
+					'id'    => 'query-monitor-extend-acf-loaded_field_groups',
 				);
 			}
 
-            $menu['qm-acf']['children']['local_json'] = array(
-                'title' => esc_html__('Local JSON', 'query-monitor-extend'),
-                'href' => '#qm-acf-local_json',
-                'id' => 'query-monitor-extend-acf-local_json',
-            );
+			$menu['qm-acf']['children']['local_json'] = array(
+				'title' => esc_html__('Local JSON', 'query-monitor-extend'),
+				'href'  => '#qm-acf-local_json',
+				'id'    => 'query-monitor-extend-acf-local_json',
+			);
 
-            return $menu;
+			return $menu;
 
-        }
+		}
 
-    }
+	}
+
 	add_filter( 'qm/outputter/html', static function( array $output ) : array {
-		if ( $collector = QM_Collectors::get( 'acf' ) )
+		if ( $collector = QM_Collectors::get( 'acf' ) ) {
 			$output['acf'] = new QMX_Output_Html_ACF( $collector );
+		}
 
 		return $output;
 	}, 70 );

@@ -14,160 +14,156 @@ add_action( 'plugin_loaded', 'load_qmx_acf_collector' );
 
 function load_qmx_acf_collector( string $file ) {
 
-	if ( 'query-monitor/query-monitor.php' !== plugin_basename( $file ) )
+	if ( 'query-monitor/query-monitor.php' !== plugin_basename( $file ) ) {
 		return;
+	}
 
 	remove_action( 'plugin_loaded', __FUNCTION__ );
 
-	if ( !class_exists( 'QueryMonitor' ) )
+	if ( ! class_exists( 'QueryMonitor' ) ) {
 		return;
+	}
 
-	if ( defined( 'QMX_DISABLE' ) && QMX_DISABLE )
+	if ( defined( 'QMX_DISABLE' ) && constant( 'QMX_DISABLE' ) ) {
 		return;
+	}
 
-    class QMX_Collector_ACF extends QM_DataCollector
-    {
+	class QMX_Collector_ACF extends QM_DataCollector {
 
-        public $id = 'acf';
+		public $id = 'acf';
 
-        protected $data = array(
-            'fields' => array(),
-            'field_keys' => array(),
-            'post_ids' => array(),
-            'callers' => array(),
-            'counts' => array(),
-            'field_groups' => array(),
-            'local_json' => array(),
-			'loaded_field_groups' => array(),
-        );
+		function __construct() {
+			parent::__construct();
 
-        function __construct()
-        {
-            parent::__construct();
+			add_filter( 'acf/settings/load_json', array( $this, 'filter__acf_settings_load_json' ), 99999 );
+			add_filter( 'acf/pre_load_value', array( $this, 'filter__acf_pre_load_value' ), 10, 3);
+			add_filter( 'acf/load_field_groups', array( $this, 'filter__acf_load_field_groups' ) );
 
-            add_filter('acf/settings/load_json', array($this, 'filter__acf_settings_load_json'), 99999);
-            add_filter('acf/pre_load_value', array($this, 'filter__acf_pre_load_value'), 10, 3);
-			add_filter('acf/load_field_groups', array($this, 'filter__acf_load_field_groups') );
-
-            $this->data->local_json['save'] = apply_filters('acf/settings/save_json', get_stylesheet_directory() . '/acf-json');
-        }
+			// Set default value. Filter applied in output.
+			$this->data->local_json['save'] = get_stylesheet_directory() . '/acf-json';
+		}
 
 		public function get_storage(): QM_Data {
 			require_once 'qmx-acf-data.php';
 			return new QMX_Data_ACF();
 		}
 
-        public function process()
-        {
-        }
+		public function process() {}
 
-        public static function get_fields_group($parent)
-        {
-            if (is_null($parent))
-                return null;
+		public static function get_fields_group( $parent ) {
+			if ( is_null( $parent ) ) {
+				return null;
+			}
 
-            $group = acf_get_field_group($parent);
+			$group = acf_get_field_group( $parent );
 
-            if (false === $group) {
-                $field = acf_get_field($parent);
-                return static::get_fields_group($field['parent']);
-            }
+			if ( false === $group ) {
+				$field = acf_get_field( $parent );
+				return static::get_fields_group( $field['parent'] );
+			}
 
-            return $group;
-        }
+			return $group;
+		}
 
-        public function filter__acf_settings_load_json($paths)
-        {
-            if ( did_action( 'qm/cease' ) )
-                return $paths;
+		public function filter__acf_settings_load_json( $paths ) {
+			if ( did_action( 'qm/cease' ) ) {
+				return $paths;
+			}
 
-            $this->data->local_json['load'] = $paths;
-            return $paths;
-        }
+			$this->data->local_json['load'] = $paths;
 
-        protected static function get_start_trace_functions()
-        {
-            $functions = null;
+			return $paths;
+		}
 
-            if (!is_null($functions))
-                return $functions;
+		protected static function get_start_trace_functions() {
+			$functions = null;
 
-            $functions = apply_filters('qmx/collector/acf/start_trace_functions', array(
-                'get_field',
-                'get_field_object',
-                'have_rows',
-            ));
+			if ( ! is_null( $functions ) ) {
+				return $functions;
+			}
 
-            return $functions;
-        }
+			$functions = apply_filters( 'qmx/collector/acf/start_trace_functions', array(
+				'get_field',
+				'get_field_object',
+				'have_rows',
+			) );
 
-        public function filter__acf_pre_load_value($short_circuit, $post_id, $field)
-        {
-            if ( did_action( 'qm/cease' ) )
-                return $short_circuit;
+			return $functions;
+		}
 
-            $full_stack_trace = apply_filters('qmx/collector/acf/full_stack_trace', is_admin(), $post_id, $field);
-            $trace = new QM_Backtrace(array('ignore_current_filter' => !$full_stack_trace));
+		public function filter__acf_pre_load_value( $short_circuit, $post_id, $field ) {
+			if ( did_action( 'qm/cease' ) ) {
+				return $short_circuit;
+			}
 
-            if (false === $full_stack_trace) {
-                foreach ($trace->get_trace() as $frame) {
-                    if (
-                        in_array($frame['function'], static::get_start_trace_functions())
-                        && false === stripos($frame['file'], ACF_PATH)
-                    )
-                        break;
+			$full_stack_trace = apply_filters( 'qmx/collector/acf/full_stack_trace', is_admin(), $post_id, $field );
+			$trace = new QM_Backtrace( array( 'ignore_current_filter' => ! $full_stack_trace ) );
 
-                    if (!empty($trace->get_trace()[1]))
-                        $trace->ignore(1);
-                }
-            }
+			if ( false === $full_stack_trace ) {
+				foreach ($trace->get_trace() as $frame) {
+					if (
+						in_array( $frame['function'], static::get_start_trace_functions() )
+						&& false === stripos( $frame['file'], ACF_PATH )
+					) {
+						break;
+					}
 
-            $row = array(
-                'field' => $field,
-                'post_id' => acf_get_valid_post_id($post_id),
-                'trace' => $trace,
-                'exists' => !empty($field['key']),
-                'caller' => $trace->get_trace()[0],
-                'group' => null,
-                'hash' => null,
-                'duplicate' => false,
-            );
+					if ( ! empty( $trace->get_trace()[1] ) ) {
+						$trace->ignore( 1 );
+					}
+				}
+			}
 
-            if (!empty($field['key']))
-                $row['group'] = static::get_fields_group($field['parent']);
+			$row = array(
+				'field'     => $field,
+				'post_id'   => acf_get_valid_post_id( $post_id ),
+				'trace'     => $trace,
+				'exists'    => ! empty( $field['key'] ),
+				'caller'    => $trace->get_trace()[0],
+				'group'     => null,
+				'hash'      => null,
+				'duplicate' => false,
+			);
 
-            $hash = md5(json_encode($row));
-            $row['hash'] = $hash;
+			if ( ! empty( $field['key'] ) ) {
+				$row['group'] = static::get_fields_group( $field['parent'] );
+			}
 
-            if (array_key_exists($hash, $this->data->counts)) {
-                $this->data->counts[ $hash ]++;
+			$hash = md5( json_encode( $row ) );
+			$row['hash'] = $hash;
 
-                if (apply_filters('qmx/collector/acf/hide_duplicates', false))
-                    return $short_circuit;
+			if ( array_key_exists( $hash, $this->data->counts ) ) {
+				$this->data->counts[ $hash ]++;
 
-                $row['duplicate'] = true;
-            }
+				if ( apply_filters( 'qmx/collector/acf/hide_duplicates', false ) ) {
+					return $short_circuit;
+				}
 
-            if (!empty($field['key']))
-                $this->data->field_keys[$field['name']] = $field['name'];
-            else
-                $this->data->field_keys[$field['key']] = $field['name'];
+				$row['duplicate'] = true;
+			}
 
-            if (!empty($row['group']))
-                $this->data->field_groups[$row['group']['key']] = $row['group']['title'];
+			if ( ! empty( $field['key'] ) ) {
+				$this->data->field_keys[ $field['key'] ] = $field['name'];
+			} else {
+				$this->data->field_keys[ $field['name'] ] = $field['name'];
+			}
 
-            $this->data->post_ids[( string )$post_id] = $post_id;
-            $this->data->callers[$row['caller']['function'] . '()'] = 1;
-            $this->data->counts[$hash] = 1;
+			if ( ! empty( $row['group'] ) ) {
+				$this->data->field_groups[ $row['group']['key'] ] = $row['group']['title'];
+			}
 
-            $this->data->fields[] = $row;
+			$this->data->post_ids[ ( string ) $post_id ] = $post_id;
+			$this->data->callers[ $row['caller']['function'] . '()' ] = 1;
+			$this->data->counts[ $hash ] = 1;
 
-            return $short_circuit;
-        }
+			$this->data->fields[] = $row;
+
+			return $short_circuit;
+		}
 
 		public function filter__acf_load_field_groups( $field_groups ) {
 			static $processed = array();
-			
+
 			if ( empty( $field_groups ) ) {
 				return $field_groups;
 			}
@@ -198,48 +194,45 @@ function load_qmx_acf_collector( string $file ) {
 			return $field_groups;
 		}
 
-        public function get_concerned_actions()
-        {
-            $actions = array(
-                'acf/init',
-            );
+		public function get_concerned_actions() {
+			$actions = array(
+				'acf/init',
+			);
 
-            return $actions;
-        }
+			return $actions;
+		}
 
-        public function get_concerned_filters()
-        {
-            $filters = array(
-                'acf/is_field_group_key',
-                'acf/is_field_key',
-                'acf/load_field_group',
-                'acf/pre_load_post_id',
-                'acf/validate_post_id',
-                'acf/pre_load_value',
-                'acf/load_value',
-                'acf/settings/load_json',
-            );
+		public function get_concerned_filters() {
+			$filters = array(
+				'acf/is_field_group_key',
+				'acf/is_field_key',
+				'acf/load_field_group',
+				'acf/pre_load_post_id',
+				'acf/validate_post_id',
+				'acf/pre_load_value',
+				'acf/load_value',
+				'acf/settings/load_json',
+			);
 
-            if (is_admin()) {
-                $filters = array_merge($filters, array(
-                    'acf/settings/save_json',
+			if ( is_admin() ) {
+				$filters = array_merge( $filters, array(
+					'acf/settings/save_json',
 					'acf/load_field_groups',
-                ));
-            }
+				) );
+			}
 
-            sort($filters, SORT_STRING);
+			sort( $filters, SORT_STRING );
 
-            return $filters;
-        }
+			return $filters;
+		}
 
-        public function get_concerned_constants()
-        {
-            return array(
-                'ACF_LITE',
-            );
-        }
+		public function get_concerned_constants() {
+			return array(
+				'ACF_LITE',
+			);
+		}
 
-    }
+	}
 
-    QM_Collectors::add( new QMX_Collector_ACF );
+	QM_Collectors::add( new QMX_Collector_ACF );
 }
