@@ -38,7 +38,7 @@ add_action( 'shutdown', static function () {
 
 			echo '<div class="qm" id="' . esc_attr( $this->collector->id() ) . '">';
 
-				if ( !empty( $data['sizes'] ) ) {
+				if ( !empty( $data->sizes ) ) {
 					echo '<table class="qm-sortable">';
 						echo '<caption class="qm-screen-reader-text">' . esc_html( $this->name() ) . '</caption>';
 						echo '<thead>';
@@ -84,7 +84,7 @@ add_action( 'shutdown', static function () {
 							$sources = array();
 							$uses = 0;
 
-							foreach ( $data['sizes'] as $id => $row ) {
+							foreach ( $data->sizes as $id => $row ) {
 								$ratio = array( $row['width'], $row['height'] );
 
 								if (
@@ -119,10 +119,10 @@ add_action( 'shutdown', static function () {
 								$sources = array_map( function( $k, $v ) { return ucwords( $k ) . ': ' . $v; }, array_keys( $sources ), $sources );
 
 							echo '<tr>';
-								echo '<td colspan="2">Total: <span class="qm-items-number">' . esc_html( number_format_i18n( count( $data['sizes'] ) ) ) . '</span></td>';
+								echo '<td colspan="2">Total: <span class="qm-items-number">' . esc_html( number_format_i18n( count( $data->sizes ) ) ) . '</span></td>';
 								echo '<td>Uses: <span class="qm-items-number">' . esc_html( number_format_i18n( $uses ) ) . '</span></td>';
-								echo '<td colspan="2">Duplicates: <span class="qm-items-number">' . esc_html( number_format_i18n( array_sum( $data['_duplicates']['dimensions'] ) ) ) . '</span></td>';
-								echo '<td colspan="2">Duplicates: <span class="qm-items-number">' . esc_html( number_format_i18n( array_sum( $data['_duplicates']['ratios'] ) ) ) . '</span></td>';
+								echo '<td colspan="2">Duplicates: <span class="qm-items-number">' . esc_html( number_format_i18n( array_sum( $data->duplicates['dimensions'] ) ) ) . '</span></td>';
+								echo '<td colspan="2">Duplicates: <span class="qm-items-number">' . esc_html( number_format_i18n( array_sum( $data->duplicates['ratios'] ) ) ) . '</span></td>';
 								echo '<td>' . implode( ', ', $sources ) . '</td>';
 							echo '</tr>';
 

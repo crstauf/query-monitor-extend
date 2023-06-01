@@ -34,7 +34,7 @@ add_action( 'shutdown', static function () {
 
 			echo '<div class="qm" id="' . esc_attr( $this->collector->id() ) . '">';
 
-				if ( !empty( $data['constants'] ) ) {
+				if ( !empty( $data->constants ) ) {
 					echo '<table class="qm-sortable">';
 						echo '<caption class="qm-screen-reader-text">' . esc_html( $this->collector->name() ) . '</caption>';
 						echo '<thead>';
@@ -64,7 +64,7 @@ add_action( 'shutdown', static function () {
 							$i = 1;
 							$bools = array( true => 'true', false => 'false' );
 
-							foreach ( $data['constants'] as $constant => $value ) {
+							foreach ( $data->constants as $constant => $value ) {
 								echo '<tr>';
 									echo '<td class="qm-num">' . $i++ . '</td>';
 									echo '<td class="qm-ltr" data-qm-sort-weight="' . strtolower( esc_attr( $constant ) ) . '"><code style="user-select: all;">' . esc_html( $constant ) . '</code></td>';
