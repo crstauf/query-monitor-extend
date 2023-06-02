@@ -333,6 +333,24 @@ add_action( 'shutdown', static function () {
 				return;
 			}
 
+			$paths = ( array ) acf_get_setting( 'load_json' );
+
+			if ( empty( $paths ) || ! acf_is_local_field_group( $group ) ) {
+				echo esc_html( $group );
+				return;
+			}
+
+			foreach ( $paths as $path ) {
+				$filepath = trailingslashit( $path ) . $group . '.json';
+
+				if ( ! file_exists( $filepath ) ) {
+					continue;
+				}
+
+				echo QM_Output_Html::output_filename( $group, $filepath );
+				return;
+			}
+
 			echo esc_html( $group );
 		}
 
@@ -343,13 +361,13 @@ add_action( 'shutdown', static function () {
 				return;
 			}
 
-			if ( empty( $group['id'] ) || ! current_user_can( 'edit_post', $group['id'] ) ) {
+			if ( empty( $group['ID'] ) || ! current_user_can( 'edit_post', $group['ID'] ) ) {
 				echo esc_html( $group['title'] );
 				return;
 			}
 
 			$url = add_query_arg( array(
-				'post'   => $group['id'],
+				'post'   => $group['ID'],
 				'action' => 'edit',
 			), admin_url( 'post.php' ) );
 
