@@ -35,6 +35,8 @@ function load_qmx_acf_collector( string $file ) {
 		function __construct() {
 			parent::__construct();
 
+			add_action( 'acf/init', array( $this, 'action__acf_init' ) );
+
 			add_filter( 'acf/settings/load_json', array( $this, 'filter__acf_settings_load_json' ), 99999 );
 			add_filter( 'acf/pre_load_value', array( $this, 'filter__acf_pre_load_value' ), 10, 3);
 			add_filter( 'acf/load_field_groups', array( $this, 'filter__acf_load_field_groups' ) );
@@ -63,6 +65,17 @@ function load_qmx_acf_collector( string $file ) {
 			}
 
 			return $group;
+		}
+
+		public function action__acf_init() : void {
+			$files = acf_get_local_json_files();
+			$groups = array();
+
+			foreach ( $files as $group_key => $filepath ) {
+				$groups[ $group_key ] = acf_get_field_group( $group_key );
+			}
+
+			$this->data->local_json['groups'] = $groups;
 		}
 
 		public function filter__acf_settings_load_json( $paths ) {

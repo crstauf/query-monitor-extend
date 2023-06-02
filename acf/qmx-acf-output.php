@@ -327,31 +327,29 @@ add_action( 'shutdown', static function () {
 		}
 
 		protected function output_column_field_group_key( array $row ) {
+			$data = $this->collector->get_data();
 			$group = $row['group'];
 
 			if ( empty( $group ) ) {
 				return;
 			}
 
-			$paths = ( array ) acf_get_setting( 'load_json' );
-
-			if ( empty( $paths ) || ! acf_is_local_field_group( $group ) ) {
+			if (
+				! acf_is_local_field_group( $group )
+				|| ! array_key_exists( $group, $data->local_json['groups'] )
+			) {
 				echo esc_html( $group );
 				return;
 			}
 
-			foreach ( $paths as $path ) {
-				$filepath = trailingslashit( $path ) . $group . '.json';
+			$filepath = $data->local_json['groups'][ $group ]['local_file'];
 
-				if ( ! file_exists( $filepath ) ) {
-					continue;
-				}
-
-				echo QM_Output_Html::output_filename( $group, $filepath );
+			if ( ! file_exists( $filepath ) ) {
+				echo esc_html( $group );
 				return;
 			}
 
-			echo esc_html( $group );
+			echo QM_Output_Html::output_filename( $group, $filepath );
 		}
 
 		protected function output_column_field_group( array $row ) {
@@ -486,7 +484,50 @@ add_action( 'shutdown', static function () {
 			echo '</tbody>';
 			echo '</table>';
 
+			$this->output_local_json_field_groups();
+
 			echo '</div>';
+		}
+
+		protected function output_local_json_field_groups() {
+			$data = $this->collector->get_data();
+
+			if ( empty( $data->local_json['groups'] ) ) {
+				echo '<section class="qm-non-tabular"><div class="qm-notice"><p>No local JSON field groups found.</p></div></section>';
+				return;
+			}
+
+			$groups = array();
+
+			foreach ( $data->local_json['groups'] as $group ) {
+				$groups[ $group['title'] ] = $group;
+			}
+
+			ksort( $groups, SORT_NATURAL );
+
+			echo '<table>';
+			echo '<caption><h2>Field Groups</caption>';
+			echo '<thead>';
+			echo '<tr>';
+			echo '<th scope="col">Title</th>';
+			echo '<th scope="col">Key</th>';
+			echo '<th scope="col">File</th>';
+			echo '</tr>';
+			echo '</thead>';
+			echo '<tbody>';
+
+			foreach ( $groups as $group ) {
+				printf(
+					'<tr><th scope="row">%s</th><td>%s</td><td>%s</td></tr>',
+					esc_html( $group['title'] ),
+					esc_html( $group['key'] ),
+					QM_Output_HTML::output_filename( $this->remove_abspath( $group['local_file'] ), $group['local_file'] )
+				);
+			}
+
+			echo '</tbody>';
+			printf( '<tfoot><tr><td colspan="3">Total: <span class="qm-items-number">%d</span></td></tr></tfoot>', count( $data->local_json['groups'] ) );
+			echo '</table>';
 		}
 
 		public function remove_abspath( string $path ) : string {
@@ -494,6 +535,7 @@ add_action( 'shutdown', static function () {
 		}
 
 		public function panel_menu( array $menu ) {
+			$data = $this->collector->get_data();
 
 			$menu['qm-acf'] = $this->menu( array(
 				'title' => esc_html__( 'Advanced Custom Fields', 'query-monitor-extend' ),
@@ -501,8 +543,6 @@ add_action( 'shutdown', static function () {
 			) );
 
 			if ( is_admin() ) {
-				$data = $this->collector->get_data();
-
 				$menu['qm-acf']['children']['loaded_field_groups'] = array(
 					'title' => esc_html__( 'Field Groups', 'query-monitor-extend' ) . sprintf( ' (%d)', count( $data->loaded_field_groups ) ),
 					'href'  => '#qm-acf-loaded_field_groups',
@@ -511,7 +551,7 @@ add_action( 'shutdown', static function () {
 			}
 
 			$menu['qm-acf']['children']['local_json'] = array(
-				'title' => esc_html__('Local JSON', 'query-monitor-extend'),
+				'title' => esc_html__('Local JSON', 'query-monitor-extend') . sprintf( ' (%d)', count( $data->local_json['groups'] ) ),
 				'href'  => '#qm-acf-local_json',
 				'id'    => 'query-monitor-extend-acf-local_json',
 			);
