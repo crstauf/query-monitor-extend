@@ -58,11 +58,15 @@ add_action( 'shutdown', static function () {
 									= 1;
 						}
 
-						if ( filesize( $file['path'] ) > $largest_file['size'] )
-							$largest_file = array(
-								'path' => $file['path'],
-								'size' => filesize( $file['path'] ),
-							);
+						try {
+							if ( filesize( $file['path'] ) > $largest_file['size'] )
+								$largest_file = array(
+									'path' => $file['path'],
+									'size' => filesize( $file['path'] ),
+								);
+						} catch ( Exception $e ) {
+							// Do nothing.
+						}
 
 						$components[$file['component']->name] = 1;
 					}
@@ -97,7 +101,13 @@ add_action( 'shutdown', static function () {
 
 							foreach ( $data->files as $i => $file ) {
 
-								$total_file_size += filesize( $file['path'] );
+								try {
+									$filesize = filesize( $file['path'] );
+								} catch ( Exception $e ) {
+									$filesize = 0;
+								}
+
+								$total_file_size += $filesize;
 
 								if ( !empty( $file['has_error'] ) )
 									$files_with_errors++;
@@ -110,8 +120,8 @@ add_action( 'shutdown', static function () {
 
 									echo '<td class="qm-num">' . ( $i + 1 ) . '</td>';
 									echo '<th scope="row">' . QM_Output_Html::output_filename( str_replace( ABSPATH, '', $file['path'] ), $file['path'] ) . '</th>';
-									echo '<td data-qm-sort-weight="' . filesize( $file['path'] ) . '">';
-										echo $this->human_file_size( filesize( $file['path'] ) );
+									echo '<td data-qm-sort-weight="' . esc_attr( $filesize ) . '">';
+										echo ! empty( $filesize ) ? $this->human_file_size( $filesize ) : '&mdash;';
 									echo '</td>';
 
 									echo '<td>' . esc_html( $file['component']->name ) . '</td>';
@@ -125,7 +135,7 @@ add_action( 'shutdown', static function () {
 								echo '<td colspan="4">';
 								printf(
 									esc_html__( 'Files in filter: %s', 'query-monitor-extend' ),
-									'<span class="qm-items-number">' . esc_html( number_format_i18n( count( $data->files) ) ) . '</span>'
+									'<span class="qm-items-number">' . esc_html( number_format_i18n( count( $data->files ) ) ) . '</span>'
 								);
 								echo '</td>';
 							echo '</tr>';
