@@ -538,7 +538,9 @@ add_action( 'shutdown', static function () {
 			$data = $this->collector->get_data();
 
 			if ( empty( $data->local_json ) ) {
-				$data->local_json['groups'] = array();
+				$data->local_json = array(
+					'groups' => array(),
+				);
 			}
 
 			$menu['qm-acf'] = $this->menu( array(
