@@ -58,14 +58,17 @@ add_action( 'shutdown', static function () {
 									= 1;
 						}
 
-						try {
-							if ( filesize( $file['path'] ) > $largest_file['size'] )
-								$largest_file = array(
-									'path' => $file['path'],
-									'size' => filesize( $file['path'] ),
-								);
-						} catch ( Exception $e ) {
-							// Do nothing.
+						$filesize = @filesize( $file['path'] );
+
+						if ( empty( $filesize ) ) {
+							$filesize = 0;
+						}
+
+						if ( $filesize > $largest_file['size'] ) {
+							$largest_file = array(
+								'path' => $file['path'],
+								'size' => filesize( $file['path'] ),
+							);
 						}
 
 						$components[$file['component']->name] = 1;
@@ -101,9 +104,9 @@ add_action( 'shutdown', static function () {
 
 							foreach ( $data->files as $i => $file ) {
 
-								try {
-									$filesize = filesize( $file['path'] );
-								} catch ( Exception $e ) {
+								$filesize = @filesize( $file['path'] );
+
+								if ( empty( $filesize ) ) {
 									$filesize = 0;
 								}
 
