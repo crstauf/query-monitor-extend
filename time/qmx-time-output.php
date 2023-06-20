@@ -16,7 +16,7 @@ add_action( 'shutdown', static function () {
 	if ( !class_exists( 'QMX_Collector_Time' ) )
 		return;
 
-	$qm_dir = trailingslashit( QueryMonitor::init()->plugin_path() );
+	$qm_dir = trailingslashit( dirname( QueryMonitor::init()->plugin_path( 'query-monitor.php' ) ) );
 
 	if ( ! file_exists( $qm_dir . 'output/Html.php' ) )
 		return;

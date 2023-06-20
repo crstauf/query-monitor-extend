@@ -16,7 +16,7 @@ add_action( 'shutdown', static function () {
 		return;
 	}
 
-	$qm_dir = trailingslashit( QueryMonitor::init()->plugin_path() );
+	$qm_dir = trailingslashit( dirname( QueryMonitor::init()->plugin_path( 'query-monitor.php' ) ) );
 
 	if ( ! file_exists( $qm_dir . 'output/Html.php' ) ) {
 		return;
