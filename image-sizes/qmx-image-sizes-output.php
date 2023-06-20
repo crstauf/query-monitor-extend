@@ -15,7 +15,32 @@ add_action( 'shutdown', static function () {
 	if ( !class_exists( 'QMX_Collector_Image_Sizes' ) )
 		return;
 
-	$qm_dir = trailingslashit( dirname( QueryMonitor::init()->plugin_path( 'query-monitor.php' ) ) );
+	if ( ! class_exists( 'QM_Dispatcher_Html' ) || ! QM_Dispatcher_Html::user_can_view() || ! QM_Dispatcher_Html::request_supported() ) {
+		return;
+	}
+
+	if ( is_admin() ) {
+		if ( ! ( did_action( 'admin_init' ) || did_action( 'admin_footer' ) ) ) {
+			return;
+		}
+	} else {
+		if ( ! ( did_action( 'wp' ) || did_action( 'wp_footer' ) || did_action( 'login_init' ) || did_action( 'gp_head' ) || did_action( 'login_footer' ) || did_action( 'gp_footer' ) ) ) {
+			return;
+		}
+	}
+
+	/** Back-compat filter. Please use `qm/dispatch/html` instead */
+	if ( ! apply_filters( 'qm/process', true, is_admin_bar_showing() ) ) {
+		return;
+	}
+
+	$qm = QueryMonitor::init()->plugin_path( 'assets/query-monitor.css' );
+
+	if ( ! file_exists( $qm ) ) {
+		return;
+	}
+
+	$qm_dir = trailingslashit( dirname( dirname( $qm ) ) );
 
 	if ( ! file_exists( $qm_dir . 'output/Html.php' ) )
 		return;
