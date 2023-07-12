@@ -1,14 +1,18 @@
 <?php
 /**
+ * Plugin Name: QMX: Heartbeat Collector
  * Plugin URI: https://github.com/crstauf/query-monitor-extend/tree/master/heartbeat
  * Description: Query Monitor collector for heartbeats.
- * Version: 1.0
+ * Version: 1.0.0
  * Author: Caleb Stauffer
  * Author URI: https://develop.calebstauffer.com
  * Update URI: false
  */
 
 defined( 'WPINC' ) || die();
+
+defined( 'QMX_DISABLED' ) || define( 'QMX_DISABLED', false );
+defined( 'QMX_TESTED_WITH_QM' ) || define( 'QMX_TESTED_WITH_QM', '3.13.0' );
 
 add_action( 'plugin_loaded', 'load_qmx_heartbeat_collector' );
 
@@ -22,8 +26,13 @@ function load_qmx_heartbeat_collector( string $file ) {
 	if ( !class_exists( 'QueryMonitor' ) )
 		return;
 
-	if ( defined( 'QMX_DISABLE' ) && QMX_DISABLE )
+	if ( defined( 'QM_DISABLED' ) && constant( 'QM_DISABLED' ) ) {
 		return;
+	}
+
+	if ( constant( 'QMX_DISABLED' ) ) {
+		return;
+	}
 
 	class QMX_Collector_Heartbeat extends QM_Collector {
 

@@ -1,5 +1,6 @@
 <?php
 /**
+ * Plugin Name: QMX: Files Collector
  * Plugin URI: https://github.com/crstauf/query-monitor-extend/tree/master/files
  * Description: Query Monitor collector for files.
  * Version: 1.0.1
@@ -9,6 +10,9 @@
  */
 
 defined( 'WPINC' ) || die();
+
+defined( 'QMX_DISABLED' ) || define( 'QMX_DISABLED', false );
+defined( 'QMX_TESTED_WITH_QM' ) || define( 'QMX_TESTED_WITH_QM', '3.13.0' );
 
 add_action( 'plugin_loaded', 'load_qmx_files_collector' );
 
@@ -22,8 +26,13 @@ function load_qmx_files_collector( string $file ) {
 	if ( !class_exists( 'QueryMonitor' ) )
 		return;
 
-	if ( defined( 'QMX_DISABLE' ) && QMX_DISABLE )
+	if ( defined( 'QM_DISABLED' ) && constant( 'QM_DISABLED' ) ) {
 		return;
+	}
+
+	if ( constant( 'QMX_DISABLED' ) ) {
+		return;
+	}
 
 	class QMX_Collector_Files extends QM_DataCollector {
 
