@@ -26,7 +26,7 @@ function load_qmx_files_collector( string $file ) {
 	if ( !class_exists( 'QueryMonitor' ) )
 		return;
 
-	if ( defined( 'QM_DISABLED' ) && ! constant( 'QM_DISABLED' ) ) {
+	if ( defined( 'QM_DISABLED' ) && constant( 'QM_DISABLED' ) ) {
 		return;
 	}
 

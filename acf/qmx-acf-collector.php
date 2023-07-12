@@ -28,7 +28,7 @@ function load_qmx_acf_collector( string $file ) {
 		return;
 	}
 
-	if ( defined( 'QM_DISABLED' ) && ! constant( 'QM_DISABLED' ) ) {
+	if ( defined( 'QM_DISABLED' ) && constant( 'QM_DISABLED' ) ) {
 		return;
 	}
 

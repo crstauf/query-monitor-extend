@@ -21,7 +21,7 @@ add_action( 'shutdown', static function () {
 		return;
 	}
 
-	if ( defined( 'QM_DISABLED' ) && ! constant( 'QM_DISABLED' ) ) {
+	if ( defined( 'QM_DISABLED' ) && constant( 'QM_DISABLED' ) ) {
 		return;
 	}
 

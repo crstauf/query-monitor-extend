@@ -15,7 +15,7 @@ if ( ! class_exists( 'QM_Data' ) ) {
 	return;
 }
 
-if ( defined( 'QM_DISABLED' ) && ! constant( 'QM_DISABLED' ) ) {
+if ( defined( 'QM_DISABLED' ) && constant( 'QM_DISABLED' ) ) {
 	return;
 }
 

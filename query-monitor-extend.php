@@ -16,7 +16,7 @@ defined( 'WPINC' ) || die();
 defined( 'QMX_DISABLED' ) || define( 'QMX_DISABLED', false );
 defined( 'QMX_TESTED_WITH_QM' ) || define( 'QMX_TESTED_WITH_QM', '3.13.0' );
 
-if ( defined( 'QM_DISABLED' ) && ! constant( 'QM_DISABLED' ) ) {
+if ( defined( 'QM_DISABLED' ) && constant( 'QM_DISABLED' ) ) {
 	return;
 }
 
