@@ -562,6 +562,10 @@ add_action( 'shutdown', static function () {
 		public function panel_menu( array $menu ) {
 			$data = $this->collector->get_data();
 
+			if ( empty( $data->local_json['groups'] ) ) {
+				$data->local_json['groups'] = array();
+			}
+
 			$menu['qm-acf'] = $this->menu( array(
 				'title' => esc_html__( 'Advanced Custom Fields', 'query-monitor-extend' ),
 				'id'    => 'query-monitor-extend-acf',
