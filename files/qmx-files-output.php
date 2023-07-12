@@ -1,8 +1,8 @@
 <?php
 /**
  * Plugin URI: https://github.com/crstauf/query-monitor-extend/tree/master/files
- * Description: Query Monitor output for files collector.
- * Version: 1.0
+ * Description: Query Monitor collector for files.
+ * Version: 1.0.1
  * Author: Caleb Stauffer
  * Author URI: https://develop.calebstauffer.com
  * Update URI: false
