@@ -1,8 +1,9 @@
 <?php
 /**
+ * Plugin Name: QMX: Image Sizes Output
  * Plugin URI: https://github.com/crstauf/query-monitor-extend/tree/master/image-sizes
  * Description: Query Monitor output for image sizes collector.
- * Version: 1.0
+ * Version: 1.0.0
  * Author: Caleb Stauffer
  * Author URI: https://develop.calebstauffer.com
  * Update URI: false
@@ -16,6 +17,14 @@ add_action( 'shutdown', static function () {
 		return;
 
 	if ( ! class_exists( 'QM_Dispatcher_Html' ) || ! QM_Dispatcher_Html::user_can_view() || ! QM_Dispatcher_Html::request_supported() ) {
+		return;
+	}
+
+	if ( defined( 'QM_DISABLED' ) && ! constant( 'QM_DISABLED' ) ) {
+		return;
+	}
+
+	if ( constant( 'QMX_DISABLED' ) ) {
 		return;
 	}
 

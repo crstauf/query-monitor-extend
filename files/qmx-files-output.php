@@ -1,5 +1,6 @@
 <?php
 /**
+ * Plugin Name: QMX: Files Output
  * Plugin URI: https://github.com/crstauf/query-monitor-extend/tree/master/files
  * Description: Query Monitor collector for files.
  * Version: 1.0.1
@@ -16,6 +17,14 @@ add_action( 'shutdown', static function () {
 		return;
 
 	if ( ! class_exists( 'QM_Dispatcher_Html' ) || ! QM_Dispatcher_Html::user_can_view() || ! QM_Dispatcher_Html::request_supported() ) {
+		return;
+	}
+
+	if ( defined( 'QM_DISABLED' ) && ! constant( 'QM_DISABLED' ) ) {
+		return;
+	}
+
+	if ( constant( 'QMX_DISABLED' ) ) {
 		return;
 	}
 

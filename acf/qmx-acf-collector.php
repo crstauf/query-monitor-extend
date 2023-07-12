@@ -1,5 +1,6 @@
 <?php
 /**
+ * Plugin Name: QMX: ACF Collector
  * Plugin URI: https://github.com/crstauf/query-monitor-extend/tree/master/acf
  * Description: Query Monitor collector for Advanced Custom Fields.
  * Version: 1.0.1
@@ -9,6 +10,9 @@
  */
 
 defined( 'WPINC' ) || die();
+
+defined( 'QMX_DISABLED' ) || define( 'QMX_DISABLED', false );
+defined( 'QMX_TESTED_WITH_QM' ) || define( 'QMX_TESTED_WITH_QM', '3.13.0' );
 
 add_action( 'plugin_loaded', 'load_qmx_acf_collector' );
 
@@ -24,7 +28,11 @@ function load_qmx_acf_collector( string $file ) {
 		return;
 	}
 
-	if ( defined( 'QMX_DISABLE' ) && constant( 'QMX_DISABLE' ) ) {
+	if ( defined( 'QM_DISABLED' ) && ! constant( 'QM_DISABLED' ) ) {
+		return;
+	}
+
+	if ( constant( 'QMX_DISABLED' ) ) {
 		return;
 	}
 

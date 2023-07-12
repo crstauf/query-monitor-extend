@@ -1,5 +1,6 @@
 <?php
 /**
+ * Plugin Name: QMX: ACF Output
  * Plugin URI: https://github.com/crstauf/query-monitor-extend/tree/master/acf
  * Description: Query Monitor output for ACF collector.
  * Version: 1.0.1
@@ -17,6 +18,14 @@ add_action( 'shutdown', static function () {
 	}
 
 	if ( ! class_exists( 'QM_Dispatcher_Html' ) || ! QM_Dispatcher_Html::user_can_view() || ! QM_Dispatcher_Html::request_supported() ) {
+		return;
+	}
+
+	if ( defined( 'QM_DISABLED' ) && ! constant( 'QM_DISABLED' ) ) {
+		return;
+	}
+
+	if ( constant( 'QMX_DISABLED' ) ) {
 		return;
 	}
 
