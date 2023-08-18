@@ -43,7 +43,7 @@ function load_qmx_time_collector( string $file ) {
 		}
 
 		public function get_storage(): QM_Data {
-			require_once 'qmx-time-data.php';
+			do_action( 'qmx/load_data/time' );
 			return new QMX_Data_Time();
 		}
 

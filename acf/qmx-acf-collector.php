@@ -54,7 +54,7 @@ function load_qmx_acf_collector( string $file ) {
 		}
 
 		public function get_storage(): QM_Data {
-			require_once 'qmx-acf-data.php';
+			do_action( 'qmx/load_data/acf' );
 			return new QMX_Data_ACF();
 		}
 

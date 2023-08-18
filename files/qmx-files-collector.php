@@ -43,7 +43,7 @@ function load_qmx_files_collector( string $file ) {
 		}
 
 		public function get_storage(): QM_Data {
-			require_once 'qmx-files-data.php';
+			do_action( 'qmx/load_data/files' );
 			return new QMX_Data_Files();
 		}
 

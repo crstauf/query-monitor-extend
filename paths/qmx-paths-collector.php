@@ -43,7 +43,7 @@ function load_qmx_paths_collector( string $file ) {
 		}
 
 		public function get_storage(): QM_Data {
-			require_once 'qmx-paths-data.php';
+			do_action( 'qmx/load_data/paths' );
 			return new QMX_Data_Paths();
 		}
 

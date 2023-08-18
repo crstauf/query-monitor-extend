@@ -110,7 +110,7 @@ function load_qmx_image_sizes_collector( string $file ) {
 		}
 
 		public function get_storage(): QM_Data {
-			require_once 'qmx-image-sizes-data.php';
+			do_action( 'qmx/load_data/image_sizes' );
 			return new QMX_Data_Image_Sizes();
 		}
 

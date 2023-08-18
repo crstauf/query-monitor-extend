@@ -11,10 +11,6 @@
 
 defined( 'WPINC' ) || die();
 
-if ( ! class_exists( 'QM_Data' ) ) {
-	return;
-}
-
 if ( defined( 'QM_DISABLED' ) && constant( 'QM_DISABLED' ) ) {
 	return;
 }
@@ -23,8 +19,12 @@ if ( constant( 'QMX_DISABLED' ) ) {
 	return;
 }
 
-class QMX_Data_Paths extends QM_Data {
+add_action( 'qmx/load_data/paths', static function () {
 
-	public $paths = array();
+	class QMX_Data_Paths extends QM_Data {
 
-}
+		public $paths = array();
+
+	}
+
+} );

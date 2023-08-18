@@ -43,7 +43,7 @@ function load_qmx_constants_collector( string $file ) {
 		}
 
 		public function get_storage(): QM_Data {
-			require_once 'qmx-constants-data.php';
+			do_action( 'qmx/load_data/constants' );
 			return new QMX_Data_Constants();
 		}
 

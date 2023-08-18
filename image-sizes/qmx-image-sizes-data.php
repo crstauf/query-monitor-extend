@@ -11,10 +11,6 @@
 
 defined( 'WPINC' ) || die();
 
-if ( ! class_exists( 'QM_Data' ) ) {
-	return;
-}
-
 if ( defined( 'QM_DISABLED' ) && constant( 'QM_DISABLED' ) ) {
 	return;
 }
@@ -23,9 +19,13 @@ if ( constant( 'QMX_DISABLED' ) ) {
 	return;
 }
 
-class QMX_Data_Image_Sizes extends QM_Data {
+add_action( 'qmx/load_data/image_sizes', static function () {
 
-	public $sizes = array();
-	public $duplicates = array();
+	class QMX_Data_Image_Sizes extends QM_Data {
 
-}
+		public $sizes = array();
+		public $duplicates = array();
+
+	}
+
+} );

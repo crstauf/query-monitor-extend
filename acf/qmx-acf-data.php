@@ -11,10 +11,6 @@
 
 defined( 'WPINC' ) || die();
 
-if ( ! class_exists( 'QM_Data' ) ) {
-	return;
-}
-
 if ( defined( 'QM_DISABLED' ) && constant( 'QM_DISABLED' ) ) {
 	return;
 }
@@ -23,15 +19,19 @@ if ( constant( 'QMX_DISABLED' ) ) {
 	return;
 }
 
-class QMX_Data_ACF extends QM_Data {
+add_action( 'qmx/load_data/acf', static function () {
 
-	public $fields = array();
-	public $field_keys = array();
-	public $post_ids = array();
-	public $callers = array();
-	public $counts = array();
-	public $field_groups = array();
-	public $local_json = array();
-	public $loaded_field_groups = array();
+	class QMX_Data_ACF extends QM_Data {
 
-}
+		public $fields = array();
+		public $field_keys = array();
+		public $post_ids = array();
+		public $callers = array();
+		public $counts = array();
+		public $field_groups = array();
+		public $local_json = array();
+		public $loaded_field_groups = array();
+
+	}
+
+} );
