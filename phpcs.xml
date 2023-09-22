@@ -1,0 +1,91 @@
+<?xml version="1.0"?>
+<ruleset name="CSSLLC">
+    <description>Query Monitor Extend Coding Standards.</description>
+
+    <arg name="extensions" value="php"/>
+    <arg name="severity" value="4"/>
+    <arg name="tab-width" value="4"/>
+    <arg value="spv"/>
+    <arg value="-colors"/>
+
+    <!--  Update to the PHP version your production/local docker container runs on -->
+    <config name="testVersion" value="8.2.8"/>
+    <!-- php -r 'echo PHP_VERSION_ID;' -->
+    <config name="php_version" value="80208%"/>
+
+    <!-- Exclude files -->
+    <exclude-pattern>*-config.php</exclude-pattern>
+    <exclude-pattern>*assets/</exclude-pattern>
+    <exclude-pattern>*vendor/</exclude-pattern>
+    <exclude-pattern>*tests/*</exclude-pattern>
+    <exclude-pattern>extensions\/(?!twig).*</exclude-pattern>
+    <exclude-pattern>*webpack/</exclude-pattern>
+
+    <!-- Rules -->
+
+    <!-- PSR2 -->
+    <rule ref="PSR2">
+        <exclude name="Generic.WhiteSpace.DisallowTabIndent"/>
+        <exclude name="Generic.Files.LineLength.TooLong"/>
+        <exclude name="PSR1.Files.SideEffects.FoundWithSymbols"/>
+        <exclude name="PSR1.Methods.CamelCapsMethodName.NotCamelCaps"/>
+        <exclude name="PSR2.Methods.FunctionCallSignature.SpaceAfterOpenBracket"/>
+        <exclude name="PSR2.Methods.FunctionCallSignature.SpaceBeforeCloseBracket"/>
+        <exclude name="PSR2.Classes.ClassDeclaration.OpenBraceNewLine"/>
+        <exclude name="PSR2.Classes.ClassDeclaration.CloseBraceAfterBody"/>
+        <exclude name="PSR2.ControlStructures.ControlStructureSpacing.SpacingAfterOpenBrace"/>
+        <exclude name="PSR2.ControlStructures.ControlStructureSpacing.SpaceBeforeCloseBrace"/>
+        <exclude name="Squiz.Classes.ValidClassName.NotCamelCaps"/>
+        <exclude name="Squiz.ControlStructures.ForEachLoopDeclaration.SpaceAfterOpen"/>
+        <exclude name="Squiz.ControlStructures.ControlSignature.SpaceAfterCloseBrace"/>
+        <exclude name="Squiz.Functions.FunctionDeclarationArgumentSpacing.SpacingAfterOpen"/>
+        <exclude name="Squiz.Functions.FunctionDeclarationArgumentSpacing.SpacingBeforeClose"/>
+        <exclude name="Squiz.Functions.MultiLineFunctionDeclaration.BraceOnSameLine"/>
+        <exclude name="Squiz.WhiteSpace.ControlStructureSpacing.SpacingAfterOpen"/>
+        <exclude name="Squiz.WhiteSpace.ControlStructureSpacing.SpacingBeforeClose"/>
+        <exclude name="Generic.WhiteSpace.ScopeIndent.IncorrectExact"/>
+        <exclude name="Generic.Files.EndFileNewline.NotFound"/>
+        <exclude name="PSR2.Files.EndFileNewline.NoneFound"/>
+        <exclude name="Generic.WhiteSpace.ScopeIndent.Incorrect"/>
+        <exclude name="PSR2.ControlStructures.ElseIfDeclaration.NotAllowed"/>
+        <exclude name="PSR12.Files.DeclareStatement.SpaceFoundBeforeDirective"/>
+        <exclude name="PSR12.Files.DeclareStatement.SpaceFoundAfterDirectiveValue"/>
+    </rule>
+
+    <!-- PSR12 -->
+    <rule ref="PSR12.Files.DeclareStatement"/>
+
+    <!-- Function spacing -->
+    <rule ref="PEAR.Functions.FunctionCallSignature">
+        <properties>
+            <property name="requiredSpacesAfterOpen" value="1"/>
+            <property name="requiredSpacesBeforeClose" value="1"/>
+        </properties>
+        <severity>0</severity>
+    </rule>
+
+    <!-- Now that we've excluded all message codes from FunctionCallSignature,
+         re-enable the two codes that we actually want. This will change the severity
+         of these codes from 0 (set by the above rule) to the default value (5). -->
+    <rule ref="PEAR.Functions.FunctionCallSignature.SpaceAfterOpenBracket" />
+    <rule ref="PEAR.Functions.FunctionCallSignature.SpaceBeforeCloseBracket" />
+
+    <!-- WordPress -->
+    <rule ref="WordPress.Arrays.MultipleStatementAlignment.DoubleArrowNotAligned"/>
+    <rule ref="WordPress.WhiteSpace.OperatorSpacing"/>
+    <rule ref="WordPress.WhiteSpace.ControlStructureSpacing.NoSpaceAfterOpenParenthesis"/>
+    <rule ref="WordPress.WhiteSpace.ControlStructureSpacing.NoSpaceBeforeCloseParenthesis"/>
+    <rule ref="WordPress.Arrays.ArrayKeySpacingRestrictions"/>
+    <rule ref="WordPressVIPMinimum">
+        <severity>3</severity>
+        <exclude name="WordPressVIPMinimum.Constants.ConstantString.NotCheckingConstantName"/>
+    </rule>
+
+    <!-- Generic -->
+    <rule ref="Generic.Functions.OpeningFunctionBraceKernighanRitchie"/>
+    <rule ref="Generic.Classes.OpeningBraceSameLine"/>
+    <rule ref="Generic.WhiteSpace.DisallowSpaceIndent"/>
+    <rule ref="Generic.Formatting.MultipleStatementAlignment"/>
+    <rule ref="Generic.Files.EndFileNewline"/>
+    <rule ref="Generic.VersionControl.GitMergeConflict"/>
+</ruleset>
