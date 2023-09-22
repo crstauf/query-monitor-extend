@@ -1,145 +1,89 @@
 <?php
-/**
- * Plugin Name: QMX: Constants Output
- * Plugin URI: https://github.com/crstauf/query-monitor-extend/tree/master/constants
- * Description: Query Monitor output for constants collector.
- * Version: 1.0
- * Author: Caleb Stauffer
- * Author URI: https://develop.calebstauffer.com
- * Update URI: false
- */
 
 defined( 'WPINC' ) || die();
 
-add_action( 'shutdown', static function () {
+class QMX_Output_Html_Constants extends QM_Output_Html {
 
-	if ( !class_exists( 'QMX_Collector_Constants' ) )
-		return;
-
-	if ( ! class_exists( 'QM_Dispatcher_Html' ) || ! QM_Dispatcher_Html::user_can_view() || ! QM_Dispatcher_Html::request_supported() ) {
-		return;
+	public function __construct( QM_Collector $collector ) {
+		parent::__construct( $collector );
+		add_filter( 'qm/output/panel_menus', array( &$this, 'panel_menu' ), 60 );
 	}
 
-	if ( defined( 'QM_DISABLED' ) && constant( 'QM_DISABLED' ) ) {
-		return;
-	}
+	public function output() {
+		$data = $this->collector->get_data();
 
-	if ( constant( 'QMX_DISABLED' ) ) {
-		return;
-	}
+		echo '<div class="qm" id="' . esc_attr( $this->collector->id() ) . '">';
 
-	if ( is_admin() ) {
-		if ( ! ( did_action( 'admin_init' ) || did_action( 'admin_footer' ) ) ) {
-			return;
-		}
-	} else {
-		if ( ! ( did_action( 'wp' ) || did_action( 'wp_footer' ) || did_action( 'login_init' ) || did_action( 'gp_head' ) || did_action( 'login_footer' ) || did_action( 'gp_footer' ) ) ) {
-			return;
-		}
-	}
+			if ( !empty( $data->constants ) ) {
+				echo '<table class="qm-sortable">';
+					echo '<caption class="qm-screen-reader-text">' . esc_html( $this->collector->name() ) . '</caption>';
+					echo '<thead>';
+						echo '<tr>';
 
-	/** Back-compat filter. Please use `qm/dispatch/html` instead */
-	if ( ! apply_filters( 'qm/process', true, is_admin_bar_showing() ) ) {
-		return;
-	}
+							echo '<th scope="col" class="qm-num qm-sorted-asc qm-sortable-column">';
+								echo $this->build_sorter( __( '', 'query-monitor-extend' ) );
+							echo '</th>';
 
-	$qm = QueryMonitor::init()->plugin_path( 'assets/query-monitor.css' );
+							echo '<th scope="col" class="qm-sortable-column">';
+								echo $this->build_sorter( __( 'Constant', 'query-monitor-extend' ) );
+							echo '</th>';
 
-	if ( ! file_exists( $qm ) ) {
-		return;
-	}
+							echo '<th scope="col" class="qm-ltr">';
+								echo __( 'Value', 'query-monitor-extend' );
+							echo '</th>';
 
-	$qm_dir = trailingslashit( dirname( dirname( $qm ) ) );
+							echo '<th scope="col" class="qm-sortable-column">';
+								echo $this->build_sorter( __( 'Type', 'query-monitor-extend' ) );
+							echo '</th>';
 
-	if ( ! file_exists( $qm_dir . 'output/Html.php' ) )
-		return;
+						echo '</tr>';
+					echo '</thead>';
 
-	require_once $qm_dir . 'output/Html.php';
+					echo '<tbody>';
 
-	class QMX_Output_Html_Constants extends QM_Output_Html {
+						$i = 1;
+						$bools = array( true => 'true', false => 'false' );
 
-		public function __construct( QM_Collector $collector ) {
-			parent::__construct( $collector );
-			add_filter( 'qm/output/panel_menus', array( &$this, 'panel_menu' ), 60 );
-		}
-
-		public function output() {
-			$data = $this->collector->get_data();
-
-			echo '<div class="qm" id="' . esc_attr( $this->collector->id() ) . '">';
-
-				if ( !empty( $data->constants ) ) {
-					echo '<table class="qm-sortable">';
-						echo '<caption class="qm-screen-reader-text">' . esc_html( $this->collector->name() ) . '</caption>';
-						echo '<thead>';
+						foreach ( $data->constants as $constant => $value ) {
 							echo '<tr>';
-
-								echo '<th scope="col" class="qm-num qm-sorted-asc qm-sortable-column">';
-									echo $this->build_sorter( __( '', 'query-monitor-extend' ) );
-								echo '</th>';
-
-								echo '<th scope="col" class="qm-sortable-column">';
-									echo $this->build_sorter( __( 'Constant', 'query-monitor-extend' ) );
-								echo '</th>';
-
-								echo '<th scope="col" class="qm-ltr">';
-									echo __( 'Value', 'query-monitor-extend' );
-								echo '</th>';
-
-								echo '<th scope="col" class="qm-sortable-column">';
-									echo $this->build_sorter( __( 'Type', 'query-monitor-extend' ) );
-								echo '</th>';
-
+								echo '<td class="qm-num">' . $i++ . '</td>';
+								echo '<td class="qm-ltr" data-qm-sort-weight="' . strtolower( esc_attr( $constant ) ) . '"><code style="user-select: all;">' . esc_html( $constant ) . '</code></td>';
+								echo '<td ' . ( is_bool( $value ) ? ' class="qm-' . $bools[$value] . '"' : '' ) . '>' . esc_html( QM_Util::display_variable( $value ) ) . '</td>';
+								echo '<td class="qm-ltr">' . esc_html( gettype( $value ) ) . '</td>';
 							echo '</tr>';
-						echo '</thead>';
+						}
 
-						echo '<tbody>';
+					echo '</tbody>';
+					echo '<tfoot>';
 
-							$i = 1;
-							$bools = array( true => 'true', false => 'false' );
+					echo '</tfoot>';
+				echo '</table>';
 
-							foreach ( $data->constants as $constant => $value ) {
-								echo '<tr>';
-									echo '<td class="qm-num">' . $i++ . '</td>';
-									echo '<td class="qm-ltr" data-qm-sort-weight="' . strtolower( esc_attr( $constant ) ) . '"><code style="user-select: all;">' . esc_html( $constant ) . '</code></td>';
-									echo '<td ' . ( is_bool( $value ) ? ' class="qm-' . $bools[$value] . '"' : '' ) . '>' . esc_html( QM_Util::display_variable( $value ) ) . '</td>';
-									echo '<td class="qm-ltr">' . esc_html( gettype( $value ) ) . '</td>';
-								echo '</tr>';
-							}
+			} else {
 
-						echo '</tbody>';
-						echo '<tfoot>';
+				echo '<div class="qm-none">';
+				echo '<p>' . esc_html__( 'None', 'query-monitor' ) . '</p>';
+				echo '</div>';
 
-						echo '</tfoot>';
-					echo '</table>';
+			}
 
-				} else {
-
-					echo '<div class="qm-none">';
-					echo '<p>' . esc_html__( 'None', 'query-monitor' ) . '</p>';
-					echo '</div>';
-
-				}
-
-			echo '</div>';
-		}
-
-		public function panel_menu( array $menu ) {
-			$menu['constants'] = $this->menu( array(
-				'title' => esc_html__( 'Constants', 'query-monitor-extend' ),
-				'id'    => 'query-monitor-extend-constants',
-			) );
-
-			return $menu;
-		}
-
+		echo '</div>';
 	}
 
-	add_filter( 'qm/outputter/html', static function ( array $output ) : array {
-		if ( $collector = QM_Collectors::get( 'constants' ) )
-			$output['constants'] = new QMX_Output_Html_Constants( $collector );
+	public function panel_menu( array $menu ) {
+		$menu['constants'] = $this->menu( array(
+			'title' => esc_html__( 'Constants', 'query-monitor-extend' ),
+			'id'    => 'query-monitor-extend-constants',
+		) );
 
-		return $output;
-	}, 70 );
+		return $menu;
+	}
 
-}, 9 );
+}
+
+add_filter( 'qm/outputter/html', static function ( array $output ) : array {
+	if ( $collector = QM_Collectors::get( 'constants' ) )
+		$output['constants'] = new QMX_Output_Html_Constants( $collector );
+
+	return $output;
+}, 70 );
