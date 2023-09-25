@@ -78,7 +78,7 @@ class QMX_Collector_Image_Sizes extends QM_DataCollector {
 	}
 
 	public function get_storage(): QM_Data {
-		do_action( 'qmx/load_data/image_sizes' );
+		require_once 'qmx-image-sizes-data.php';
 		return new QMX_Data_Image_Sizes();
 	}
 

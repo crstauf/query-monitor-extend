@@ -20,7 +20,7 @@ class QMX_Collector_ACF extends QM_DataCollector {
 	}
 
 	public function get_storage(): QM_Data {
-		require_once 'qmx-acf-data.php'
+		require_once 'qmx-acf-data.php';
 		return new QMX_Data_ACF();
 	}
 

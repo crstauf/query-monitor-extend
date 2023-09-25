@@ -11,7 +11,7 @@ class QMX_Collector_Paths extends QM_DataCollector {
 	}
 
 	public function get_storage(): QM_Data {
-		do_action( 'qmx/load_data/paths' );
+		require_once 'qmx-paths-data.php';
 		return new QMX_Data_Paths();
 	}
 

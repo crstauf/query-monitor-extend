@@ -11,7 +11,7 @@ class QMX_Collector_Time extends QM_DataCollector {
 	}
 
 	public function get_storage(): QM_Data {
-		do_action( 'qmx/load_data/time' );
+		require_once 'qmx-time-data.php';
 		return new QMX_Data_Time();
 	}
 

@@ -11,7 +11,7 @@ class QMX_Collector_Files extends QM_DataCollector {
 	}
 
 	public function get_storage(): QM_Data {
-		do_action( 'qmx/load_data/files' );
+		require_once 'qmx-files-data.php';
 		return new QMX_Data_Files();
 	}
 
