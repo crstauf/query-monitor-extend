@@ -24,6 +24,14 @@ if ( constant( 'QMX_DISABLED' ) ) {
 	return;
 }
 
+// Prevent combo mu-plugin and plugin.
+if ( defined( 'QMX_LOADED' ) ) {
+	trigger_error( sprintf( 'Query Monitor Extend loaded previously: %s', constant( 'QMX_LOADED' ) ), E_USER_NOTICE );
+	return;
+}
+
+define( 'QMX_LOADED', __FILE__ );
+
 /**
  * Filter: plugin_row_meta
  *
