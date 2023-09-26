@@ -1,13 +1,6 @@
 <?php
-/**
- * Plugin Name: QMX: Additional Conditionals
- * Plugin URI: https://github.com/crstauf/query-monitor-extend/tree/master/qmx-conditionals.php
- * Description: Additional conditionals for Query Monitor.
- * Version: 1.0.0
- * Author: Caleb Stauffer
- * Author URI: https://develop.calebstauffer.com
- * Update URI: false
- */
+
+defined( 'WPINC' ) || die();
 
 add_filter( 'qm/collect/conditionals', static function( array $conditionals ) : array {
 	$conditionals = array_merge( $conditionals, array(
