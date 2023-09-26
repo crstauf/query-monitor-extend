@@ -4,7 +4,14 @@ includes:
 parameters:
 	level: 8
 	paths:
-		- src/
+		- acf/
+		- constants/
+		- files/
+		- heartbeat/
+		- paths/
+		- time/
+		- qmx-conditionals.php
+		- query-monitor-extend.php
 	excludePaths:
 		- vendor/
 	bootstrapFiles:

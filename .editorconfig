@@ -4,6 +4,6 @@ end_of_line = lf
 indent_style = tab
 trim_trailing_whitespace = true
 
-[*.{yml,json,svg}]
+[*.{yml,json,svg,xml}]
 indent_style = space
 indent_size = 2
