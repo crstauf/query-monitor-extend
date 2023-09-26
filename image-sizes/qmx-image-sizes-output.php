@@ -1,202 +1,146 @@
 <?php
-/**
- * Plugin Name: QMX: Image Sizes Output
- * Plugin URI: https://github.com/crstauf/query-monitor-extend/tree/master/image-sizes
- * Description: Query Monitor output for image sizes collector.
- * Version: 1.0.0
- * Author: Caleb Stauffer
- * Author URI: https://develop.calebstauffer.com
- * Update URI: false
- */
 
 defined( 'WPINC' ) || die();
 
-add_action( 'shutdown', static function () {
+class QMX_Output_Html_Image_Sizes extends QM_Output_Html {
 
-	if ( !class_exists( 'QMX_Collector_Image_Sizes' ) )
-		return;
-
-	if ( ! class_exists( 'QM_Dispatcher_Html' ) || ! QM_Dispatcher_Html::user_can_view() || ! QM_Dispatcher_Html::request_supported() ) {
-		return;
+	public function __construct( QM_Collector $collector ) {
+		parent::__construct( $collector );
+		add_filter( 'qm/output/panel_menus', array( &$this, 'panel_menu' ), 60 );
 	}
 
-	if ( defined( 'QM_DISABLED' ) && constant( 'QM_DISABLED' ) ) {
-		return;
+	public function name() {
+		return __( 'Image Sizes', 'query-monitor-extend' );
 	}
 
-	if ( constant( 'QMX_DISABLED' ) ) {
-		return;
-	}
+	public function output() {
+		$data = $this->collector->get_data();
 
-	if ( is_admin() ) {
-		if ( ! ( did_action( 'admin_init' ) || did_action( 'admin_footer' ) ) ) {
-			return;
-		}
-	} else {
-		if ( ! ( did_action( 'wp' ) || did_action( 'wp_footer' ) || did_action( 'login_init' ) || did_action( 'gp_head' ) || did_action( 'login_footer' ) || did_action( 'gp_footer' ) ) ) {
-			return;
-		}
-	}
+		echo '<div class="qm" id="' . esc_attr( $this->collector->id() ) . '">';
 
-	/** Back-compat filter. Please use `qm/dispatch/html` instead */
-	if ( ! apply_filters( 'qm/process', true, is_admin_bar_showing() ) ) {
-		return;
-	}
+			if ( !empty( $data->sizes ) ) {
+				echo '<table class="qm-sortable">';
+					echo '<caption class="qm-screen-reader-text">' . esc_html( $this->name() ) . '</caption>';
+					echo '<thead>';
+						echo '<tr>';
 
-	$qm = QueryMonitor::init()->plugin_path( 'assets/query-monitor.css' );
+							echo '<th scope="col" class="qm-num qm-sorted-asc qm-sortable-column">';
+								echo $this->build_sorter( __( '', 'query-monitor-extend' ) );
+							echo '</th>';
 
-	if ( ! file_exists( $qm ) ) {
-		return;
-	}
+							echo '<th scope="col" class="qm-sortable-column">';
+								echo $this->build_sorter( __( 'ID', 'query-monitor-extend' ) );
+							echo '</th>';
 
-	$qm_dir = trailingslashit( dirname( dirname( $qm ) ) );
+							echo '<th scope="col" class="qm-sortable-column">';
+								echo $this->build_sorter( __( 'Uses', 'query-monitor-extend' ) );
+							echo '</th>';
 
-	if ( ! file_exists( $qm_dir . 'output/Html.php' ) )
-		return;
+							echo '<th scope="col" class="qm-num qm-sortable-column">';
+								echo $this->build_sorter( __( 'Width', 'query-monitor-extend' ) );
+							echo '</th>';
 
-	require_once $qm_dir . 'output/Html.php';
+							echo '<th scope="col" class="qm-num qm-sortable-column">';
+								echo $this->build_sorter( __( 'Height', 'query-monitor-extend' ) );
+							echo '</th>';
 
-	class QMX_Output_Html_Image_Sizes extends QM_Output_Html {
+							echo '<th scope="col" class="qm-num qm-sortable-column">';
+								echo $this->build_sorter( __( 'Ratio', 'query-monitor-extend' ) );
+							echo '</th>';
 
-		public function __construct( QM_Collector $collector ) {
-			parent::__construct( $collector );
-			add_filter( 'qm/output/panel_menus', array( &$this, 'panel_menu' ), 60 );
-		}
+							echo '<th scope="col" class="qm-num">';
+								echo __( 'Cropped', 'query-monitor-extend' );
+							echo '</th>';
 
-		public function name() {
-			return __( 'Image Sizes', 'query-monitor-extend' );
-		}
+							echo '<th scope="col" class="qm-sortable-column">';
+								echo $this->build_sorter( __( 'Source', 'query-monitor-extend' ) );
+							echo '</th>';
 
-		public function output() {
-			$data = $this->collector->get_data();
+						echo '</tr>';
+					echo '</thead>';
 
-			echo '<div class="qm" id="' . esc_attr( $this->collector->id() ) . '">';
+					echo '<tbody>';
 
-				if ( !empty( $data->sizes ) ) {
-					echo '<table class="qm-sortable">';
-						echo '<caption class="qm-screen-reader-text">' . esc_html( $this->name() ) . '</caption>';
-						echo '<thead>';
-							echo '<tr>';
+						$sources = array();
+						$uses = 0;
 
-								echo '<th scope="col" class="qm-num qm-sorted-asc qm-sortable-column">';
-									echo $this->build_sorter( __( '', 'query-monitor-extend' ) );
-								echo '</th>';
+						foreach ( $data->sizes as $id => $row ) {
+							$ratio = array( $row['width'], $row['height'] );
 
-								echo '<th scope="col" class="qm-sortable-column">';
-									echo $this->build_sorter( __( 'ID', 'query-monitor-extend' ) );
-								echo '</th>';
+							if (
+								    !empty( $row['width'] )
+								&& !empty( $row['height'] )
+							)
+								$ratio = array( $row['width'] / $row['_gcd'], $row['height'] / $row['_gcd'] );
 
-								echo '<th scope="col" class="qm-sortable-column">';
-									echo $this->build_sorter( __( 'Uses', 'query-monitor-extend' ) );
-								echo '</th>';
+							if ( $ratio === array( $row['width'], $row['height'] ) )
+								$ratio = array( '&mdash;' );
 
-								echo '<th scope="col" class="qm-num qm-sortable-column">';
-									echo $this->build_sorter( __( 'Width', 'query-monitor-extend' ) );
-								echo '</th>';
+							$uses += $row['used'];
 
-								echo '<th scope="col" class="qm-num qm-sortable-column">';
-									echo $this->build_sorter( __( 'Height', 'query-monitor-extend' ) );
-								echo '</th>';
-
-								echo '<th scope="col" class="qm-num qm-sortable-column">';
-									echo $this->build_sorter( __( 'Ratio', 'query-monitor-extend' ) );
-								echo '</th>';
-
-								echo '<th scope="col" class="qm-num">';
-									echo __( 'Cropped', 'query-monitor-extend' );
-								echo '</th>';
-
-								echo '<th scope="col" class="qm-sortable-column">';
-									echo $this->build_sorter( __( 'Source', 'query-monitor-extend' ) );
-								echo '</th>';
-
-							echo '</tr>';
-						echo '</thead>';
-
-						echo '<tbody>';
-
-							$sources = array();
-							$uses = 0;
-
-							foreach ( $data->sizes as $id => $row ) {
-								$ratio = array( $row['width'], $row['height'] );
-
-								if (
-									    !empty( $row['width'] )
-									&& !empty( $row['height'] )
-								)
-									$ratio = array( $row['width'] / $row['_gcd'], $row['height'] / $row['_gcd'] );
-
-								if ( $ratio === array( $row['width'], $row['height'] ) )
-									$ratio = array( '&mdash;' );
-
-								$uses += $row['used'];
-
-								echo '<tr data-qmx-image-size-width="' . esc_attr( $row['width'] ) . '" data-qmx-image-size-height="' . esc_attr( $row['height'] ) . '" data-qmx-image-size-ratio="' . esc_attr( $row['ratio'] ) . '">';
-									echo '<td class="qm-num">' . esc_html( $row['num']    ) . '</td>';
-									echo '<td class="qm-ltr">' . esc_html( $id            ) . '</td>';
-									echo '<td class="qm-num" data-qmx-image-size-count="'  . esc_attr( $row['used']   ) . '">' . esc_html( $row['used']   ) . '</td>';
-									echo '<td class="qm-num" data-qmx-image-size-width="'  . esc_attr( $row['width']  ) . '">' . esc_html( $row['width']  ) . '</td>';
-									echo '<td class="qm-num" data-qmx-image-size-height="' . esc_attr( $row['height'] ) . '">' . esc_html( $row['height'] ) . '</td>';
-									echo '<td class="qm-num" data-qmx-image-size-ratio="'  . esc_attr( $row['ratio']  ) . '" data-qm-sort-weight="' . esc_attr( $row['ratio'] ) . '">' . esc_html( implode( ':', $ratio )  ) . '</td>';
-									echo '<td class="qm-num qm-true">' . ( $row['crop'] ? '<span class="dashicons dashicons-yes"></span>' : '' ) . '</td>';
-									echo '<td class="qm-ltr">' . esc_html( $row['source'] ) . '</td>';
-								echo '</tr>';
-
-								array_key_exists( $row['source'], $sources ) ? $sources[$row['source']]++ : $sources[$row['source']] = 1;
-							}
-
-						echo '</tbody>';
-						echo '<tfoot>';
-
-							if ( !empty( $sources ) )
-								$sources = array_map( function( $k, $v ) { return ucwords( $k ) . ': ' . $v; }, array_keys( $sources ), $sources );
-
-							echo '<tr>';
-								echo '<td colspan="2">Total: <span class="qm-items-number">' . esc_html( number_format_i18n( count( $data->sizes ) ) ) . '</span></td>';
-								echo '<td>Uses: <span class="qm-items-number">' . esc_html( number_format_i18n( $uses ) ) . '</span></td>';
-								echo '<td colspan="2">Duplicates: <span class="qm-items-number">' . esc_html( number_format_i18n( array_sum( $data->duplicates['dimensions'] ) ) ) . '</span></td>';
-								echo '<td colspan="2">Duplicates: <span class="qm-items-number">' . esc_html( number_format_i18n( array_sum( $data->duplicates['ratios'] ) ) ) . '</span></td>';
-								echo '<td>' . implode( ', ', $sources ) . '</td>';
+							echo '<tr data-qmx-image-size-width="' . esc_attr( $row['width'] ) . '" data-qmx-image-size-height="' . esc_attr( $row['height'] ) . '" data-qmx-image-size-ratio="' . esc_attr( $row['ratio'] ) . '">';
+								echo '<td class="qm-num">' . esc_html( $row['num']    ) . '</td>';
+								echo '<td class="qm-ltr">' . esc_html( $id            ) . '</td>';
+								echo '<td class="qm-num" data-qmx-image-size-count="'  . esc_attr( $row['used']   ) . '">' . esc_html( $row['used']   ) . '</td>';
+								echo '<td class="qm-num" data-qmx-image-size-width="'  . esc_attr( $row['width']  ) . '">' . esc_html( $row['width']  ) . '</td>';
+								echo '<td class="qm-num" data-qmx-image-size-height="' . esc_attr( $row['height'] ) . '">' . esc_html( $row['height'] ) . '</td>';
+								echo '<td class="qm-num" data-qmx-image-size-ratio="'  . esc_attr( $row['ratio']  ) . '" data-qm-sort-weight="' . esc_attr( $row['ratio'] ) . '">' . esc_html( implode( ':', $ratio )  ) . '</td>';
+								echo '<td class="qm-num qm-true">' . ( $row['crop'] ? '<span class="dashicons dashicons-yes"></span>' : '' ) . '</td>';
+								echo '<td class="qm-ltr">' . esc_html( $row['source'] ) . '</td>';
 							echo '</tr>';
 
-						echo '</tfoot>';
-					echo '</table>';
+							array_key_exists( $row['source'], $sources ) ? $sources[$row['source']]++ : $sources[$row['source']] = 1;
+						}
 
-				} else {
+					echo '</tbody>';
+					echo '<tfoot>';
 
-					echo '<div class="qm-none">';
-					echo '<p>' . esc_html__( 'None', 'query-monitor' ) . '</p>';
-					echo '</div>';
+						if ( !empty( $sources ) )
+							$sources = array_map( function( $k, $v ) { return ucwords( $k ) . ': ' . $v; }, array_keys( $sources ), $sources );
 
-				}
+						echo '<tr>';
+							echo '<td colspan="2">Total: <span class="qm-items-number">' . esc_html( number_format_i18n( count( $data->sizes ) ) ) . '</span></td>';
+							echo '<td>Uses: <span class="qm-items-number">' . esc_html( number_format_i18n( $uses ) ) . '</span></td>';
+							echo '<td colspan="2">Duplicates: <span class="qm-items-number">' . esc_html( number_format_i18n( array_sum( $data->duplicates['dimensions'] ) ) ) . '</span></td>';
+							echo '<td colspan="2">Duplicates: <span class="qm-items-number">' . esc_html( number_format_i18n( array_sum( $data->duplicates['ratios'] ) ) ) . '</span></td>';
+							echo '<td>' . implode( ', ', $sources ) . '</td>';
+						echo '</tr>';
 
-			echo '</div>';
+					echo '</tfoot>';
+				echo '</table>';
 
-			$this->current_id = 'qm-image_sizes';
-			$this->current_name = 'Image Sizes';
+			} else {
 
-			$this->output_concerns();
-		}
+				echo '<div class="qm-none">';
+				echo '<p>' . esc_html__( 'None', 'query-monitor' ) . '</p>';
+				echo '</div>';
 
-		public function panel_menu( array $menu ) {
+			}
 
-			$menu['qm-image_sizes'] = $this->menu( array(
-				'title' => esc_html__( 'Image Sizes', 'query-monitor-extend' ),
-				'id'    => 'query-monitor-extend-image_sizes',
-			) );
+		echo '</div>';
 
-			return $menu;
+		$this->current_id = 'qm-image_sizes';
+		$this->current_name = 'Image Sizes';
 
-		}
+		$this->output_concerns();
+	}
+
+	public function panel_menu( array $menu ) {
+
+		$menu['qm-image_sizes'] = $this->menu( array(
+			'title' => esc_html__( 'Image Sizes', 'query-monitor-extend' ),
+			'id'    => 'query-monitor-extend-image_sizes',
+		) );
+
+		return $menu;
 
 	}
 
-	add_filter( 'qm/outputter/html', static function ( array $output ) : array {
-		if ( $collector = QM_Collectors::get( 'image_sizes' ) )
-			$output['image_sizes'] = new QMX_Output_Html_Image_Sizes( $collector );
+}
 
-		return $output;
-	}, 70 );
+add_filter( 'qm/outputter/html', static function ( array $output ) : array {
+	if ( $collector = QM_Collectors::get( 'image_sizes' ) )
+		$output['image_sizes'] = new QMX_Output_Html_Image_Sizes( $collector );
 
-}, 9 );
+	return $output;
+}, 70 );

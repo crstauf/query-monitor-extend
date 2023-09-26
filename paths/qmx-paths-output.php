@@ -1,163 +1,107 @@
 <?php
-/**
- * Plugin Name: QMX: Paths Output
- * Plugin URI: https://github.com/crstauf/query-monitor-extend/tree/master/paths
- * Description: Query Monitor output for paths collector.
- * Version: 1.0
- * Author: Caleb Stauffer
- * Author URI: https://develop.calebstauffer.com
- * Update URI: false
- */
 
 defined( 'WPINC' ) || die();
 
-add_action( 'shutdown', static function () {
+class QMX_Output_Html_Paths extends QM_Output_Html {
 
-	if ( !class_exists( 'QMX_Collector_Paths' ) )
-		return;
-
-	if ( ! class_exists( 'QM_Dispatcher_Html' ) || ! QM_Dispatcher_Html::user_can_view() || ! QM_Dispatcher_Html::request_supported() ) {
-		return;
+	public function __construct( QM_Collector $collector ) {
+		parent::__construct( $collector );
+		add_filter( 'qm/output/panel_menus', array( &$this, 'panel_menu' ), 60 );
 	}
 
-	if ( defined( 'QM_DISABLED' ) && constant( 'QM_DISABLED' ) ) {
-		return;
+	public function name() {
+		return __( 'Paths', 'query-monitor-extend' );
 	}
 
-	if ( constant( 'QMX_DISABLED' ) ) {
-		return;
-	}
+	public function output() {
+		$data = $this->collector->get_data();
 
-	if ( is_admin() ) {
-		if ( ! ( did_action( 'admin_init' ) || did_action( 'admin_footer' ) ) ) {
-			return;
-		}
-	} else {
-		if ( ! ( did_action( 'wp' ) || did_action( 'wp_footer' ) || did_action( 'login_init' ) || did_action( 'gp_head' ) || did_action( 'login_footer' ) || did_action( 'gp_footer' ) ) ) {
-			return;
-		}
-	}
+		echo '<div class="qm" id="' . esc_attr( $this->collector->id() ) . '">';
 
-	/** Back-compat filter. Please use `qm/dispatch/html` instead */
-	if ( ! apply_filters( 'qm/process', true, is_admin_bar_showing() ) ) {
-		return;
-	}
+			if ( !empty( $data->paths ) ) {
+				echo '<table class="qm-sortable">';
+					echo '<caption class="qm-screen-reader-text">' . esc_html( $this->collector->name() ) . '</caption>';
+					echo '<thead>';
+						echo '<tr>';
 
-	$qm = QueryMonitor::init()->plugin_path( 'assets/query-monitor.css' );
+							echo '<th scope="col" class="qm-sorted-asc qm-sortable-column">';
+								echo $this->build_sorter( __( 'Constant/Function', 'query-monitor-extend' ) );
+							echo '</th>';
 
-	if ( ! file_exists( $qm ) ) {
-		return;
-	}
+							echo '<th scope="col" class="qm-ltr">';
+								echo __( 'Path', 'query-monitor-extend' );
+							echo '</th>';
 
-	$qm_dir = trailingslashit( dirname( dirname( $qm ) ) );
+						echo '</tr>';
+					echo '</thead>';
 
-	if ( ! file_exists( $qm_dir . 'output/Html.php' ) )
-		return;
+					echo '<tbody>';
 
-	require_once $qm_dir . 'output/Html.php';
-
-	class QMX_Output_Html_Paths extends QM_Output_Html {
-
-		public function __construct( QM_Collector $collector ) {
-			parent::__construct( $collector );
-			add_filter( 'qm/output/panel_menus', array( &$this, 'panel_menu' ), 60 );
-		}
-
-		public function name() {
-			return __( 'Paths', 'query-monitor-extend' );
-		}
-
-		public function output() {
-			$data = $this->collector->get_data();
-
-			echo '<div class="qm" id="' . esc_attr( $this->collector->id() ) . '">';
-
-				if ( !empty( $data->paths ) ) {
-					echo '<table class="qm-sortable">';
-						echo '<caption class="qm-screen-reader-text">' . esc_html( $this->collector->name() ) . '</caption>';
-						echo '<thead>';
+						foreach ( $data->paths as $var => $value ) {
 							echo '<tr>';
+								echo '<td class="qm-ltr"><code style="user-select: all;">' . esc_html( $var ) . '</code></td>';
 
-								echo '<th scope="col" class="qm-sorted-asc qm-sortable-column">';
-									echo $this->build_sorter( __( 'Constant/Function', 'query-monitor-extend' ) );
-								echo '</th>';
+								if ( is_string( $value ) ) {
 
-								echo '<th scope="col" class="qm-ltr">';
-									echo __( 'Path', 'query-monitor-extend' );
-								echo '</th>';
+									# Remove ABSPATH and add back to support paths without ABSPATH.
+									$possible_path = str_replace( ABSPATH, '', $value );
+									$possible_path = ABSPATH . $possible_path;
 
+									if ( file_exists( $possible_path ) )
+										$value = QM_Output_Html::output_filename( $value, $possible_path );
+									else
+										$value = esc_html( $value );
+
+									echo '<td>' . $value . '</td>';
+
+								} else {
+
+									echo '<td class="qm-has-inner qm-ltr">';
+										self::output_inner( $value );
+									echo '</td>';
+
+								}
 							echo '</tr>';
-						echo '</thead>';
+						}
 
-						echo '<tbody>';
+					echo '</tbody>';
+					echo '<tfoot>';
 
-							foreach ( $data->paths as $var => $value ) {
-								echo '<tr>';
-									echo '<td class="qm-ltr"><code style="user-select: all;">' . esc_html( $var ) . '</code></td>';
+					echo '</tfoot>';
+				echo '</table>';
 
-									if ( is_string( $value ) ) {
+			} else {
 
-										# Remove ABSPATH and add back to support paths without ABSPATH.
-										$possible_path = str_replace( ABSPATH, '', $value );
-										$possible_path = ABSPATH . $possible_path;
+				echo '<div class="qm-none">';
+				echo '<p>' . esc_html__( 'None', 'query-monitor' ) . '</p>';
+				echo '</div>';
 
-										if ( file_exists( $possible_path ) )
-											$value = QM_Output_Html::output_filename( $value, $possible_path );
-										else
-											$value = esc_html( $value );
+			}
 
-										echo '<td>' . $value . '</td>';
+		echo '</div>';
 
-									} else {
+		$this->current_id = 'qm-paths';
+		$this->current_name = 'Paths';
 
-										echo '<td class="qm-has-inner qm-ltr">';
-											self::output_inner( $value );
-										echo '</td>';
+		$this->output_concerns();
+	}
 
-									}
-								echo '</tr>';
-							}
+	public function panel_menu( array $menu ) {
 
-						echo '</tbody>';
-						echo '<tfoot>';
+		$menu['qm-paths'] = $this->menu( array(
+			'title' => esc_html__( 'Paths', 'query-monitor-extend' ),
+			'id'    => 'query-monitor-extend-paths',
+		) );
 
-						echo '</tfoot>';
-					echo '</table>';
-
-				} else {
-
-					echo '<div class="qm-none">';
-					echo '<p>' . esc_html__( 'None', 'query-monitor' ) . '</p>';
-					echo '</div>';
-
-				}
-
-			echo '</div>';
-
-			$this->current_id = 'qm-paths';
-			$this->current_name = 'Paths';
-
-			$this->output_concerns();
-		}
-
-		public function panel_menu( array $menu ) {
-
-			$menu['qm-paths'] = $this->menu( array(
-				'title' => esc_html__( 'Paths', 'query-monitor-extend' ),
-				'id'    => 'query-monitor-extend-paths',
-			) );
-
-			return $menu;
-
-		}
+		return $menu;
 
 	}
 
-	add_filter( 'qm/outputter/html', static function ( array $output ) : array {
-		if ( $collector = QM_Collectors::get( 'paths' ) )
-			$output['paths'] = new QMX_Output_Html_Paths( $collector );
+}
 
-		return $output;
-	}, 70 );
+add_filter( 'qm/outputter/html', static function ( array $output ) : array {
+	if ( $collector = QM_Collectors::get( 'paths' ) )
+		$output['paths'] = new QMX_Output_Html_Paths( $collector );
 
-}, 9 );
+	return $output;
+}, 70 );
