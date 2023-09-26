@@ -1,0 +1,75 @@
+name: PHPCS
+run-name: Run PHPCS on `${{ github.head_ref }}`
+
+on:
+  push:
+    branches:
+      - master
+    paths:
+      - acf/*.php
+      - constants/*.php
+      - files/*.php
+      - heartbeat/*.php
+      - image-sizes/*.php
+      - paths/*.php
+      - time/*.php
+      - qmx-conditionals.php
+      - query-monitor-extend.php
+      - phpcs.xml
+      - .github/workflows/phpcs.yml
+  pull_request:
+    paths:
+      - class-repository.php
+      - class-wpcli.php
+      - what-git-branch.php
+      - .github/workflows/phpcs.yml
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  phpcs:
+    runs-on: ubuntu-latest
+    steps:
+
+      - uses: actions/checkout@v3
+
+      - name: Detect File Changes
+        uses: dorny/paths-filter@v2
+        id: filter
+        with:
+          list-files: shell
+          filters: |
+            wpcontent:
+              - added|modified: 'acf/*.php'
+              - added|modified: 'constants/*.php'
+              - added|modified: 'files/*.php'
+              - added|modified: 'heartbeat/*.php'
+              - added|modified: 'image-sizes/*.php'
+              - added|modified: 'paths/*.php'
+              - added|modified: 'time/*.php'
+              - added|modified: 'qmx-conditionals.php'
+              - added|modified: 'query-monitor-extend.php'
+
+      - name: Setup PHP
+        if: ${{ steps.filter.outputs.wpcontent == 'true' }}
+        uses: "shivammathur/setup-php@v2"
+        with:
+          php-version: "8.1"
+          ini-values: "memory_limit=1G"
+          coverage: none
+
+      - name: Validate composer.json and composer.lock
+        if: ${{ steps.filter.outputs.wpcontent == 'true' }}
+        run: composer validate --no-check-publish
+
+      - name: Install Composer dependencies
+        if: ${{ steps.filter.outputs.wpcontent == 'true' }}
+        run: |
+          composer install --prefer-dist --no-progress --no-suggest --optimize-autoloader
+
+      - name: Run PHPCS checks
+        if: ${{ steps.filter.outputs.wpcontent == 'true' }}
+        run: ./vendor/bin/phpcs ${{ steps.filter.outputs.wpcontent_files }}

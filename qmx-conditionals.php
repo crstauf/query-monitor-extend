@@ -2,7 +2,7 @@
 
 defined( 'WPINC' ) || die();
 
-add_filter( 'qm/collect/conditionals', static function( array $conditionals ) : array {
+add_filter( 'qm/collect/conditionals', static function ( array $conditionals ) : array {
 	$conditionals = array_merge( $conditionals, array(
 		'has_post_thumbnail',
 	) );
@@ -12,7 +12,7 @@ add_filter( 'qm/collect/conditionals', static function( array $conditionals ) : 
 	 *
 	 * @link https://woocommerce.github.io/code-reference/files/woocommerce-includes-wc-conditional-functions.html
 	 */
-	if ( class_exists( 'WooCommerce' ) )
+	if ( class_exists( 'WooCommerce' ) ) {
 		$conditionals = array_merge( $conditionals, array(
 			'is_account_page',
 			'is_add_payment_method_page',
@@ -32,6 +32,7 @@ add_filter( 'qm/collect/conditionals', static function( array $conditionals ) : 
 			'is_wc_endpoint_url',
 			'is_woocommerce',
 		) );
+	}
 
 	sort( $conditionals );
 

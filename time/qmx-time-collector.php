@@ -6,18 +6,19 @@ class QMX_Collector_Time extends QM_DataCollector {
 
 	public $id = 'time';
 
-	public function name() {
+	public function name() : string {
 		return __( 'Time', 'query-monitor-extend' );
 	}
 
-	public function get_storage(): QM_Data {
+	public function get_storage() : QM_Data {
 		require_once 'qmx-time-data.php';
 		return new QMX_Data_Time();
 	}
 
-	function process() {
-		if ( did_action( 'qm/cease' ) )
+	public function process() : void {
+		if ( did_action( 'qm/cease' ) ) {
 			return;
+		}
 
 		$this->data['functions'] = array(
 			'UTC'       => 'get_utc',
@@ -25,55 +26,58 @@ class QMX_Collector_Time extends QM_DataCollector {
 			'WordPress' => 'get_wp',
 			'Browser'   => 'get_browser',
 		);
-
 	}
 
-	function get_utc() {
-		$datetime = date_create( "now", new DateTimeZone( 'UTC' ) );
+	public function get_utc() : string {
+		$datetime = date_create( 'now', new DateTimeZone( 'UTC' ) );
 		$datetime->setTimezone( new DateTimeZone( 'UTC' ) );
+
 		return $datetime->format( 'D, M j, Y H:i:s' );
 	}
 
-	function get_server() {
-		$datetime = date_create( "now", new DateTimeZone( 'UTC' ) );
+	public function get_server() : string {
+		$datetime = date_create( 'now', new DateTimeZone( 'UTC' ) );
 
-		if ( !empty( ini_get( 'date.timezone' ) ) )
+		if ( ! empty( ini_get( 'date.timezone' ) ) ) {
 			$datetime->setTimezone( new DateTimeZone( ini_get( 'date.timezone' ) ) );
+		}
 
 		return $datetime->format( 'D, M j, Y H:i:s T' );
 	}
 
-	function get_server_offset() {
+	public function get_server_offset() : string {
 		$datetime = date_create( "now", new DateTimeZone( 'UTC' ) );
 
-		if ( !empty( ini_get( 'date.timezone' ) ) )
+		if ( ! empty( ini_get( 'date.timezone' ) ) ) {
 			$datetime->setTimezone( new DateTimeZone( ini_get( 'date.timezone' ) ) );
+		}
 
 		return $datetime->format( 'Z' );
 	}
 
-	function get_server_timezone() {
+	public function get_server_timezone() : string {
 		$datetime = date_create( "now", new DateTimeZone( 'UTC' ) );
 
-		if ( !empty( ini_get( 'date.timezone' ) ) )
+		if ( ! empty( ini_get( 'date.timezone' ) ) ) {
 			$datetime->setTimezone( new DateTimeZone( ini_get( 'date.timezone' ) ) );
+		}
 
 		return $datetime->format( 'T' );
 	}
 
-	function get_wp() {
+	public function get_wp() : string {
 		return current_time( 'D, M j, Y H:i:s T' );
 	}
 
-	function get_wp_offset() {
+	public function get_wp_offset() : string {
 		return get_option( 'gmt_offset' );
 	}
 
-	function get_wp_timezone() {
+	public function get_wp_timezone() : string {
 		return current_time( 'T' );
 	}
 
-	function get_browser() {
+	public function get_browser() : string {
 		return '-';
 	}
 

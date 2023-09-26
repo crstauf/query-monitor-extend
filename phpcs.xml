@@ -60,6 +60,7 @@
         <exclude name="PSR2.ControlStructures.ElseIfDeclaration.NotAllowed"/>
         <exclude name="PSR12.Files.DeclareStatement.SpaceFoundBeforeDirective"/>
         <exclude name="PSR12.Files.DeclareStatement.SpaceFoundAfterDirectiveValue"/>
+        <exclude name="PSR1.Classes.ClassDeclaration.MissingNamespace"/>
     </rule>
 
     <!-- PSR12 -->

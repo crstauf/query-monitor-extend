@@ -43,8 +43,9 @@ define( 'QMX_LOADED', __FILE__ );
  * @return string[]
  */
 add_filter( 'plugin_row_meta', static function ( array $meta, string $file ) : array {
-	if ( 'query-monitor-extend/query-monitor-extend.php' !== $file )
+	if ( 'query-monitor-extend/query-monitor-extend.php' !== $file ) {
 		return $meta;
+	}
 
 	$first = array_shift( $meta );
 
@@ -59,8 +60,9 @@ add_filter( 'plugin_row_meta', static function ( array $meta, string $file ) : a
 		)
 	);
 
-	if ( class_exists( 'QueryMonitor' ) )
+	if ( class_exists( 'QueryMonitor' ) ) {
 		return $meta;
+	}
 
 	$first = array_shift( $meta );
 
@@ -76,8 +78,9 @@ add_filter( 'plugin_row_meta', static function ( array $meta, string $file ) : a
 	return $meta;
 }, 10, 2 );
 
-if ( !class_exists( 'QueryMonitor' ) || did_action( 'qm/cease' ) )
+if ( ! class_exists( 'QueryMonitor' ) || did_action( 'qm/cease' ) ) {
 	return;
+}
 
 $collector_names = array(
 	'acf',
@@ -102,7 +105,7 @@ if ( trailingslashit( constant( 'WPMU_PLUGIN_DIR' ) ) === $dir ) {
 # Include all collector and outputters.
 foreach ( $collector_names as $collector_name ) {
 	include_once sprintf( '%1$s%2$s/qmx-%2$s-collector.php', $dir, $collector_name );
-	include_once sprintf( '%1$s%2$s/qmx-%2$s-output.php',    $dir, $collector_name );
+	include_once sprintf( '%1$s%2$s/qmx-%2$s-output.php', $dir, $collector_name );
 }
 
 # Include additional conditionals.
