@@ -9,13 +9,13 @@ class QMX_Collector_ACF extends QM_DataCollector {
 
 	public $id = 'acf';
 
-	function __construct() {
+	public function __construct() {
 		parent::__construct();
 
 		add_action( 'acf/init', array( $this, 'action__acf_init' ) );
 
 		add_filter( 'acf/settings/load_json', array( $this, 'filter__acf_settings_load_json' ), 99999 );
-		add_filter( 'acf/pre_load_value', array( $this, 'filter__acf_pre_load_value' ), 10, 3);
+		add_filter( 'acf/pre_load_value', array( $this, 'filter__acf_pre_load_value' ), 10, 3 );
 		add_filter( 'acf/load_field_groups', array( $this, 'filter__acf_load_field_groups' ) );
 
 		// Set default value. Filter applied in output.
@@ -27,7 +27,8 @@ class QMX_Collector_ACF extends QM_DataCollector {
 		return new QMX_Data_ACF();
 	}
 
-	public function process() {}
+	public function process() {
+	}
 
 	/**
 	 * @param mixed $parent
@@ -54,7 +55,7 @@ class QMX_Collector_ACF extends QM_DataCollector {
 	}
 
 	public function action__acf_init() : void {
-		$files = acf_get_local_json_files();
+		$files  = acf_get_local_json_files();
 		$groups = array();
 
 		foreach ( $files as $group_key => $filepath ) {
@@ -151,7 +152,7 @@ class QMX_Collector_ACF extends QM_DataCollector {
 			$row['group'] = static::get_fields_group( $field['parent'] );
 		}
 
-		$hash = md5( (string) json_encode( $row ) );
+		$hash        = md5( (string) json_encode( $row ) );
 		$row['hash'] = $hash;
 
 		if ( array_key_exists( $hash, $this->data->counts ) ) {
@@ -174,11 +175,10 @@ class QMX_Collector_ACF extends QM_DataCollector {
 			$this->data->field_groups[ $row['group']['key'] ] = $row['group']['title'];
 		}
 
-		$this->data->post_ids[ ( string ) $post_id ] = $post_id;
+		$this->data->post_ids[ ( string ) $post_id ]              = $post_id;
 		$this->data->callers[ $row['caller']['function'] . '()' ] = 1;
-		$this->data->counts[ $hash ] = 1;
-
-		$this->data->fields[] = $row;
+		$this->data->counts[ $hash ]                              = 1;
+		$this->data->fields[]                                     = $row;
 
 		return $short_circuit;
 	}

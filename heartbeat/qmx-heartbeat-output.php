@@ -63,7 +63,7 @@ class QMX_Output_Html_Heartbeat extends QM_Output_Html {
 
 		echo '</div>';
 
-		$this->current_id = 'qm-heartbeat';
+		$this->current_id   = 'qm-heartbeat';
 		$this->current_name = 'Heartbeat';
 
 		$this->output_concerns();

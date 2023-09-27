@@ -32,7 +32,7 @@ class QMX_Collector_Files extends QM_DataCollector {
 			if ( ! empty( $php_errors['errors'] ) ) {
 				foreach ( $php_errors['errors'] as $type => $errors ) {
 					foreach ( $errors as $error ) {
-						$files_with_errors[$error['file']] = 1;
+						$files_with_errors[ $error['file'] ] = 1;
 					}
 				}
 			}
@@ -45,7 +45,6 @@ class QMX_Collector_Files extends QM_DataCollector {
 				'has_error' => array_key_exists( $filepath, $files_with_errors ),
 			);
 		}
-
 	}
 
 }

@@ -21,6 +21,7 @@ class QMX_Collector_Constants extends QM_DataCollector {
 		}
 
 		$constants = get_defined_constants( true );
+
 		$this->data['constants'] = $constants['user'];
 	}
 

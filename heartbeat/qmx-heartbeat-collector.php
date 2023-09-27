@@ -9,8 +9,9 @@ class QMX_Collector_Heartbeat extends QM_Collector {
 	public function __construct() {
 		parent::__construct();
 
-		if ( $this->qm_no_jquery() )
+		if ( $this->qm_no_jquery() ) {
 			return;
+		}
 
 		add_action( 'wp_enqueue_scripts', array( &$this, 'add_inline_script' ) );
 		add_action( 'admin_enqueue_scripts', array( &$this, 'add_inline_script' ) );
@@ -21,10 +22,10 @@ class QMX_Collector_Heartbeat extends QM_Collector {
 			return;
 		}
 
-		wp_add_inline_script( 'heartbeat', $this->_inlineScript_heartbeat() );
+		wp_add_inline_script( 'heartbeat', $this->inlineScript_heartbeat() );
 	}
 
-	public function _inlineScript_heartbeat() : string {
+	public function inlineScript_heartbeat() : string {
 		ob_start();
 		?>
 

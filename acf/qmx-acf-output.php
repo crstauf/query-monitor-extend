@@ -20,7 +20,7 @@ class QMX_Output_Html_ACF extends QM_Output_Html {
 	protected static function identify_duplicates() : bool {
 		$bool = null;
 
-		if ( ! is_null( $bool) ) {
+		if ( ! is_null( $bool ) ) {
 			return $bool;
 		}
 
@@ -110,10 +110,10 @@ class QMX_Output_Html_ACF extends QM_Output_Html {
 				$row_attr['class'] .= ' qm-warn';
 			}
 
-			$row_attr['data-qm-acf-field'] = $row['field']['name'] . ' ' . $row['field']['key'];
-			$row_attr['data-qm-acf-post'] = $row['post_id'];
+			$row_attr['data-qm-acf-field']  = $row['field']['name'] . ' ' . $row['field']['key'];
+			$row_attr['data-qm-acf-post']   = $row['post_id'];
 			$row_attr['data-qm-acf-caller'] = $row['caller']['function'] . '()';
-			$row_attr['data-qm-acf-group'] = 'qmx-acf-no-group';
+			$row_attr['data-qm-acf-group']  = 'qmx-acf-no-group';
 
 			if ( empty( $row['field']['key'] ) ) {
 				$row_attr['data-qm-acf-field'] .= ' qmx-acf-no-field';
@@ -175,10 +175,10 @@ class QMX_Output_Html_ACF extends QM_Output_Html {
 	}
 
 	protected function output_field_groups_table() : void {
-		$id = 'qm-acf-loaded_field_groups';
-		$name = 'Advanced Custom Fields: Loaded Field Groups';
 		/** @var QMX_Data_ACF */
 		$data = $this->collector->get_data();
+		$id   = 'qm-acf-loaded_field_groups';
+		$name = 'Advanced Custom Fields: Loaded Field Groups';
 
 		printf(
 			'<div class="qm qm-concerns" id="%1$s" role="tabpanel" aria-labelledby="%1$s-caption" tabindex="-1">',
@@ -321,7 +321,7 @@ class QMX_Output_Html_ACF extends QM_Output_Html {
 	 */
 	protected function output_column_field_group_key( array $row ) : void {
 		/** @var QMX_Data_ACF */
-		$data = $this->collector->get_data();
+		$data  = $this->collector->get_data();
 		$group = $row['group'];
 
 		if ( empty( $group ) ) {
@@ -394,10 +394,11 @@ class QMX_Output_Html_ACF extends QM_Output_Html {
 	 * @param array<string, mixed> $row
 	 */
 	protected function output_column_caller( array $row ) : void {
-		$trace = $row['trace'];
+		$trace          = $row['trace'];
 		$filtered_trace = $trace->get_display_trace();
-		$caller_name = self::output_filename( $row['caller']['function'] . '()', $row['caller']['file'], $row['caller']['line'] );
-		$stack = array();
+		$caller_name    = self::output_filename( $row['caller']['function'] . '()', $row['caller']['file'], $row['caller']['line'] );
+		$stack          = array();
+
 		array_shift( $filtered_trace );
 
 		foreach ( $filtered_trace as $item ) {
@@ -415,7 +416,7 @@ class QMX_Output_Html_ACF extends QM_Output_Html {
 
 		if ( 1 < count( $stack ) ) {
 			echo self::build_toggler();
-			}
+		}
 
 		echo '<ol>';
 		printf( '<li>%s</li>', $caller_name );
@@ -428,7 +429,7 @@ class QMX_Output_Html_ACF extends QM_Output_Html {
 	}
 
 	protected function output_local_json() : void {
-		$id = 'qm-acf-local_json';
+		$id   = 'qm-acf-local_json';
 		$name = 'Advanced Custom Fields: Local JSON';
 		$data = $this->collector->get_data();
 
@@ -564,18 +565,16 @@ class QMX_Output_Html_ACF extends QM_Output_Html {
 		}
 
 		$menu['qm-acf']['children']['local_json'] = array(
-			'title' => esc_html__('Local JSON', 'query-monitor-extend') . sprintf( ' (%d)', count( $data->local_json['groups'] ) ),
+			'title' => esc_html__( 'Local JSON', 'query-monitor-extend' ) . sprintf( ' (%d)', count( $data->local_json['groups'] ) ),
 			'href'  => '#qm-acf-local_json',
 			'id'    => 'query-monitor-extend-acf-local_json',
 		);
 
 		return $menu;
-
 	}
-
 }
 
-add_filter( 'qm/outputter/html', static function( array $output ) : array {
+add_filter( 'qm/outputter/html', static function ( array $output ) : array {
 	if ( $collector = QM_Collectors::get( 'acf' ) ) {
 		$output['acf'] = new QMX_Output_Html_ACF( $collector );
 	}
