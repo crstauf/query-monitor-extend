@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 defined( 'WPINC' ) || die();
 
@@ -10,7 +10,7 @@ class QMX_Collector_Image_Sizes extends QM_DataCollector {
 		parent::__construct();
 
 		$this->data->sizes = array(
-			'thumbnail' => array(
+			'thumbnail'    => array(
 				'width'  => intval( get_option( 'thumbnail_size_w' ) ),
 				'height' => intval( get_option( 'thumbnail_size_h' ) ),
 				  'used' => 0,
@@ -18,7 +18,7 @@ class QMX_Collector_Image_Sizes extends QM_DataCollector {
 				  'crop' => true,
 				   'num' => 1,
 			),
-			'medium' => array(
+			'medium'       => array(
 				 'width' => intval( get_option( 'medium_size_w' ) ),
 				'height' => intval( get_option( 'medium_size_h' ) ),
 				  'used' => 0,
@@ -34,7 +34,7 @@ class QMX_Collector_Image_Sizes extends QM_DataCollector {
 				  'crop' => false,
 				   'num' => 3,
 			),
-			'large' => array(
+			'large'        => array(
 				 'width' => intval( get_option( 'large_size_w' ) ),
 				'height' => intval( get_option( 'large_size_h' ) ),
 				  'used' => 0,
@@ -47,7 +47,7 @@ class QMX_Collector_Image_Sizes extends QM_DataCollector {
 			 * @see _wp_add_additional_image_sizes()
 			 * @since WP 5.3.0
 			 */
-			'1536x1536' => array(
+			'1536x1536'    => array(
 				 'width' => 1536,
 				'height' => 1536,
 				  'used' => 0,
@@ -55,7 +55,7 @@ class QMX_Collector_Image_Sizes extends QM_DataCollector {
 				  'crop' => false,
 				   'num' => 5,
 			),
-			'2048x2048' => array(
+			'2048x2048'    => array(
 				 'width' => 2048,
 				'height' => 2048,
 				  'used' => 0,
@@ -65,16 +65,15 @@ class QMX_Collector_Image_Sizes extends QM_DataCollector {
 			),
 		);
 
-		add_action( 'plugins_loaded',        array( &$this, 'action__plugins_loaded'    ) );
-		add_action( 'after_setup_theme',     array( &$this, 'action__after_setup_theme' ) );
-		add_action( 'wp_enqueue_scripts',    array( &$this, 'add_inline_script' ), -998 );
+		add_action( 'plugins_loaded', array( &$this, 'action__plugins_loaded'    ) );
+		add_action( 'after_setup_theme', array( &$this, 'action__after_setup_theme' ) );
+		add_action( 'wp_enqueue_scripts', array( &$this, 'add_inline_script' ), -998 );
 		add_action( 'admin_enqueue_scripts', array( &$this, 'add_inline_script' ), -998 );
 		add_action( 'login_enqueue_scripts', array( &$this, 'add_inline_script' ), -998 );
 		add_action( 'enqueue_embed_scripts', array( &$this, 'add_inline_script' ), -998 );
 
 		add_action( 'wp', array( $this, 'action__wp' ) );
 		add_filter( 'wp_get_attachment_image_src', array( $this, 'filter__wp_get_attachment_image_src' ), 10, 3 );
-
 	}
 
 	public function get_storage(): QM_Data {
@@ -88,90 +87,104 @@ class QMX_Collector_Image_Sizes extends QM_DataCollector {
 		);
 	}
 
-	function action__plugins_loaded() {
-		if ( 'plugins_loaded' !== current_action() || did_action( 'qm/cease' ) )
+	public function action__plugins_loaded() {
+		if ( 'plugins_loaded' !== current_action() || did_action( 'qm/cease' ) ) {
 			return;
+		}
 
-		$this->_process_added_image_sizes( 'plugin' );
+		$this->process_added_image_sizes( 'plugin' );
 	}
 
-	function action__after_setup_theme() {
-		if ( 'after_setup_theme' !== current_action() || did_action( 'qm/cease' ) )
+	public function action__after_setup_theme() {
+		if ( 'after_setup_theme' !== current_action() || did_action( 'qm/cease' ) ) {
 			return;
+		}
 
-		$this->_process_added_image_sizes( 'theme' );
+		$this->process_added_image_sizes( 'theme' );
 	}
 
-	function action__wp() : void {
-		if ( did_action( 'qm/cease' ) )
+	public function action__wp() : void {
+		if ( did_action( 'qm/cease' ) ) {
 			return;
+		}
 
 		$post = get_queried_object();
 
-		if ( empty( $post ) )
+		if ( empty( $post ) ) {
 			return;
+		}
 
 		$blocks = parse_blocks( $post->post_content );
 
-		if ( empty( $blocks ) )
+		if ( empty( $blocks ) ) {
 			return;
+		}
 
 		foreach ( $blocks as $block ) {
-			if ( 'core/image' !== $block['blockName'] )
+			if ( 'core/image' !== $block['blockName'] ) {
 				continue;
+			}
 
 			$size = $block['attrs']['sizeSlug'];
 
-			if ( !array_key_exists( $size, $this->data->sizes ) )
+			if ( ! array_key_exists( $size, $this->data->sizes ) ) {
 				continue;
+			}
 
 			$this->data->sizes[ $size ]['used']++;
 		}
 	}
 
-	function filter__wp_get_attachment_image_src( $image, $attachment_id, $size ) {
-		if ( did_action( 'qm/cease' ) )
+	public function filter__wp_get_attachment_image_src( $image, $attachment_id, $size ) {
+		if ( did_action( 'qm/cease' ) ) {
 			return $image;
+		}
 
 		# If specifying custom dimensions, bail.
-		if ( is_array( $size ) )
+		if ( is_array( $size ) ) {
 			return $image;
+		}
 
 		# If size is not registered, bail.
-		if ( !array_key_exists( $size, $this->data->sizes ) )
+		if ( ! array_key_exists( $size, $this->data->sizes ) ) {
 			return $image;
+		}
 
 		$this->data->sizes[ $size ]['used']++;
 
 		return $image;
 	}
 
-	protected function _process_added_image_sizes( $source = 'unknown' ) {
+	protected function process_added_image_sizes( $source = 'unknown' ) {
 		global $_wp_additional_image_sizes;
 
 		$num = count( $this->data->sizes );
 
 		if (
 			 is_array( $_wp_additional_image_sizes )
-			&& !empty( $_wp_additional_image_sizes )
-		)
-			foreach ( $_wp_additional_image_sizes as $id => $size )
-				if ( !array_key_exists( $id, $this->data->sizes ) )
-					$this->data->sizes[$id] = array_merge(
+			&& ! empty( $_wp_additional_image_sizes )
+		) {
+			foreach ( $_wp_additional_image_sizes as $id => $size ) {
+				if ( ! array_key_exists( $id, $this->data->sizes ) ) {
+					$this->data->sizes[ $id ] = array_merge(
 						array(
-							'num' => ++$num,
+							'num'    => ++$num,
 							'source' => apply_filters( 'qmx/image-size/source', $source, $id, $size ),
-							'used' => 0,
+							'used'   => 0,
 						),
 						$size
 					);
+				}
+			}
+		}
 	}
 
 	public function process() {
-		if ( did_action( 'qm/cease' ) )
+		if ( did_action( 'qm/cease' ) ) {
 			return;
+		}
 
-		$this->_process_added_image_sizes();
+		$this->process_added_image_sizes();
 
 		$this->data->sizes = array_map( array( &$this, 'add_ratio' ), $this->data->sizes );
 
@@ -179,36 +192,45 @@ class QMX_Collector_Image_Sizes extends QM_DataCollector {
 
 		foreach ( $this->data->sizes as $size ) {
 			$key = $size['width'] . ':' . $size['height'] . ' - ' . ( bool ) $size['crop'];
-			array_key_exists( $key, $counts['dimensions'] )
-				? $counts['dimensions'][$key]++
-				: $counts['dimensions'][$key] = 1;
+
+			if ( ! array_key_exists( $key, $counts['dimensions'] ) ) {
+				$counts['dimensions'][ $key ] = 0;
+			}
+
+			$counts['dimensions'][ $key ]++
 
 			$key = $size['ratio'] . ' - ' . ( bool ) $size['crop'];
-			if ( 0 !== $size['ratio'] )
-				array_key_exists( $key, $counts['ratios'] )
-					? $counts['ratios'][$key]++
-					: $counts['ratios'][$key] = 1;
+			if ( 0 !== $size['ratio'] ) {
+				if ( ! array_key_exists( $key, $counts['ratios'] ) ) {
+					$counts['rations'][ $key ] = 0;
+				}
+
+				$counts['ratios'][ $key ]++;
+			}
 		}
 
-		foreach ( array( 'dimensions', 'ratios' ) as $type )
-			$counts[$type] = array_filter( $counts[$type], function( $v ) { return $v > 1; } );
+		foreach ( array( 'dimensions', 'ratios' ) as $type ) {
+			$counts[ $type ] = array_filter( $counts[ $type ], function ( $v ) {
+				return $v > 1;
+			} );
+		}
 
 		$this->data->duplicates = $counts;
-
 	}
 
 	private function add_ratio( array $size ) {
 		if (
-			   !array_key_exists( 'width',  $size )
-			|| !array_key_exists( 'height', $size )
-		)
+			   ! array_key_exists( 'width', $size )
+			|| ! array_key_exists( 'height', $size )
+		) {
 			return $size;
+		}
 
 		$num1 = $size['width'];
 		$num2 = $size['height'];
 
 		while ( 0 !== $num2 ) {
-			$t = $num1 % $num2;
+			$t    = $num1 % $num2;
 			$num1 = $num2;
 			$num2 = $t;
 		}
@@ -226,13 +248,14 @@ class QMX_Collector_Image_Sizes extends QM_DataCollector {
 	}
 
 	public function add_inline_script() {
-		if ( did_action( 'qm/cease' ) )
+		if ( did_action( 'qm/cease' ) ) {
 			return;
+		}
 
-		wp_add_inline_script( 'query-monitor', $this->_inlineScript_queryMonitor() );
+		wp_add_inline_script( 'query-monitor', $this->inlineScript_queryMonitor() );
 	}
 
-	protected function _inlineScript_queryMonitor() {
+	protected function inlineScript_queryMonitor() {
 		ob_start();
 		?>
 

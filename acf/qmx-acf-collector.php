@@ -1,7 +1,10 @@
-<?php
+<?php declare(strict_types=1);
 
 defined( 'WPINC' ) || die();
 
+/**
+ * @property-read QMX_Data_ACF $data
+ */
 class QMX_Collector_ACF extends QM_DataCollector {
 
 	public $id = 'acf';
@@ -26,6 +29,10 @@ class QMX_Collector_ACF extends QM_DataCollector {
 
 	public function process() {}
 
+	/**
+	 * @param mixed $parent
+	 * @return mixed
+	 */
 	public static function get_fields_group( $parent ) {
 		if ( is_null( $parent ) ) {
 			return null;
@@ -35,6 +42,11 @@ class QMX_Collector_ACF extends QM_DataCollector {
 
 		if ( false === $group ) {
 			$field = acf_get_field( $parent );
+
+			if ( false === $field ) {
+				return $parent;
+			}
+
 			return static::get_fields_group( $field['parent'] );
 		}
 
@@ -52,7 +64,11 @@ class QMX_Collector_ACF extends QM_DataCollector {
 		$this->data->local_json['groups'] = $groups;
 	}
 
-	public function filter__acf_settings_load_json( $paths ) {
+	/**
+	 * @param string[] $paths
+	 * @return string[]
+	 */
+	public function filter__acf_settings_load_json( array $paths ) : array {
 		if ( did_action( 'qm/cease' ) ) {
 			return $paths;
 		}
@@ -62,6 +78,9 @@ class QMX_Collector_ACF extends QM_DataCollector {
 		return $paths;
 	}
 
+	/**
+	 * @return string[]
+	 */
 	protected static function get_start_trace_functions() {
 		$functions = null;
 
@@ -69,28 +88,44 @@ class QMX_Collector_ACF extends QM_DataCollector {
 			return $functions;
 		}
 
-		$functions = apply_filters( 'qmx/collector/acf/start_trace_functions', array(
+		$functions = (array) apply_filters( 'qmx/collector/acf/start_trace_functions', array(
 			'get_field',
 			'get_field_object',
 			'have_rows',
 		) );
 
+		$functions = array_filter( $functions, static function ( $item ) {
+			return is_string( $item );
+		} );
+
 		return $functions;
 	}
 
+	/**
+	 * @param mixed $short_circuit
+	 * @param int|string $post_id
+	 * @param array<mixed> $field
+	 * @return mixed
+	 */
 	public function filter__acf_pre_load_value( $short_circuit, $post_id, $field ) {
-		if ( did_action( 'qm/cease' ) ) {
+		if ( did_action( 'qm/cease' ) || ! function_exists( 'acf_get_valid_post_id' ) ) {
 			return $short_circuit;
 		}
 
+		$args             = array();
 		$full_stack_trace = apply_filters( 'qmx/collector/acf/full_stack_trace', is_admin(), $post_id, $field );
-		$trace = new QM_Backtrace( array( 'ignore_current_filter' => ! $full_stack_trace ) );
+
+		if ( ! $full_stack_trace ) {
+			$args['ignore_hook'] = array( current_filter() );
+		};
+
+		$trace = new QM_Backtrace( $args );
 
 		if ( false === $full_stack_trace ) {
-			foreach ($trace->get_trace() as $frame) {
+			foreach ( $trace->get_trace() as $frame ) {
 				if (
 					in_array( $frame['function'], static::get_start_trace_functions() )
-					&& false === stripos( $frame['file'], ACF_PATH )
+					&& false === stripos( $frame['file'], constant( 'ACF_PATH' ) )
 				) {
 					break;
 				}
@@ -116,7 +151,7 @@ class QMX_Collector_ACF extends QM_DataCollector {
 			$row['group'] = static::get_fields_group( $field['parent'] );
 		}
 
-		$hash = md5( json_encode( $row ) );
+		$hash = md5( (string) json_encode( $row ) );
 		$row['hash'] = $hash;
 
 		if ( array_key_exists( $hash, $this->data->counts ) ) {
@@ -148,23 +183,27 @@ class QMX_Collector_ACF extends QM_DataCollector {
 		return $short_circuit;
 	}
 
-	public function filter__acf_load_field_groups( $field_groups ) {
+	/**
+	 * @param array<mixed> $field_groups
+	 * @return array<mixed>
+	 */
+	public function filter__acf_load_field_groups( array $field_groups ) : array {
 		static $processed = array();
 
 		if ( empty( $field_groups ) ) {
 			return $field_groups;
 		}
 
-		$hash = wp_hash( json_encode( $field_groups ) );
+		$hash = wp_hash( (string) json_encode( $field_groups ) );
 
 		if ( in_array( $hash, $processed ) ) {
-			return;
+			return $field_groups;
 		}
 
 		$processed[] = $hash;
 
 		foreach ( $field_groups as $field_group ) {
-			$key = wp_hash( json_encode( $field_group ) );
+			$key = wp_hash( (string) json_encode( $field_group ) );
 
 			if ( array_key_exists( $key, $this->data->loaded_field_groups ) ) {
 				continue;

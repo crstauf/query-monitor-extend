@@ -17,6 +17,7 @@ parameters:
 	bootstrapFiles:
 		- dev/phpstan-bootstrap.php
 		- vendor/php-stubs/wordpress-stubs/wordpress-stubs.php
+		- vendor/php-stubs/acf-pro-stubs/acf-pro-stubs.php
 	stubFiles:
 		- dev/wordpress-overrides.stub
 	dynamicConstantNames:

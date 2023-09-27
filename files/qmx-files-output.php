@@ -1,7 +1,10 @@
-<?php
+<?php declare(strict_types=1);
 
 defined( 'WPINC' ) || die();
 
+/**
+ * @property-read QMX_Collector_Files $collector
+ */
 class QMX_Output_Html_Files extends QM_Output_Html {
 
 	public function __construct( QM_Collector $collector ) {
@@ -103,7 +106,7 @@ class QMX_Output_Html_Files extends QM_Output_Html {
 
 								echo '<td class="qm-num">' . ( $i + 1 ) . '</td>';
 								echo '<th scope="row">' . QM_Output_Html::output_filename( str_replace( ABSPATH, '', $file['path'] ), $file['path'] ) . '</th>';
-								echo '<td data-qm-sort-weight="' . esc_attr( $filesize ) . '">';
+								echo '<td data-qm-sort-weight="' . esc_attr( (string) $filesize ) . '">';
 									echo ! empty( $filesize ) ? $this->human_file_size( $filesize ) : '&mdash;';
 								echo '</td>';
 
@@ -152,12 +155,21 @@ class QMX_Output_Html_Files extends QM_Output_Html {
 		echo '</div>';
 	}
 
+	/**
+	 * @param string[] $title
+	 * @return string[]
+	 */
 	public function admin_title( array $title ) {
 		$data = $this->collector->get_data();
 
-		if ( !empty( $data->files ) ) {
+		if ( ! empty( $data->files ) ) {
 			$_title = sprintf( esc_html_x( '%s F', 'Files count', 'query-monitor-extend' ), number_format_i18n( count( $data->files ) ) );
 			$_title = preg_replace( '#\s?([^0-9,\.]+)#', '<small>$1</small>', $_title );
+
+			if ( is_null( $_title ) ) {
+				return $title;
+			}
+
 			$title[] = $_title;
 		}
 
@@ -165,20 +177,23 @@ class QMX_Output_Html_Files extends QM_Output_Html {
 
 	}
 
+	/**
+	 * @param array<string, array<string, mixed>> $menu
+	 * @return array<string, array<string, mixed>>
+	 */
 	public function panel_menu( array $menu ) {
-
 		$menu['files'] = $this->menu( array(
 			'title' => esc_html__( 'Files', 'query-monitor-extend' ),
 			'id'    => 'query-monitor-extend-files',
 		) );
 
 		return $menu;
-
 	}
 
-	private function human_file_size( $bytes ) {
+	private function human_file_size( int $bytes ) : string {
+		$places = (int) strlen( (string) $bytes );
 		$filesize_units = 'BKMGTP';
-		$factor = ( int ) floor( ( strlen( $bytes ) - 1 ) / 3 );
+		$factor = ( int ) floor( ( $places - 1 ) / 3 );
 		return sprintf( "%.2f", $bytes / pow( 1024, $factor ) ) . @$filesize_units[$factor];
 	}
 

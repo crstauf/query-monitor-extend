@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 defined( 'WPINC' ) || die();
 
@@ -6,7 +6,7 @@ class QMX_Collector_Constants extends QM_DataCollector {
 
 	public $id = 'constants';
 
-	public function name() {
+	public function name() : string {
 		return __( 'Constants', 'query-monitor-extend' );
 	}
 
@@ -15,13 +15,13 @@ class QMX_Collector_Constants extends QM_DataCollector {
 		return new QMX_Data_Constants();
 	}
 
-	public function process() {
-		if ( did_action( 'qm/cease' ) )
+	public function process() : void {
+		if ( did_action( 'qm/cease' ) ) {
 			return;
+		}
 
 		$constants = get_defined_constants( true );
 		$this->data['constants'] = $constants['user'];
-
 	}
 
 }
