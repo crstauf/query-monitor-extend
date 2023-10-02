@@ -97,7 +97,7 @@ class QMX_Output_Html_Image_Sizes extends QM_Output_Html {
 								echo '<td class="qm-ltr">' . esc_html( $row['source'] ) . '</td>';
 							echo '</tr>';
 
-							if ( ! array_key_exists( $row['source'], $sources ) {
+							if ( ! array_key_exists( $row['source'], $sources ) ) {
 								$sources[ $row['source'] ] = 0;
 							}
 

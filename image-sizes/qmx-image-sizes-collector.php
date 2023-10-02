@@ -197,12 +197,12 @@ class QMX_Collector_Image_Sizes extends QM_DataCollector {
 				$counts['dimensions'][ $key ] = 0;
 			}
 
-			$counts['dimensions'][ $key ]++
+			$counts['dimensions'][ $key ]++;
 
 			$key = $size['ratio'] . ' - ' . ( bool ) $size['crop'];
 			if ( 0 !== $size['ratio'] ) {
 				if ( ! array_key_exists( $key, $counts['ratios'] ) ) {
-					$counts['rations'][ $key ] = 0;
+					$counts['ratios'][ $key ] = 0;
 				}
 
 				$counts['ratios'][ $key ]++;

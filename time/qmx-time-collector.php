@@ -69,8 +69,8 @@ class QMX_Collector_Time extends QM_DataCollector {
 		return current_time( 'D, M j, Y H:i:s T' );
 	}
 
-	public function get_wp_offset() : string {
-		return get_option( 'gmt_offset' );
+	public function get_wp_offset() : float {
+		return ( float ) get_option( 'gmt_offset' );
 	}
 
 	public function get_wp_timezone() : string {

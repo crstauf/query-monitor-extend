@@ -133,7 +133,7 @@ class QMX_Output_Html_ACF extends QM_Output_Html {
 			$attr = '';
 
 			foreach ( $row_attr as $a => $v ) {
-				$attr .= ' ' . $a . '="' . esc_attr( trim( $v ) ) . '"';
+				$attr .= ' ' . $a . '="' . esc_attr( trim( ( string ) $v ) ) . '"';
 			}
 
 			echo '<tr' . $attr . '>';

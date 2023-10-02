@@ -60,7 +60,7 @@ class QMX_Output_Html_Time extends QM_Output_Html {
 								var UTC_string = d.toUTCString();
 								var utc_time = d.getTime() + ( d.getTimezoneOffset() * 60 * 1000 );
 								var server = new Date( utc_time + ( <?php echo esc_js( $this->collector->get_server_offset() ) ?> * 1000 ) );
-								var wp = new Date( utc_time + ( <?php echo esc_js( (string) ( (int) $this->collector->get_wp_offset() * HOUR_IN_SECONDS ) ); ?> * 1000 ) );
+								var wp = new Date( utc_time + ( <?php echo esc_js( (string) ( $this->collector->get_wp_offset() * HOUR_IN_SECONDS ) ); ?> * 1000 ) );
 
 								qmx_time_utc.innerHTML =
 									qmx_time_days[d.getUTCDay()] + ', '
