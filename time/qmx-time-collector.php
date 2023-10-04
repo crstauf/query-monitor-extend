@@ -2,6 +2,9 @@
 
 defined( 'WPINC' ) || die();
 
+/**
+ * @extends QM_DataCollector<QMX_Data_Time>
+ */
 class QMX_Collector_Time extends QM_DataCollector {
 
 	public $id = 'time';

@@ -3,6 +3,7 @@
 defined( 'WPINC' ) || die();
 
 /**
+ * @extends QM_DataCollector<QMX_Data_ACF>
  * @property-read QMX_Data_ACF $data
  */
 class QMX_Collector_ACF extends QM_DataCollector {

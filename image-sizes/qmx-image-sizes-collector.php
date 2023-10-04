@@ -2,6 +2,9 @@
 
 defined( 'WPINC' ) || die();
 
+/**
+ * @extends QM_DataCollector<QMX_Data_Image_Sizes>
+ */
 class QMX_Collector_Image_Sizes extends QM_DataCollector {
 
 	public $id = 'image_sizes';

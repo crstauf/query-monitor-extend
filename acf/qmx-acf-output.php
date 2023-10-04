@@ -242,6 +242,8 @@ class QMX_Output_Html_ACF extends QM_Output_Html {
 			echo '</td>';
 
 			echo '</tr>';
+
+			$row_num++;
 		}
 
 		echo '</tbody>';

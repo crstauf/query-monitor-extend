@@ -55,7 +55,7 @@ class QMX_Output_Html_Files extends QM_Output_Html {
 						);
 					}
 
-					$components[ $file['component']->name ] = 1;
+					$components[ ( string ) $file['component']->name ] = 1;
 				}
 
 				echo '<table class="qm-sortable">';

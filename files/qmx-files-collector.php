@@ -3,6 +3,7 @@
 defined( 'WPINC' ) || die();
 
 /**
+ * @extends QM_DataCollector<QMX_Data_Files>
  * @property-write QMX_Data_Files $data
  */
 class QMX_Collector_Files extends QM_DataCollector {

@@ -2,6 +2,9 @@
 
 defined( 'WPINC' ) || die();
 
+/**
+ * @extends QM_DataCollector<QMX_Data_Constants>
+ */
 class QMX_Collector_Constants extends QM_DataCollector {
 
 	public $id = 'constants';
