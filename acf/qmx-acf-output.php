@@ -1,7 +1,10 @@
-<?php
+<?php declare(strict_types=1);
 
 defined( 'WPINC' ) || die();
 
+/**
+ * @property-read QMX_Collector_ACF $collector
+ */
 class QMX_Output_Html_ACF extends QM_Output_Html {
 
 	public function __construct( QM_Collector $collector ) {
@@ -14,19 +17,20 @@ class QMX_Output_Html_ACF extends QM_Output_Html {
 		return __( 'Advanced Custom Fields', 'query-monitor-extend' );
 	}
 
-	protected static function identify_duplicates() {
+	protected static function identify_duplicates() : bool {
 		$bool = null;
 
-		if ( ! is_null( $bool) ) {
+		if ( ! is_null( $bool ) ) {
 			return $bool;
 		}
 
-		$bool = apply_filters( 'qmx/output/acf/identify_duplicates', false );
+		$bool = (bool) apply_filters( 'qmx/output/acf/identify_duplicates', false );
 
 		return $bool;
 	}
 
-	public function output() {
+	public function output() : void {
+		/** @var QMX_Data_ACF */
 		$data = $this->collector->get_data();
 
 		$this->output_fields_table();
@@ -38,7 +42,8 @@ class QMX_Output_Html_ACF extends QM_Output_Html {
 		}
 	}
 
-	protected function output_fields_table() {
+	protected function output_fields_table() : void {
+		/** @var QMX_Data_ACF */
 		$data = $this->collector->get_data();
 
 		if ( empty( $data->fields ) ) {
@@ -105,10 +110,10 @@ class QMX_Output_Html_ACF extends QM_Output_Html {
 				$row_attr['class'] .= ' qm-warn';
 			}
 
-			$row_attr['data-qm-acf-field'] = $row['field']['name'] . ' ' . $row['field']['key'];
-			$row_attr['data-qm-acf-post'] = $row['post_id'];
+			$row_attr['data-qm-acf-field']  = $row['field']['name'] . ' ' . $row['field']['key'];
+			$row_attr['data-qm-acf-post']   = $row['post_id'];
 			$row_attr['data-qm-acf-caller'] = $row['caller']['function'] . '()';
-			$row_attr['data-qm-acf-group'] = 'qmx-acf-no-group';
+			$row_attr['data-qm-acf-group']  = 'qmx-acf-no-group';
 
 			if ( empty( $row['field']['key'] ) ) {
 				$row_attr['data-qm-acf-field'] .= ' qmx-acf-no-field';
@@ -128,13 +133,13 @@ class QMX_Output_Html_ACF extends QM_Output_Html {
 			$attr = '';
 
 			foreach ( $row_attr as $a => $v ) {
-				$attr .= ' ' . $a . '="' . esc_attr( trim( $v ) ) . '"';
+				$attr .= ' ' . $a . '="' . esc_attr( trim( ( string ) $v ) ) . '"';
 			}
 
 			echo '<tr' . $attr . '>';
 
 			# Number
-			echo '<th scope="row" class="qm-row-num qm-num">' . esc_html( $row_num + 1 ) . '</th>';
+			echo '<th scope="row" class="qm-row-num qm-num">' . esc_html( (string) ( $row_num + 1 ) ) . '</th>';
 
 			# Field name
 			echo '<td class="qm-ltr qm-has-toggle qm-nowrap">';
@@ -169,10 +174,11 @@ class QMX_Output_Html_ACF extends QM_Output_Html {
 		echo '</div>';
 	}
 
-	protected function output_field_groups_table() {
-		$id = 'qm-acf-loaded_field_groups';
-		$name = 'Advanced Custom Fields: Loaded Field Groups';
+	protected function output_field_groups_table() : void {
+		/** @var QMX_Data_ACF */
 		$data = $this->collector->get_data();
+		$id   = 'qm-acf-loaded_field_groups';
+		$name = 'Advanced Custom Fields: Loaded Field Groups';
 
 		printf(
 			'<div class="qm qm-concerns" id="%1$s" role="tabpanel" aria-labelledby="%1$s-caption" tabindex="-1">',
@@ -214,7 +220,7 @@ class QMX_Output_Html_ACF extends QM_Output_Html {
 		foreach ( $data->loaded_field_groups as $row ) {
 			$class = '';
 
-			if ( 1 === $row_num % 2 ) {
+			if ( 1 === ( $row_num % 2 ) ) {
 				$class = ' class="qm-odd"';
 			}
 
@@ -236,6 +242,8 @@ class QMX_Output_Html_ACF extends QM_Output_Html {
 			echo '</td>';
 
 			echo '</tr>';
+
+			$row_num++;
 		}
 
 		echo '</tbody>';
@@ -250,7 +258,10 @@ class QMX_Output_Html_ACF extends QM_Output_Html {
 		echo '</div>';
 	}
 
-	protected function output_column_field_name( array $row ) {
+	/**
+	 * @param array<string, mixed> $row
+	 */
+	protected function output_column_field_name( array $row ) : void {
 		echo esc_html( $row['field']['name'] );
 
 		if ( ! $row['exists'] ) {
@@ -279,7 +290,10 @@ class QMX_Output_Html_ACF extends QM_Output_Html {
 		echo '</div>';
 	}
 
-	protected function output_column_field_group_title( array $row ) {
+	/**
+	 * @param array<string, mixed> $row
+	 */
+	protected function output_column_field_group_title( array $row ) : void {
 		$title = $row['title'];
 
 		if ( empty( $title ) ) {
@@ -304,8 +318,12 @@ class QMX_Output_Html_ACF extends QM_Output_Html {
 		);
 	}
 
-	protected function output_column_field_group_key( array $row ) {
-		$data = $this->collector->get_data();
+	/**
+	 * @param array<string, mixed> $row
+	 */
+	protected function output_column_field_group_key( array $row ) : void {
+		/** @var QMX_Data_ACF */
+		$data  = $this->collector->get_data();
 		$group = $row['group'];
 
 		if ( empty( $group ) ) {
@@ -313,7 +331,8 @@ class QMX_Output_Html_ACF extends QM_Output_Html {
 		}
 
 		if (
-			! acf_is_local_field_group( $group )
+			! function_exists( 'acf_is_local_field_group' )
+			|| ! acf_is_local_field_group( $group )
 			|| ! array_key_exists( $group, $data->local_json['groups'] )
 		) {
 			echo esc_html( $group );
@@ -330,7 +349,10 @@ class QMX_Output_Html_ACF extends QM_Output_Html {
 		echo QM_Output_Html::output_filename( $group, $filepath );
 	}
 
-	protected function output_column_field_group( array $row ) {
+	/**
+	 * @param array<string, mixed> $row
+	 */
+	protected function output_column_field_group( array $row ) : void {
 		$group = $row['group'];
 
 		if ( empty( $group ) ) {
@@ -355,7 +377,10 @@ class QMX_Output_Html_ACF extends QM_Output_Html {
 		);
 	}
 
-	protected function output_column_field_group_rules( array $row ) {
+	/**
+	 * @param array<string, mixed> $row
+	 */
+	protected function output_column_field_group_rules( array $row ) : void {
 		$rules = $row['rules'];
 
 		if ( empty( $rules ) ) {
@@ -367,11 +392,15 @@ class QMX_Output_Html_ACF extends QM_Output_Html {
 		echo '</pre>';
 	}
 
-	protected function output_column_caller( array $row ) {
-		$trace = $row['trace'];
+	/**
+	 * @param array<string, mixed> $row
+	 */
+	protected function output_column_caller( array $row ) : void {
+		$trace          = $row['trace'];
 		$filtered_trace = $trace->get_display_trace();
-		$caller_name = self::output_filename( $row['caller']['function'] . '()', $row['caller']['file'], $row['caller']['line'] );
-		$stack = array();
+		$caller_name    = self::output_filename( $row['caller']['function'] . '()', $row['caller']['file'], $row['caller']['line'] );
+		$stack          = array();
+
 		array_shift( $filtered_trace );
 
 		foreach ( $filtered_trace as $item ) {
@@ -389,7 +418,7 @@ class QMX_Output_Html_ACF extends QM_Output_Html {
 
 		if ( 1 < count( $stack ) ) {
 			echo self::build_toggler();
-			}
+		}
 
 		echo '<ol>';
 		printf( '<li>%s</li>', $caller_name );
@@ -401,8 +430,8 @@ class QMX_Output_Html_ACF extends QM_Output_Html {
 		echo '</ol>';
 	}
 
-	protected function output_local_json() {
-		$id = 'qm-acf-local_json';
+	protected function output_local_json() : void {
+		$id   = 'qm-acf-local_json';
 		$name = 'Advanced Custom Fields: Local JSON';
 		$data = $this->collector->get_data();
 
@@ -446,11 +475,11 @@ class QMX_Output_Html_ACF extends QM_Output_Html {
 				echo '<tr>';
 
 				if ( 0 === $i ) {
-					echo '<th scope="row" rowspan="' . esc_attr( count( $data->local_json['load'] ) ) . '">Load</th>';
-					echo '<td rowspan="' . esc_attr( count( $data->local_json['load'] ) ) . '"><code>acf/settings/load_json</code></td>';
+					echo '<th scope="row" rowspan="' . esc_attr( (string) count( $data->local_json['load'] ) ) . '">Load</th>';
+					echo '<td rowspan="' . esc_attr( (string) count( $data->local_json['load'] ) ) . '"><code>acf/settings/load_json</code></td>';
 				}
 
-				echo '<td class="qm-num">' . esc_html( $i ) . '</td>';
+				echo '<td class="qm-num">' . esc_html( (string) $i ) . '</td>';
 				echo '<td>' . QM_Output_Html::output_filename( $this->remove_abspath( $path ), $path ) . '</td>';
 
 				echo '</tr>';
@@ -467,7 +496,7 @@ class QMX_Output_Html_ACF extends QM_Output_Html {
 		echo '</div>';
 	}
 
-	protected function output_local_json_field_groups() {
+	protected function output_local_json_field_groups() : void {
 		$data = $this->collector->get_data();
 
 		if ( empty( $data->local_json['groups'] ) ) {
@@ -499,7 +528,7 @@ class QMX_Output_Html_ACF extends QM_Output_Html {
 				'<tr><th scope="row">%s</th><td>%s</td><td>%s</td></tr>',
 				esc_html( $group['title'] ),
 				esc_html( $group['key'] ),
-				QM_Output_HTML::output_filename( $this->remove_abspath( $group['local_file'] ), $group['local_file'] )
+				QM_Output_Html::output_filename( $this->remove_abspath( $group['local_file'] ), $group['local_file'] )
 			);
 		}
 
@@ -512,7 +541,12 @@ class QMX_Output_Html_ACF extends QM_Output_Html {
 		return str_replace( ABSPATH, '', $path );
 	}
 
+	/**
+	 * @param array<string, array<string, mixed>> $menu
+	 * @return array<string, array<string, mixed>>
+	 */
 	public function panel_menu( array $menu ) {
+		/** @var QMX_Data_ACF */
 		$data = $this->collector->get_data();
 
 		if ( empty( $data->local_json['groups'] ) ) {
@@ -533,18 +567,16 @@ class QMX_Output_Html_ACF extends QM_Output_Html {
 		}
 
 		$menu['qm-acf']['children']['local_json'] = array(
-			'title' => esc_html__('Local JSON', 'query-monitor-extend') . sprintf( ' (%d)', count( $data->local_json['groups'] ) ),
+			'title' => esc_html__( 'Local JSON', 'query-monitor-extend' ) . sprintf( ' (%d)', count( $data->local_json['groups'] ) ),
 			'href'  => '#qm-acf-local_json',
 			'id'    => 'query-monitor-extend-acf-local_json',
 		);
 
 		return $menu;
-
 	}
-
 }
 
-add_filter( 'qm/outputter/html', static function( array $output ) : array {
+add_filter( 'qm/outputter/html', static function ( array $output ) : array {
 	if ( $collector = QM_Collectors::get( 'acf' ) ) {
 		$output['acf'] = new QMX_Output_Html_ACF( $collector );
 	}

@@ -1,7 +1,10 @@
-<?php
+<?php declare(strict_types=1);
 
 defined( 'WPINC' ) || die();
 
+/**
+ * @property-read QMX_Collector_Constants $collector
+ */
 class QMX_Output_Html_Constants extends QM_Output_Html {
 
 	public function __construct( QM_Collector $collector ) {
@@ -14,7 +17,7 @@ class QMX_Output_Html_Constants extends QM_Output_Html {
 
 		echo '<div class="qm" id="' . esc_attr( $this->collector->id() ) . '">';
 
-			if ( !empty( $data->constants ) ) {
+			if ( ! empty( $data->constants ) ) {
 				echo '<table class="qm-sortable">';
 					echo '<caption class="qm-screen-reader-text">' . esc_html( $this->collector->name() ) . '</caption>';
 					echo '<thead>';
@@ -41,14 +44,14 @@ class QMX_Output_Html_Constants extends QM_Output_Html {
 
 					echo '<tbody>';
 
-						$i = 1;
 						$bools = array( true => 'true', false => 'false' );
+						$i     = 1;
 
 						foreach ( $data->constants as $constant => $value ) {
 							echo '<tr>';
 								echo '<td class="qm-num">' . $i++ . '</td>';
 								echo '<td class="qm-ltr" data-qm-sort-weight="' . strtolower( esc_attr( $constant ) ) . '"><code style="user-select: all;">' . esc_html( $constant ) . '</code></td>';
-								echo '<td ' . ( is_bool( $value ) ? ' class="qm-' . $bools[$value] . '"' : '' ) . '>' . esc_html( QM_Util::display_variable( $value ) ) . '</td>';
+								echo '<td ' . ( is_bool( $value ) ? ' class="qm-' . $bools[ $value ] . '"' : '' ) . '>' . esc_html( (string) QM_Util::display_variable( $value ) ) . '</td>';
 								echo '<td class="qm-ltr">' . esc_html( gettype( $value ) ) . '</td>';
 							echo '</tr>';
 						}
@@ -70,6 +73,10 @@ class QMX_Output_Html_Constants extends QM_Output_Html {
 		echo '</div>';
 	}
 
+	/**
+	 * @param array<string, array<string, mixed>> $menu
+	 * @return array<string, array<string, mixed>>
+	 */
 	public function panel_menu( array $menu ) {
 		$menu['constants'] = $this->menu( array(
 			'title' => esc_html__( 'Constants', 'query-monitor-extend' ),
@@ -82,8 +89,9 @@ class QMX_Output_Html_Constants extends QM_Output_Html {
 }
 
 add_filter( 'qm/outputter/html', static function ( array $output ) : array {
-	if ( $collector = QM_Collectors::get( 'constants' ) )
+	if ( $collector = QM_Collectors::get( 'constants' ) ) {
 		$output['constants'] = new QMX_Output_Html_Constants( $collector );
+	}
 
 	return $output;
 }, 70 );

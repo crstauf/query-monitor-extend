@@ -1,7 +1,10 @@
-<?php
+<?php declare(strict_types=1);
 
 defined( 'WPINC' ) || die();
 
+/**
+ * @property-read QMX_Collector_Time $collector
+ */
 class QMX_Output_Html_Time extends QM_Output_Html {
 
 	public function __construct( QM_Collector $collector ) {
@@ -10,18 +13,20 @@ class QMX_Output_Html_Time extends QM_Output_Html {
 	}
 
 	public function output() {
-		$data = $this->collector->get_data();
 		$wp_offset = get_option( 'gmt_offset' );
+		/** @var QMX_Data_Time $data */
+		$data = $this->collector->get_data();
 
 		echo '<div class="qm qm-non-tabular" id="' . esc_attr( $this->collector->id() ) . '">' .
 			'<div class="qm-boxed">';
 
 				foreach ( $data->functions as $label => $function ) {
-					if ( is_callable( array( $this->collector, $function ) ) )
+					if ( is_callable( array( $this->collector, $function ) ) ) {
 						echo '<div class="qm-section">' .
 							'<h2>' . esc_html( $label ) . '</h2>' .
 							'<p><code id="qm-time-' . sanitize_title( $label ) . '">' . $this->collector->$function() . '</code></p>' .
 						'</div>';
+					}
 				}
 
 			echo '</div>';
@@ -55,7 +60,7 @@ class QMX_Output_Html_Time extends QM_Output_Html {
 								var UTC_string = d.toUTCString();
 								var utc_time = d.getTime() + ( d.getTimezoneOffset() * 60 * 1000 );
 								var server = new Date( utc_time + ( <?php echo esc_js( $this->collector->get_server_offset() ) ?> * 1000 ) );
-								var wp = new Date( utc_time + ( <?php echo esc_js( $this->collector->get_wp_offset() * HOUR_IN_SECONDS ) ?> * 1000 ) );
+								var wp = new Date( utc_time + ( <?php echo esc_js( (string) ( $this->collector->get_wp_offset() * HOUR_IN_SECONDS ) ); ?> * 1000 ) );
 
 								qmx_time_utc.innerHTML =
 									qmx_time_days[d.getUTCDay()] + ', '
@@ -74,7 +79,9 @@ class QMX_Output_Html_Time extends QM_Output_Html {
 									+ ( 10 > server.getHours() ? '0' : '' ) + server.getHours()
 									+ ':' + ( 10 > server.getMinutes() ? '0' : '' ) + server.getMinutes()
 									+ ':' + ( 10 > server.getSeconds() ? '0' : '' ) + server.getSeconds()
-									+ ' <?php echo esc_js( $this->collector->get_server_timezone() ) ?>';
+									+ ' <?php
+									echo esc_js( $this->collector->get_server_timezone() )
+									?>';
 
 								qmx_time_wp.innerHTML =
 									qmx_time_days[wp.getDay()] + ', '
@@ -84,7 +91,7 @@ class QMX_Output_Html_Time extends QM_Output_Html {
 									+ ( 10 > wp.getHours() ? '0' : '' ) + wp.getHours()
 									+ ':' + ( 10 > wp.getMinutes() ? '0' : '' ) + wp.getMinutes()
 									+ ':' + ( 10 > wp.getSeconds() ? '0' : '' ) + wp.getSeconds()
-									+ ' <?php echo esc_js( $this->collector->get_wp_timezone() ) ?>';
+									+ ' <?php echo esc_js( $this->collector->get_wp_timezone() ); ?>';
 
 								qmx_time_browser.innerHTML =
 									qmx_time_days[d.getDay()] + ', '
@@ -105,25 +112,27 @@ class QMX_Output_Html_Time extends QM_Output_Html {
 
 			<?php
 		echo '</div>';
-
 	}
 
+	/**
+	 * @param array<string, array<string, mixed>> $menu
+	 * @return array<string, array<string, mixed>>
+	 */
 	public function panel_menu( array $menu ) {
-
 		$menu['time'] = $this->menu( array(
 			'title' => esc_html__( 'Time', 'query-monitor-extend' ),
 			'id'    => 'query-monitor-extend-time',
 		) );
 
 		return $menu;
-
 	}
 
 }
 
 add_filter( 'qm/outputter/html', static function ( array $output ) : array {
-	if ( $collector = QM_Collectors::get( 'time' ) )
+	if ( $collector = QM_Collectors::get( 'time' ) ) {
 		$output['time'] = new QMX_Output_Html_Time( $collector );
+	}
 
 	return $output;
 }, 70 );

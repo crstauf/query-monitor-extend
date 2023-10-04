@@ -1,7 +1,10 @@
-<?php
+<?php declare(strict_types=1);
 
 defined( 'WPINC' ) || die();
 
+/**
+ * @property-read QMX_Collector_Heartbeat $collector
+ */
 class QMX_Output_Html_Heartbeat extends QM_Output_Html {
 
 	public function __construct( QM_Collector $collector ) {
@@ -60,12 +63,16 @@ class QMX_Output_Html_Heartbeat extends QM_Output_Html {
 
 		echo '</div>';
 
-		$this->current_id = 'qm-heartbeat';
+		$this->current_id   = 'qm-heartbeat';
 		$this->current_name = 'Heartbeat';
 
 		$this->output_concerns();
 	}
 
+	/**
+	 * @param array<string, array<string, mixed>> $menu
+	 * @return array<string, array<string, mixed>>
+	 */
 	public function panel_menu( array $menu ) {
 		$menu['qm-heartbeat'] = $this->menu( array(
 			'title' => esc_html__( 'Heartbeats (0)' ),
@@ -74,12 +81,12 @@ class QMX_Output_Html_Heartbeat extends QM_Output_Html {
 
 		return $menu;
 	}
-
 }
 
 add_filter( 'qm/outputter/html', static function ( array $output ) : array {
-	if ( $collector = QM_Collectors::get( 'heartbeat' ) )
+	if ( $collector = QM_Collectors::get( 'heartbeat' ) ) {
 		$output['heartbeat'] = new QMX_Output_Html_Heartbeat( $collector );
+	}
 
 	return $output;
 }, 70 );

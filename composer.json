@@ -1,0 +1,36 @@
+{
+  "name": "crstauf/query-monitor-extend",
+  "description": "Query Monitor Extend",
+  "require-dev": {
+    "automattic/vipwpcs": "^3.0",
+    "szepeviktor/phpstan-wordpress": "^1.1",
+    "phpstan/extension-installer": "^1.1",
+    "php-stubs/acf-pro-stubs": "^6.0",
+    "php-stubs/wordpress-stubs": "^6.0",
+    "squizlabs/php_codesniffer": "^3.7",
+    "mediawiki/mediawiki-codesniffer": "^41.0",
+    "cweagans/composer-patches": "~1.0",
+    "johnbillion/query-monitor": "^3.13"
+  },
+  "config": {
+    "allow-plugins": {
+      "dealerdirect/phpcodesniffer-composer-installer": true,
+      "phpstan/extension-installer": true,
+      "cweagans/composer-patches": true,
+      "composer/installers": true
+    }
+  },
+  "license": "proprietary",
+  "extra": {
+    "installer-paths": {
+      "vendor/wordpress-plugins/{$name}/": [
+        "type:wordpress-plugin"
+      ]
+    },
+    "patches": {
+      "php-stubs/acf-pro-stubs": {
+        "PHPStan return types": "dev/patches/acf-pro-stubs.patch"
+      }
+    }
+  }
+}

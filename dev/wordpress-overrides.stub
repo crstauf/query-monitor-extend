@@ -1,0 +1,54 @@
+<?php
+
+/**
+ * Various overrides to fix WP core false positives.
+ *
+ * @since 2.2.0
+ */
+
+
+/**
+* Whether current WordPress query has results to loop over.
+*
+* @since 1.5.0
+*
+* @global WP_Query $wp_query Global WP_Query instance.
+*
+* @return bool
+* @phpstan-impure
+*/
+function have_posts() {
+}
+
+class WP_Query {
+/**
+* Determines whether there are more posts available in the loop.
+*
+* Calls the {@see 'loop_end'} action when the loop is complete.
+*
+* @since 1.5.0
+*
+* @return bool True if posts are available, false if end of loop.
+* @phpstan-impure
+*/
+public function have_posts() {
+}
+}
+
+/**
+ * have_rows
+ *
+ * Checks if a field (such as Repeater or Flexible Content) has any rows of data to loop over.
+ * This function is intended to be used in conjunction with the_row() to step through available values.
+ *
+ * @date    2/09/13
+ * @since   4.3.0
+ *
+ * @param   string $selector The field name or field key.
+ * @param   mixed  $post_id The post ID where the value is saved. Defaults to the current post.
+ * @return  bool
+ * @phpstan-impure
+ */
+function have_rows($selector, $post_id = \false)
+{
+}

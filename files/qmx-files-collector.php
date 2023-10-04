@@ -1,12 +1,16 @@
-<?php
+<?php declare(strict_types=1);
 
 defined( 'WPINC' ) || die();
 
+/**
+ * @extends QM_DataCollector<QMX_Data_Files>
+ * @property-write QMX_Data_Files $data
+ */
 class QMX_Collector_Files extends QM_DataCollector {
 
 	public $id = 'files';
 
-	public function name() {
+	public function name() : string {
 		return __( 'Files', 'query-monitor-extend' );
 	}
 
@@ -16,24 +20,32 @@ class QMX_Collector_Files extends QM_DataCollector {
 	}
 
 	public function process() {
-		if ( did_action( 'qm/cease' ) )
+		if ( did_action( 'qm/cease' ) ) {
 			return;
+		}
 
-		$php_errors = QM_Collectors::get( 'php_errors' )->get_data();
 		$files_with_errors = array();
+		$collector         = QM_Collectors::get( 'php_errors' );
 
-		if ( !empty( $php_errors['errors'] ) )
-			foreach ( $php_errors['errors'] as $type => $errors )
-				foreach ( $errors as $error )
-					$files_with_errors[$error['file']] = 1;
+		if ( ! is_null( $collector ) ) {
+			$php_errors = $collector->get_data();
 
-		foreach ( get_included_files() as $i => $filepath )
+			if ( ! empty( $php_errors['errors'] ) ) {
+				foreach ( $php_errors['errors'] as $type => $errors ) {
+					foreach ( $errors as $error ) {
+						$files_with_errors[ $error['file'] ] = 1;
+					}
+				}
+			}
+		}
+
+		foreach ( get_included_files() as $i => $filepath ) {
 			$this->data->files[] = array(
-				'path' => $filepath,
+				'path'      => $filepath,
 				'component' => QM_Util::get_file_component( $filepath ),
 				'has_error' => array_key_exists( $filepath, $files_with_errors ),
 			);
-
+		}
 	}
 
 }

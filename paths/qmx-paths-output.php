@@ -1,7 +1,10 @@
-<?php
+<?php declare(strict_types=1);
 
 defined( 'WPINC' ) || die();
 
+/**
+ * @property-read QMX_Collector_Paths $collector
+ */
 class QMX_Output_Html_Paths extends QM_Output_Html {
 
 	public function __construct( QM_Collector $collector ) {
@@ -14,11 +17,12 @@ class QMX_Output_Html_Paths extends QM_Output_Html {
 	}
 
 	public function output() {
+		/** @var QMX_Data_Paths $data */
 		$data = $this->collector->get_data();
 
 		echo '<div class="qm" id="' . esc_attr( $this->collector->id() ) . '">';
 
-			if ( !empty( $data->paths ) ) {
+			if ( ! empty( $data->paths ) ) {
 				echo '<table class="qm-sortable">';
 					echo '<caption class="qm-screen-reader-text">' . esc_html( $this->collector->name() ) . '</caption>';
 					echo '<thead>';
@@ -47,10 +51,11 @@ class QMX_Output_Html_Paths extends QM_Output_Html {
 									$possible_path = str_replace( ABSPATH, '', $value );
 									$possible_path = ABSPATH . $possible_path;
 
-									if ( file_exists( $possible_path ) )
+									$value = esc_html( $value );
+
+									if ( file_exists( $possible_path ) ) {
 										$value = QM_Output_Html::output_filename( $value, $possible_path );
-									else
-										$value = esc_html( $value );
+									}
 
 									echo '<td>' . $value . '</td>';
 
@@ -80,28 +85,31 @@ class QMX_Output_Html_Paths extends QM_Output_Html {
 
 		echo '</div>';
 
-		$this->current_id = 'qm-paths';
+		$this->current_id   = 'qm-paths';
 		$this->current_name = 'Paths';
 
 		$this->output_concerns();
 	}
 
+	/**
+	 * @param array<string, array<string, mixed>> $menu
+	 * @return array<string, array<string, mixed>>
+	 */
 	public function panel_menu( array $menu ) {
-
 		$menu['qm-paths'] = $this->menu( array(
 			'title' => esc_html__( 'Paths', 'query-monitor-extend' ),
 			'id'    => 'query-monitor-extend-paths',
 		) );
 
 		return $menu;
-
 	}
 
 }
 
 add_filter( 'qm/outputter/html', static function ( array $output ) : array {
-	if ( $collector = QM_Collectors::get( 'paths' ) )
+	if ( $collector = QM_Collectors::get( 'paths' ) ) {
 		$output['paths'] = new QMX_Output_Html_Paths( $collector );
+	}
 
 	return $output;
 }, 70 );

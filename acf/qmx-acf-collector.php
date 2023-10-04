@@ -1,18 +1,22 @@
-<?php
+<?php declare(strict_types=1);
 
 defined( 'WPINC' ) || die();
 
+/**
+ * @extends QM_DataCollector<QMX_Data_ACF>
+ * @property-read QMX_Data_ACF $data
+ */
 class QMX_Collector_ACF extends QM_DataCollector {
 
 	public $id = 'acf';
 
-	function __construct() {
+	public function __construct() {
 		parent::__construct();
 
 		add_action( 'acf/init', array( $this, 'action__acf_init' ) );
 
 		add_filter( 'acf/settings/load_json', array( $this, 'filter__acf_settings_load_json' ), 99999 );
-		add_filter( 'acf/pre_load_value', array( $this, 'filter__acf_pre_load_value' ), 10, 3);
+		add_filter( 'acf/pre_load_value', array( $this, 'filter__acf_pre_load_value' ), 10, 3 );
 		add_filter( 'acf/load_field_groups', array( $this, 'filter__acf_load_field_groups' ) );
 
 		// Set default value. Filter applied in output.
@@ -24,8 +28,13 @@ class QMX_Collector_ACF extends QM_DataCollector {
 		return new QMX_Data_ACF();
 	}
 
-	public function process() {}
+	public function process() {
+	}
 
+	/**
+	 * @param mixed $parent
+	 * @return mixed
+	 */
 	public static function get_fields_group( $parent ) {
 		if ( is_null( $parent ) ) {
 			return null;
@@ -35,6 +44,11 @@ class QMX_Collector_ACF extends QM_DataCollector {
 
 		if ( false === $group ) {
 			$field = acf_get_field( $parent );
+
+			if ( false === $field ) {
+				return $parent;
+			}
+
 			return static::get_fields_group( $field['parent'] );
 		}
 
@@ -42,7 +56,7 @@ class QMX_Collector_ACF extends QM_DataCollector {
 	}
 
 	public function action__acf_init() : void {
-		$files = acf_get_local_json_files();
+		$files  = acf_get_local_json_files();
 		$groups = array();
 
 		foreach ( $files as $group_key => $filepath ) {
@@ -52,7 +66,11 @@ class QMX_Collector_ACF extends QM_DataCollector {
 		$this->data->local_json['groups'] = $groups;
 	}
 
-	public function filter__acf_settings_load_json( $paths ) {
+	/**
+	 * @param string[] $paths
+	 * @return string[]
+	 */
+	public function filter__acf_settings_load_json( array $paths ) : array {
 		if ( did_action( 'qm/cease' ) ) {
 			return $paths;
 		}
@@ -62,6 +80,9 @@ class QMX_Collector_ACF extends QM_DataCollector {
 		return $paths;
 	}
 
+	/**
+	 * @return string[]
+	 */
 	protected static function get_start_trace_functions() {
 		$functions = null;
 
@@ -69,28 +90,44 @@ class QMX_Collector_ACF extends QM_DataCollector {
 			return $functions;
 		}
 
-		$functions = apply_filters( 'qmx/collector/acf/start_trace_functions', array(
+		$functions = (array) apply_filters( 'qmx/collector/acf/start_trace_functions', array(
 			'get_field',
 			'get_field_object',
 			'have_rows',
 		) );
 
+		$functions = array_filter( $functions, static function ( $item ) {
+			return is_string( $item );
+		} );
+
 		return $functions;
 	}
 
+	/**
+	 * @param mixed $short_circuit
+	 * @param int|string $post_id
+	 * @param array<mixed> $field
+	 * @return mixed
+	 */
 	public function filter__acf_pre_load_value( $short_circuit, $post_id, $field ) {
-		if ( did_action( 'qm/cease' ) ) {
+		if ( did_action( 'qm/cease' ) || ! function_exists( 'acf_get_valid_post_id' ) ) {
 			return $short_circuit;
 		}
 
+		$args             = array();
 		$full_stack_trace = apply_filters( 'qmx/collector/acf/full_stack_trace', is_admin(), $post_id, $field );
-		$trace = new QM_Backtrace( array( 'ignore_current_filter' => ! $full_stack_trace ) );
+
+		if ( ! $full_stack_trace ) {
+			$args['ignore_hook'] = array( current_filter() );
+		};
+
+		$trace = new QM_Backtrace( $args );
 
 		if ( false === $full_stack_trace ) {
-			foreach ($trace->get_trace() as $frame) {
+			foreach ( $trace->get_trace() as $frame ) {
 				if (
 					in_array( $frame['function'], static::get_start_trace_functions() )
-					&& false === stripos( $frame['file'], ACF_PATH )
+					&& false === stripos( $frame['file'], constant( 'ACF_PATH' ) )
 				) {
 					break;
 				}
@@ -116,7 +153,7 @@ class QMX_Collector_ACF extends QM_DataCollector {
 			$row['group'] = static::get_fields_group( $field['parent'] );
 		}
 
-		$hash = md5( json_encode( $row ) );
+		$hash        = md5( (string) json_encode( $row ) );
 		$row['hash'] = $hash;
 
 		if ( array_key_exists( $hash, $this->data->counts ) ) {
@@ -139,32 +176,35 @@ class QMX_Collector_ACF extends QM_DataCollector {
 			$this->data->field_groups[ $row['group']['key'] ] = $row['group']['title'];
 		}
 
-		$this->data->post_ids[ ( string ) $post_id ] = $post_id;
+		$this->data->post_ids[ ( string ) $post_id ]              = $post_id;
 		$this->data->callers[ $row['caller']['function'] . '()' ] = 1;
-		$this->data->counts[ $hash ] = 1;
-
-		$this->data->fields[] = $row;
+		$this->data->counts[ $hash ]                              = 1;
+		$this->data->fields[]                                     = $row;
 
 		return $short_circuit;
 	}
 
-	public function filter__acf_load_field_groups( $field_groups ) {
+	/**
+	 * @param array<mixed> $field_groups
+	 * @return array<mixed>
+	 */
+	public function filter__acf_load_field_groups( array $field_groups ) : array {
 		static $processed = array();
 
 		if ( empty( $field_groups ) ) {
 			return $field_groups;
 		}
 
-		$hash = wp_hash( json_encode( $field_groups ) );
+		$hash = wp_hash( (string) json_encode( $field_groups ) );
 
 		if ( in_array( $hash, $processed ) ) {
-			return;
+			return $field_groups;
 		}
 
 		$processed[] = $hash;
 
 		foreach ( $field_groups as $field_group ) {
-			$key = wp_hash( json_encode( $field_group ) );
+			$key = wp_hash( (string) json_encode( $field_group ) );
 
 			if ( array_key_exists( $key, $this->data->loaded_field_groups ) ) {
 				continue;

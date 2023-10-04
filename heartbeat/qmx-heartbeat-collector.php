@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 defined( 'WPINC' ) || die();
 
@@ -6,24 +6,26 @@ class QMX_Collector_Heartbeat extends QM_Collector {
 
 	public $id = 'heartbeat';
 
-	function __construct() {
+	public function __construct() {
 		parent::__construct();
 
-		if ( $this->qm_no_jquery() )
+		if ( $this->qm_no_jquery() ) {
 			return;
+		}
 
 		add_action( 'wp_enqueue_scripts', array( &$this, 'add_inline_script' ) );
 		add_action( 'admin_enqueue_scripts', array( &$this, 'add_inline_script' ) );
 	}
 
-	public function add_inline_script() {
-		if ( did_action( 'qm/cease' ) )
+	public function add_inline_script() : void {
+		if ( did_action( 'qm/cease' ) ) {
 			return;
+		}
 
-		wp_add_inline_script( 'heartbeat', $this->_inlineScript_heartbeat() );
+		wp_add_inline_script( 'heartbeat', $this->inlineScript_heartbeat() );
 	}
 
-	public function _inlineScript_heartbeat() {
+	public function inlineScript_heartbeat() : string {
 		ob_start();
 		?>
 
@@ -152,18 +154,18 @@ class QMX_Collector_Heartbeat extends QM_Collector {
 		qmx_heartbeat.init();
 
 		<?php
-		return ob_get_clean();
+		return (string) ob_get_clean();
 	}
 
-	public function name() {
+	public function name() : string {
 		return __( 'Heartbeat', 'query-monitor-extend' );
 	}
 
 	public function process() {
 	}
 
-	public function qm_no_jquery() {
-		return defined( 'QM_NO_JQUERY' ) && QM_NO_JQUERY;
+	public function qm_no_jquery() : bool {
+		return defined( 'QM_NO_JQUERY' ) && constant( 'QM_NO_JQUERY' );
 	}
 
 	public function get_concerned_filters() : array {
