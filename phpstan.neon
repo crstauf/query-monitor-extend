@@ -8,6 +8,7 @@ parameters:
 		- constants/
 		- files/
 		- heartbeat/
+		- image-sizes/
 		- paths/
 		- time/
 		- qmx-conditionals.php

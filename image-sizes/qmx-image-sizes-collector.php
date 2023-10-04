@@ -4,6 +4,7 @@ defined( 'WPINC' ) || die();
 
 /**
  * @extends QM_DataCollector<QMX_Data_Image_Sizes>
+ * @property-write QMX_Data_Image_Sizes $data
  */
 class QMX_Collector_Image_Sizes extends QM_DataCollector {
 
@@ -90,7 +91,7 @@ class QMX_Collector_Image_Sizes extends QM_DataCollector {
 		);
 	}
 
-	public function action__plugins_loaded() {
+	public function action__plugins_loaded() : void {
 		if ( 'plugins_loaded' !== current_action() || did_action( 'qm/cease' ) ) {
 			return;
 		}
@@ -98,7 +99,7 @@ class QMX_Collector_Image_Sizes extends QM_DataCollector {
 		$this->process_added_image_sizes( 'plugin' );
 	}
 
-	public function action__after_setup_theme() {
+	public function action__after_setup_theme() : void {
 		if ( 'after_setup_theme' !== current_action() || did_action( 'qm/cease' ) ) {
 			return;
 		}
@@ -113,7 +114,7 @@ class QMX_Collector_Image_Sizes extends QM_DataCollector {
 
 		$post = get_queried_object();
 
-		if ( empty( $post ) ) {
+		if ( empty( $post ) || ! is_object( $post ) || ! is_a( $post, WP_Post::class ) ) {
 			return;
 		}
 
@@ -138,7 +139,13 @@ class QMX_Collector_Image_Sizes extends QM_DataCollector {
 		}
 	}
 
-	public function filter__wp_get_attachment_image_src( $image, $attachment_id, $size ) {
+	/**
+	 * @param string $image
+	 * @param int $attachment_id
+	 * @param string $size
+	 * @return string
+	 */
+	public function filter__wp_get_attachment_image_src( $image, $attachment_id, $size ) : string {
 		if ( did_action( 'qm/cease' ) ) {
 			return $image;
 		}
@@ -158,7 +165,11 @@ class QMX_Collector_Image_Sizes extends QM_DataCollector {
 		return $image;
 	}
 
-	protected function process_added_image_sizes( $source = 'unknown' ) {
+	/**
+	 * @param string $source
+	 * @return void
+	 */
+	protected function process_added_image_sizes( string $source = 'unknown' ) : void {
 		global $_wp_additional_image_sizes;
 
 		$num = count( $this->data->sizes );
@@ -221,7 +232,11 @@ class QMX_Collector_Image_Sizes extends QM_DataCollector {
 		$this->data->duplicates = $counts;
 	}
 
-	private function add_ratio( array $size ) {
+	/**
+	 * @param array<string, int> $size
+	 * @return array<string, int|float>
+	 */
+	private function add_ratio( array $size ) : array {
 		if (
 			   ! array_key_exists( 'width', $size )
 			|| ! array_key_exists( 'height', $size )
@@ -250,7 +265,7 @@ class QMX_Collector_Image_Sizes extends QM_DataCollector {
 		return $size;
 	}
 
-	public function add_inline_script() {
+	public function add_inline_script() : void {
 		if ( did_action( 'qm/cease' ) ) {
 			return;
 		}
@@ -258,7 +273,7 @@ class QMX_Collector_Image_Sizes extends QM_DataCollector {
 		wp_add_inline_script( 'query-monitor', $this->inlineScript_queryMonitor() );
 	}
 
-	protected function inlineScript_queryMonitor() {
+	protected function inlineScript_queryMonitor() : string {
 		ob_start();
 		?>
 
@@ -295,7 +310,7 @@ class QMX_Collector_Image_Sizes extends QM_DataCollector {
 		}
 
 		<?php
-		return ob_get_clean();
+		return ( string ) ob_get_clean();
 	}
 
 }

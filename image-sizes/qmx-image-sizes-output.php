@@ -2,6 +2,9 @@
 
 defined( 'WPINC' ) || die();
 
+/**
+ * @property-read QMX_Collector_Image_Sizes $collector
+ */
 class QMX_Output_Html_Image_Sizes extends QM_Output_Html {
 
 	public function __construct( QM_Collector $collector ) {
@@ -14,9 +17,12 @@ class QMX_Output_Html_Image_Sizes extends QM_Output_Html {
 	}
 
 	public function output() {
-		$data = $this->collector->get_data();
+		/** @var QMX_Collector_Image_Sizes */
+		$collector = $this->collector;
+		/** @var QMX_Data_Image_Sizes */
+		$data = $collector->get_data();
 
-		echo '<div class="qm" id="' . esc_attr( $this->collector->id() ) . '">';
+		echo '<div class="qm" id="' . esc_attr( $collector->id() ) . '">';
 
 			if ( ! empty( $data->sizes ) ) {
 				echo '<table class="qm-sortable">';
@@ -107,15 +113,13 @@ class QMX_Output_Html_Image_Sizes extends QM_Output_Html {
 					echo '</tbody>';
 					echo '<tfoot>';
 
-						if ( ! empty( $sources ) ) {
-							$sources = array_map(
-								function ( $k, $v ) {
-									return ucwords( $k ) . ': ' . $v;
-								},
-								array_keys( $sources ),
-								$sources
-							);
-						}
+						$sources = array_map(
+							function ( $k, $v ) {
+								return ucwords( ( string ) $k ) . ': ' . $v;
+							},
+							array_keys( $sources ),
+							$sources
+						);
 
 						echo '<tr>';
 							echo '<td colspan="2">Total: <span class="qm-items-number">' . esc_html( number_format_i18n( count( $data->sizes ) ) ) . '</span></td>';
@@ -144,6 +148,10 @@ class QMX_Output_Html_Image_Sizes extends QM_Output_Html {
 		$this->output_concerns();
 	}
 
+	/**
+	 * @param array<string, array<string, mixed>> $menu
+	 * @return array<string, array<string, mixed>>
+	 */
 	public function panel_menu( array $menu ) {
 		$menu['qm-image_sizes'] = $this->menu( array(
 			'title' => esc_html__( 'Image Sizes', 'query-monitor-extend' ),
