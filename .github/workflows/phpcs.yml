@@ -19,9 +19,16 @@ on:
       - .github/workflows/phpcs.yml
   pull_request:
     paths:
-      - class-repository.php
-      - class-wpcli.php
-      - what-git-branch.php
+      - acf/*.php
+      - constants/*.php
+      - files/*.php
+      - heartbeat/*.php
+      - image-sizes/*.php
+      - paths/*.php
+      - time/*.php
+      - qmx-conditionals.php
+      - query-monitor-extend.php
+      - phpcs.xml
       - .github/workflows/phpcs.yml
   workflow_dispatch:
 
