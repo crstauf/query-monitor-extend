@@ -22,7 +22,7 @@ jobs:
           sh dev/create-release-files.sh
 
       - name: "Draft new release"
-        uses: marvinpinto/action-automatic-releases@1.2.1
+        uses: marvinpinto/action-automatic-releases@latest
         with:
           repo_token: "${{ secrets.GITHUB_TOKEN }}"
           draft: true
