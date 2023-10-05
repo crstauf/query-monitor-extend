@@ -1,12 +1,14 @@
 <?php declare(strict_types=1);
 
+namespace QMX\Collector;
+
 defined( 'WPINC' ) || die();
 
 /**
- * @extends QM_DataCollector<QMX_Data_Image_Sizes>
- * @property-write QMX_Data_Image_Sizes $data
+ * @extends \QM_DataCollector<\QMX\Data\ImageSizes>
+ * @property-write \QMX\Data\ImageSizes $data
  */
-class QMX_Collector_Image_Sizes extends QM_DataCollector {
+class ImageSizes extends \QM_DataCollector {
 
 	public $id = 'image_sizes';
 
@@ -80,7 +82,7 @@ class QMX_Collector_Image_Sizes extends QM_DataCollector {
 		add_filter( 'wp_get_attachment_image_src', array( $this, 'filter__wp_get_attachment_image_src' ), 10, 3 );
 	}
 
-	public function get_storage(): QM_Data {
+	public function get_storage(): \QM_Data {
 		require_once 'qmx-image-sizes-data.php';
 		return new QMX_Data_Image_Sizes();
 	}
@@ -314,5 +316,3 @@ class QMX_Collector_Image_Sizes extends QM_DataCollector {
 	}
 
 }
-
-QM_Collectors::add( new QMX_Collector_Image_Sizes );

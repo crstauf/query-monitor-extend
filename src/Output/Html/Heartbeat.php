@@ -1,13 +1,15 @@
 <?php declare(strict_types=1);
 
+namespace QMX\Output\Html;
+
 defined( 'WPINC' ) || die();
 
 /**
- * @property-read QMX_Collector_Heartbeat $collector
+ * @property-read \QMX\Collector\Heartbeat $collector
  */
-class QMX_Output_Html_Heartbeat extends QM_Output_Html {
+class Heartbeat extends \QM_Output_Html {
 
-	public function __construct( QM_Collector $collector ) {
+	public function __construct( \QM_Collector $collector ) {
 		parent::__construct( $collector );
 		add_filter( 'qm/output/panel_menus', array( &$this, 'panel_menu' ), 60 );
 	}
@@ -82,11 +84,3 @@ class QMX_Output_Html_Heartbeat extends QM_Output_Html {
 		return $menu;
 	}
 }
-
-add_filter( 'qm/outputter/html', static function ( array $output ) : array {
-	if ( $collector = QM_Collectors::get( 'heartbeat' ) ) {
-		$output['heartbeat'] = new QMX_Output_Html_Heartbeat( $collector );
-	}
-
-	return $output;
-}, 70 );

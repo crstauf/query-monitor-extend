@@ -1,8 +1,10 @@
 <?php declare(strict_types=1);
 
+namespace QMX\Collector;
+
 defined( 'WPINC' ) || die();
 
-class QMX_Collector_Heartbeat extends QM_Collector {
+class Heartbeat extends \QM_Collector {
 
 	public $id = 'heartbeat';
 
@@ -175,8 +177,3 @@ class QMX_Collector_Heartbeat extends QM_Collector {
 	}
 
 }
-
-add_filter( 'qm/collectors', static function ( array $collectors ) : array {
-	$collectors['heartbeat'] = new QMX_Collector_Heartbeat;
-	return $collectors;
-} );

@@ -1,11 +1,13 @@
 <?php declare(strict_types=1);
 
+namespace QMX\Output\Html;
+
 defined( 'WPINC' ) || die();
 
 /**
- * @property-read QMX_Collector_ACF $collector
+ * @property-read \QMX\Collector\ACF $collector
  */
-class QMX_Output_Html_ACF extends QM_Output_Html {
+class ACF extends \QM_Output_Html {
 
 	public function __construct( QM_Collector $collector ) {
 		parent::__construct( $collector );
@@ -30,7 +32,7 @@ class QMX_Output_Html_ACF extends QM_Output_Html {
 	}
 
 	public function output() : void {
-		/** @var QMX_Data_ACF */
+		/** @var \QMX\Data\ACF */
 		$data = $this->collector->get_data();
 
 		$this->output_fields_table();
@@ -43,7 +45,7 @@ class QMX_Output_Html_ACF extends QM_Output_Html {
 	}
 
 	protected function output_fields_table() : void {
-		/** @var QMX_Data_ACF */
+		/** @var \QMX\Data\ACF */
 		$data = $this->collector->get_data();
 
 		if ( empty( $data->fields ) ) {
@@ -175,7 +177,7 @@ class QMX_Output_Html_ACF extends QM_Output_Html {
 	}
 
 	protected function output_field_groups_table() : void {
-		/** @var QMX_Data_ACF */
+		/** @var \QMX\Data\ACF */
 		$data = $this->collector->get_data();
 		$id   = 'qm-acf-loaded_field_groups';
 		$name = 'Advanced Custom Fields: Loaded Field Groups';
@@ -322,7 +324,7 @@ class QMX_Output_Html_ACF extends QM_Output_Html {
 	 * @param array<string, mixed> $row
 	 */
 	protected function output_column_field_group_key( array $row ) : void {
-		/** @var QMX_Data_ACF */
+		/** @var \QMX\Data\ACF */
 		$data  = $this->collector->get_data();
 		$group = $row['group'];
 
@@ -546,7 +548,7 @@ class QMX_Output_Html_ACF extends QM_Output_Html {
 	 * @return array<string, array<string, mixed>>
 	 */
 	public function panel_menu( array $menu ) {
-		/** @var QMX_Data_ACF */
+		/** @var \QMX\Data\ACF */
 		$data = $this->collector->get_data();
 
 		if ( empty( $data->local_json['groups'] ) ) {
@@ -575,11 +577,3 @@ class QMX_Output_Html_ACF extends QM_Output_Html {
 		return $menu;
 	}
 }
-
-add_filter( 'qm/outputter/html', static function ( array $output ) : array {
-	if ( $collector = QM_Collectors::get( 'acf' ) ) {
-		$output['acf'] = new QMX_Output_Html_ACF( $collector );
-	}
-
-	return $output;
-}, 70 );

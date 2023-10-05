@@ -1,13 +1,15 @@
 <?php declare(strict_types=1);
 
+namespace QMX\Output\Html;
+
 defined( 'WPINC' ) || die();
 
 /**
- * @property-read QMX_Collector_Paths $collector
+ * @property-read \QMX\Collector\Paths $collector
  */
-class QMX_Output_Html_Paths extends QM_Output_Html {
+class Paths extends \QM_Output_Html {
 
-	public function __construct( QM_Collector $collector ) {
+	public function __construct( \QM_Collector $collector ) {
 		parent::__construct( $collector );
 		add_filter( 'qm/output/panel_menus', array( &$this, 'panel_menu' ), 60 );
 	}
@@ -17,7 +19,7 @@ class QMX_Output_Html_Paths extends QM_Output_Html {
 	}
 
 	public function output() {
-		/** @var QMX_Data_Paths $data */
+		/** @var \QMX\Data\Paths $data */
 		$data = $this->collector->get_data();
 
 		echo '<div class="qm" id="' . esc_attr( $this->collector->id() ) . '">';
@@ -105,11 +107,3 @@ class QMX_Output_Html_Paths extends QM_Output_Html {
 	}
 
 }
-
-add_filter( 'qm/outputter/html', static function ( array $output ) : array {
-	if ( $collector = QM_Collectors::get( 'paths' ) ) {
-		$output['paths'] = new QMX_Output_Html_Paths( $collector );
-	}
-
-	return $output;
-}, 70 );

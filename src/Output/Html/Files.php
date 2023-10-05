@@ -1,13 +1,15 @@
 <?php declare(strict_types=1);
 
+namespace QMX\Output\Html;
+
 defined( 'WPINC' ) || die();
 
 /**
- * @property-read QMX_Collector_Files $collector
+ * @property-read \QMX\Collector\Files $collector
  */
-class QMX_Output_Html_Files extends QM_Output_Html {
+class Files extends \QM_Output_Html {
 
-	public function __construct( QM_Collector $collector ) {
+	public function __construct( \QM_Collector $collector ) {
 		parent::__construct( $collector );
 
 		add_filter( 'qm/output/title', array( &$this, 'admin_title' ), 40 );
@@ -200,11 +202,3 @@ class QMX_Output_Html_Files extends QM_Output_Html {
 	}
 
 }
-
-add_filter( 'qm/outputter/html', static function ( array $output ) : array {
-	if ( $collector = QM_Collectors::get( 'files' ) ) {
-		$output['files'] = new QMX_Output_Html_Files( $collector );
-	}
-
-	return $output;
-}, 70 );

@@ -1,12 +1,14 @@
 <?php declare(strict_types=1);
 
+namespace QMX\Collector;
+
 defined( 'WPINC' ) || die();
 
 /**
- * @extends QM_DataCollector<QMX_Data_ACF>
- * @property-read QMX_Data_ACF $data
+ * @extends \QM_DataCollector<\QMX\Data\ACF>
+ * @property-read \QMX\Data\ACF $data
  */
-class QMX_Collector_ACF extends QM_DataCollector {
+class ACF extends \QM_DataCollector {
 
 	public $id = 'acf';
 
@@ -23,7 +25,7 @@ class QMX_Collector_ACF extends QM_DataCollector {
 		$this->data->local_json['save'] = get_stylesheet_directory() . '/acf-json';
 	}
 
-	public function get_storage(): QM_Data {
+	public function get_storage(): \QM_Data {
 		require_once 'qmx-acf-data.php';
 		return new QMX_Data_ACF();
 	}
@@ -260,5 +262,3 @@ class QMX_Collector_ACF extends QM_DataCollector {
 	}
 
 }
-
-QM_Collectors::add( new QMX_Collector_ACF );

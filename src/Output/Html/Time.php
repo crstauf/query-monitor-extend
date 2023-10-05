@@ -1,20 +1,22 @@
 <?php declare(strict_types=1);
 
+namespace QMX\Output\Html;
+
 defined( 'WPINC' ) || die();
 
 /**
- * @property-read QMX_Collector_Time $collector
+ * @property-read \QMX\Collector\Time $collector
  */
-class QMX_Output_Html_Time extends QM_Output_Html {
+class Time extends \QM_Output_Html {
 
-	public function __construct( QM_Collector $collector ) {
+	public function __construct( \QM_Collector $collector ) {
 		parent::__construct( $collector );
 		add_filter( 'qm/output/panel_menus', array( &$this, 'panel_menu' ), 60 );
 	}
 
 	public function output() {
 		$wp_offset = get_option( 'gmt_offset' );
-		/** @var QMX_Data_Time $data */
+		/** @var \QMX\Data\Time $data */
 		$data = $this->collector->get_data();
 
 		echo '<div class="qm qm-non-tabular" id="' . esc_attr( $this->collector->id() ) . '">' .
@@ -128,11 +130,3 @@ class QMX_Output_Html_Time extends QM_Output_Html {
 	}
 
 }
-
-add_filter( 'qm/outputter/html', static function ( array $output ) : array {
-	if ( $collector = QM_Collectors::get( 'time' ) ) {
-		$output['time'] = new QMX_Output_Html_Time( $collector );
-	}
-
-	return $output;
-}, 70 );

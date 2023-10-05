@@ -1,11 +1,15 @@
 <?php declare(strict_types=1);
 
+namespace QMX\Collector;
+
+use DateTimeZone;
+
 defined( 'WPINC' ) || die();
 
 /**
- * @extends QM_DataCollector<QMX_Data_Time>
+ * @extends \QM_DataCollector<\QMX\Data\Time>
  */
-class QMX_Collector_Time extends QM_DataCollector {
+class Time extends \QM_DataCollector {
 
 	public $id = 'time';
 
@@ -13,9 +17,8 @@ class QMX_Collector_Time extends QM_DataCollector {
 		return __( 'Time', 'query-monitor-extend' );
 	}
 
-	public function get_storage() : QM_Data {
-		require_once 'qmx-time-data.php';
-		return new QMX_Data_Time();
+	public function get_storage() : \QM_Data {
+		return new \QMX\Data\Time();
 	}
 
 	public function process() : void {
@@ -85,8 +88,3 @@ class QMX_Collector_Time extends QM_DataCollector {
 	}
 
 }
-
-add_filter( 'qm/collectors', static function ( array $collectors ) : array {
-	$collectors['time'] = new QMX_Collector_Time;
-	return $collectors;
-} );

@@ -1,12 +1,14 @@
 <?php declare(strict_types=1);
 
+namespace QMX\Collector;
+
 defined( 'WPINC' ) || die();
 
 /**
- * @extends QM_DataCollector<QMX_Data_Paths>
- * @property-write QMX_Data_Paths $data
+ * @extends \QM_DataCollector<\QMX\Data\Paths>
+ * @property-write \QMX\Data\Paths $data
  */
-class QMX_Collector_Paths extends QM_DataCollector {
+class Paths extends \QM_DataCollector {
 
 	public $id = 'paths';
 
@@ -14,9 +16,8 @@ class QMX_Collector_Paths extends QM_DataCollector {
 		return __( 'Paths', 'query-monitor-extend' );
 	}
 
-	public function get_storage(): QM_Data {
-		require_once 'qmx-paths-data.php';
-		return new QMX_Data_Paths();
+	public function get_storage(): \QM_Data {
+		return new \QMX\Data\Paths();
 	}
 
 	public function process() {
@@ -142,8 +143,3 @@ class QMX_Collector_Paths extends QM_DataCollector {
 	}
 
 }
-
-add_filter( 'qm/collectors', static function ( array $collectors ) : array {
-	$collectors['paths'] = new QMX_Collector_Paths;
-	return $collectors;
-} );

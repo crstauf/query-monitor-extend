@@ -1,13 +1,15 @@
 <?php declare(strict_types=1);
 
+namespace QMX\Output\Html;
+
 defined( 'WPINC' ) || die();
 
 /**
  * @property-read QMX_Collector_Image_Sizes $collector
  */
-class QMX_Output_Html_Image_Sizes extends QM_Output_Html {
+class ImageSizes extends \QM_Output_Html {
 
-	public function __construct( QM_Collector $collector ) {
+	public function __construct( \QM_Collector $collector ) {
 		parent::__construct( $collector );
 		add_filter( 'qm/output/panel_menus', array( &$this, 'panel_menu' ), 60 );
 	}
@@ -17,9 +19,9 @@ class QMX_Output_Html_Image_Sizes extends QM_Output_Html {
 	}
 
 	public function output() {
-		/** @var QMX_Collector_Image_Sizes */
+		/** @var \QMX\Collector\ImageSizes */
 		$collector = $this->collector;
-		/** @var QMX_Data_Image_Sizes */
+		/** @var \QMX\Data\ImageSizes */
 		$data = $collector->get_data();
 
 		echo '<div class="qm" id="' . esc_attr( $collector->id() ) . '">';
@@ -161,11 +163,3 @@ class QMX_Output_Html_Image_Sizes extends QM_Output_Html {
 		return $menu;
 	}
 }
-
-add_filter( 'qm/outputter/html', static function ( array $output ) : array {
-	if ( $collector = QM_Collectors::get( 'image_sizes' ) ) {
-		$output['image_sizes'] = new QMX_Output_Html_Image_Sizes( $collector );
-	}
-
-	return $output;
-}, 70 );

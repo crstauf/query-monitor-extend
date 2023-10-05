@@ -1,12 +1,14 @@
 <?php declare(strict_types=1);
 
+namespace QMX\Collector;
+
 defined( 'WPINC' ) || die();
 
 /**
- * @extends QM_DataCollector<QMX_Data_Files>
- * @property-write QMX_Data_Files $data
+ * @extends \QM_DataCollector<\QMX\Data\Files>
+ * @property-write \QMX\Data\Files $data
  */
-class QMX_Collector_Files extends QM_DataCollector {
+class Files extends \QM_DataCollector {
 
 	public $id = 'files';
 
@@ -14,9 +16,8 @@ class QMX_Collector_Files extends QM_DataCollector {
 		return __( 'Files', 'query-monitor-extend' );
 	}
 
-	public function get_storage(): QM_Data {
-		require_once 'qmx-files-data.php';
-		return new QMX_Data_Files();
+	public function get_storage(): \QM_Data {
+		return new \QMX\Data\Files();
 	}
 
 	public function process() {
@@ -49,8 +50,3 @@ class QMX_Collector_Files extends QM_DataCollector {
 	}
 
 }
-
-add_filter( 'qm/collectors', static function ( array $collectors ) : array {
-	$collectors['files'] = new QMX_Collector_Files;
-	return $collectors;
-} );

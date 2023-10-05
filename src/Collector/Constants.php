@@ -1,11 +1,13 @@
 <?php declare(strict_types=1);
 
+namespace QMX\Collector;
+
 defined( 'WPINC' ) || die();
 
 /**
- * @extends QM_DataCollector<QMX_Data_Constants>
+ * @extends \QM_DataCollector<\QMX\Data\Constants>
  */
-class QMX_Collector_Constants extends QM_DataCollector {
+class Constants extends \QM_DataCollector {
 
 	public $id = 'constants';
 
@@ -13,7 +15,7 @@ class QMX_Collector_Constants extends QM_DataCollector {
 		return __( 'Constants', 'query-monitor-extend' );
 	}
 
-	public function get_storage(): QM_Data {
+	public function get_storage(): \QM_Data {
 		require_once 'qmx-constants-data.php';
 		return new QMX_Data_Constants();
 	}
@@ -29,8 +31,3 @@ class QMX_Collector_Constants extends QM_DataCollector {
 	}
 
 }
-
-add_filter( 'qm/collectors', static function ( array $collectors ) : array {
-	$collectors['constants'] = new QMX_Collector_Constants;
-	return $collectors;
-} );

@@ -1,11 +1,13 @@
 <?php declare(strict_types=1);
 
+namespace QMX\Output\Html;
+
 defined( 'WPINC' ) || die();
 
 /**
- * @property-read QMX_Collector_Constants $collector
+ * @property-read \QMX\Collector\Constants $collector
  */
-class QMX_Output_Html_Constants extends QM_Output_Html {
+class Constants extends \QM_Output_Html {
 
 	public function __construct( QM_Collector $collector ) {
 		parent::__construct( $collector );
@@ -87,11 +89,3 @@ class QMX_Output_Html_Constants extends QM_Output_Html {
 	}
 
 }
-
-add_filter( 'qm/outputter/html', static function ( array $output ) : array {
-	if ( $collector = QM_Collectors::get( 'constants' ) ) {
-		$output['constants'] = new QMX_Output_Html_Constants( $collector );
-	}
-
-	return $output;
-}, 70 );

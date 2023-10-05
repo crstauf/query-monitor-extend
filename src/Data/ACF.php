@@ -1,8 +1,10 @@
 <?php declare(strict_types=1);
 
+namespace QMX\Data;
+
 defined( 'WPINC' ) || die();
 
-class QMX_Data_ACF extends QM_Data {
+class ACF extends \QM_Data {
 
 	/**
 	 * @var array<mixed> $fields
