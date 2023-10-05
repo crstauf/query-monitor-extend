@@ -21,10 +21,6 @@ if ( ! defined( 'QMX_TESTED_WITH_QM' ) ) {
 	define( 'QMX_TESTED_WITH_QM', '3.13.1' );
 }
 
-if ( constant( 'QM_DISABLED' ) ) {
-	return;
-}
-
 if ( constant( 'QMX_DISABLED' ) ) {
 	return;
 }
@@ -36,10 +32,6 @@ if ( defined( 'QMX_LOADED' ) ) {
 }
 
 define( 'QMX_LOADED', __FILE__ );
-
-if ( ! class_exists( 'QueryMonitor' ) || did_action( 'qm/cease' ) ) {
-	return;
-}
 
 spl_autoload_register( static function ( $class_name ) {
     // A nice autoloader.
