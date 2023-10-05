@@ -109,7 +109,7 @@ class Files extends \QM_Output_Html {
 							'>';
 
 								echo '<td class="qm-num">' . ( $i + 1 ) . '</td>';
-								echo '<th scope="row">' . QM_Output_Html::output_filename( str_replace( ABSPATH, '', $file['path'] ), $file['path'] ) . '</th>';
+								echo '<th scope="row">' . \QM_Output_Html::output_filename( str_replace( ABSPATH, '', $file['path'] ), $file['path'] ) . '</th>';
 								echo '<td data-qm-sort-weight="' . esc_attr( (string) $filesize ) . '">';
 									echo ! empty( $filesize ) ? $this->human_file_size( $filesize ) : '&mdash;';
 								echo '</td>';

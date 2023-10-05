@@ -7,7 +7,7 @@ defined( 'WPINC' ) || die();
 class Paths extends \QM_Data {
 
 	/**
-	 * @var array<string, string>
+	 * @var array<string, string|array<string, mixed>>
 	 */
 	public $paths = array();
 

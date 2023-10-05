@@ -17,6 +17,13 @@ class Plugin {
 
 	public static function boot() : void {
 
+if ( constant( 'QM_DISABLED' ) ) {
+	return;
+}
+if ( ! class_exists( 'QueryMonitor' ) || did_action( 'qm/cease' ) ) {
+	return;
+}
+
 		QM_Collectors::add( new ACF() );
 		QM_Collectors::add( new Constants() );
 		QM_Collectors::add( new Files() );
@@ -27,12 +34,14 @@ class Plugin {
 
 		add_filter( 'qm/outputter/html', static function ( array $output ) : array {
 			if ( $collector = QM_Collectors::get( 'constants' ) ) {
-				$output['constants'] = new QMX_Output_Html_Constants( $collector );
+				$output['constants'] = new \QMX\Output\Html\Constants( $collector );
 			}
 
 			return $output;
 		}, 70 );
 	}
+
+	public static function add_plugin_links() : void {
 
 /**
  * Filter: plugin_row_meta
@@ -80,6 +89,10 @@ add_filter( 'plugin_row_meta', static function ( array $meta, string $file ) : a
 	return $meta;
 }, 10, 2 );
 
+	}
+
+	public static function add_wc_conditionals() : void {
+
 add_filter( 'qm/collect/conditionals', static function ( array $conditionals ) : array {
 	$conditionals = array_merge( $conditionals, array(
 		'has_post_thumbnail',
@@ -116,5 +129,7 @@ add_filter( 'qm/collect/conditionals', static function ( array $conditionals ) :
 
 	return $conditionals;
 } );
+
+	}
 
 }

@@ -2,6 +2,9 @@
 
 namespace QMX\Collector;
 
+use QM_Collectors;
+use QM_Util;
+
 defined( 'WPINC' ) || die();
 
 /**

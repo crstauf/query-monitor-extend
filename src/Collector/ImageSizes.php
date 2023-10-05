@@ -2,6 +2,8 @@
 
 namespace QMX\Collector;
 
+use WP_Post;
+
 defined( 'WPINC' ) || die();
 
 /**

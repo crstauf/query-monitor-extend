@@ -49,14 +49,14 @@ class Paths extends \QM_Output_Html {
 
 								if ( is_string( $value ) ) {
 
-									# Remove ABSPATH and add back to support paths without ABSPATH.
+									// Remove ABSPATH and add back to support paths without ABSPATH.
 									$possible_path = str_replace( ABSPATH, '', $value );
 									$possible_path = ABSPATH . $possible_path;
 
 									$value = esc_html( $value );
 
 									if ( file_exists( $possible_path ) ) {
-										$value = QM_Output_Html::output_filename( $value, $possible_path );
+										$value = \QM_Output_Html::output_filename( $value, $possible_path );
 									}
 
 									echo '<td>' . $value . '</td>';

@@ -9,7 +9,7 @@ defined( 'WPINC' ) || die();
  */
 class ACF extends \QM_Output_Html {
 
-	public function __construct( QM_Collector $collector ) {
+	public function __construct( \QM_Collector $collector ) {
 		parent::__construct( $collector );
 
 		add_filter( 'qm/output/panel_menus', array( $this, 'panel_menu' ), 60 );
@@ -316,7 +316,7 @@ class ACF extends \QM_Output_Html {
 			'<a href="%1$s" class="qm-edit-link">%2$s%3$s</a>',
 			esc_url( $url ),
 			esc_html( $title ),
-			QueryMonitor::icon( 'edit' )
+			\QueryMonitor::icon( 'edit' )
 		);
 	}
 
@@ -348,7 +348,7 @@ class ACF extends \QM_Output_Html {
 			return;
 		}
 
-		echo QM_Output_Html::output_filename( $group, $filepath );
+		echo \QM_Output_Html::output_filename( $group, $filepath );
 	}
 
 	/**
@@ -375,7 +375,7 @@ class ACF extends \QM_Output_Html {
 			'<a href="%1$s" class="qm-edit-link">%2$s%3$s</a>',
 			esc_url( $url ),
 			esc_html( $group['title'] ),
-			QueryMonitor::icon( 'edit' )
+			\QueryMonitor::icon( 'edit' )
 		);
 	}
 
@@ -466,7 +466,7 @@ class ACF extends \QM_Output_Html {
 			echo '<tr>';
 			echo '<th scope="row">Save</th>';
 			echo '<td><code>acf/settings/save_json</code></td>';
-			echo '<td colspan="2">' . QM_Output_Html::output_filename( $this->remove_abspath( $directory ), $directory ) . '</td>';
+			echo '<td colspan="2">' . \QM_Output_Html::output_filename( $this->remove_abspath( $directory ), $directory ) . '</td>';
 			echo '</tr>';
 		}
 
@@ -482,7 +482,7 @@ class ACF extends \QM_Output_Html {
 				}
 
 				echo '<td class="qm-num">' . esc_html( (string) $i ) . '</td>';
-				echo '<td>' . QM_Output_Html::output_filename( $this->remove_abspath( $path ), $path ) . '</td>';
+				echo '<td>' . \QM_Output_Html::output_filename( $this->remove_abspath( $path ), $path ) . '</td>';
 
 				echo '</tr>';
 
@@ -530,7 +530,7 @@ class ACF extends \QM_Output_Html {
 				'<tr><th scope="row">%s</th><td>%s</td><td>%s</td></tr>',
 				esc_html( $group['title'] ),
 				esc_html( $group['key'] ),
-				QM_Output_Html::output_filename( $this->remove_abspath( $group['local_file'] ), $group['local_file'] )
+				\QM_Output_Html::output_filename( $this->remove_abspath( $group['local_file'] ), $group['local_file'] )
 			);
 		}
 

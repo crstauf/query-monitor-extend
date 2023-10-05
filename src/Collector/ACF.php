@@ -2,6 +2,8 @@
 
 namespace QMX\Collector;
 
+use QM_Backtrace;
+
 defined( 'WPINC' ) || die();
 
 /**

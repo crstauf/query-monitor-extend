@@ -9,7 +9,7 @@ defined( 'WPINC' ) || die();
  */
 class Constants extends \QM_Output_Html {
 
-	public function __construct( QM_Collector $collector ) {
+	public function __construct( \QM_Collector $collector ) {
 		parent::__construct( $collector );
 		add_filter( 'qm/output/panel_menus', array( &$this, 'panel_menu' ), 60 );
 	}
@@ -53,7 +53,7 @@ class Constants extends \QM_Output_Html {
 							echo '<tr>';
 								echo '<td class="qm-num">' . $i++ . '</td>';
 								echo '<td class="qm-ltr" data-qm-sort-weight="' . strtolower( esc_attr( $constant ) ) . '"><code style="user-select: all;">' . esc_html( $constant ) . '</code></td>';
-								echo '<td ' . ( is_bool( $value ) ? ' class="qm-' . $bools[ $value ] . '"' : '' ) . '>' . esc_html( (string) QM_Util::display_variable( $value ) ) . '</td>';
+								echo '<td ' . ( is_bool( $value ) ? ' class="qm-' . $bools[ $value ] . '"' : '' ) . '>' . esc_html( (string) \QM_Util::display_variable( $value ) ) . '</td>';
 								echo '<td class="qm-ltr">' . esc_html( gettype( $value ) ) . '</td>';
 							echo '</tr>';
 						}
