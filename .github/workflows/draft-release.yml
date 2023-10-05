@@ -1,6 +1,7 @@
 name: "Draft new release"
 
 on:
+  pull_request:
   workflow_dispatch:
     inputs:
       version:
