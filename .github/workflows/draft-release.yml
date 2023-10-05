@@ -21,8 +21,8 @@ jobs:
         run: |
           sh dev/create-release-files.sh
 
-      - name: "Create release"
-        uses: "marvinpinto/action-automatic-releases@1.2.1"
+      - name: "Draft new release"
+        uses: marvinpinto/action-automatic-releases@1.2.1
         with:
           repo_token: "${{ secrets.GITHUB_TOKEN }}"
           draft: true
