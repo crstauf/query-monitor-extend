@@ -125,7 +125,7 @@ class QMX_Collector_Image_Sizes extends QM_DataCollector {
 		}
 
 		foreach ( $blocks as $block ) {
-			if ( 'core/image' !== $block['blockName'] ) {
+			if ( 'core/image' !== $block['blockName'] || empty( $block['attrs'] ) || empty( $block['attrs']['sizeSlug'] ) ) {
 				continue;
 			}
 
@@ -140,12 +140,12 @@ class QMX_Collector_Image_Sizes extends QM_DataCollector {
 	}
 
 	/**
-	 * @param string $image
+	 * @param false|array<int, string> $image
 	 * @param int $attachment_id
-	 * @param string $size
-	 * @return string
+	 * @param string|int[] $size
+	 * @return false|array<int, string>
 	 */
-	public function filter__wp_get_attachment_image_src( $image, $attachment_id, $size ) : string {
+	public function filter__wp_get_attachment_image_src( $image, int $attachment_id, $size ) {
 		if ( did_action( 'qm/cease' ) ) {
 			return $image;
 		}
