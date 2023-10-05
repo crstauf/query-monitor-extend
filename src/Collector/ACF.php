@@ -26,7 +26,6 @@ class ACF extends \QM_DataCollector {
 	}
 
 	public function get_storage(): \QM_Data {
-		require_once 'qmx-acf-data.php';
 		return new \QMX\Data\ACF();
 	}
 

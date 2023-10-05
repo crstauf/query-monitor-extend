@@ -83,7 +83,6 @@ class ImageSizes extends \QM_DataCollector {
 	}
 
 	public function get_storage(): \QM_Data {
-		require_once 'qmx-image-sizes-data.php';
 		return new \QMX\Data\ImageSizes();
 	}
 
