@@ -2,15 +2,8 @@
 <ruleset name="CSSLLC">
     <description>Query Monitor Extend Coding Standards.</description>
 
-    <file>acf</file>
-    <file>constants</file>
-    <file>files</file>
-    <file>heartbeat</file>
-    <file>image-sizes</file>
-    <file>paths</file>
-    <file>time</file>
-    <file>qmx-conditionals.php</file>
     <file>query-monitor-extend.php</file>
+    <file>src/</file>
 
     <arg name="extensions" value="php"/>
     <arg name="severity" value="4"/>

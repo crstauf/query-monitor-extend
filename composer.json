@@ -17,19 +17,14 @@
       "dealerdirect/phpcodesniffer-composer-installer": true,
       "phpstan/extension-installer": true,
       "cweagans/composer-patches": true,
-      "composer/installers": true
+      "composer/installers": false
     }
   },
   "license": "proprietary",
   "extra": {
-    "installer-paths": {
-      "vendor/wordpress-plugins/{$name}/": [
-        "type:wordpress-plugin"
-      ]
-    },
     "patches": {
       "php-stubs/acf-pro-stubs": {
-        "PHPStan return types": "dev/patches/acf-pro-stubs.patch"
+        "PHPStan return types": "tests/phpstan/patches/acf-pro-stubs.patch"
       }
     }
   }

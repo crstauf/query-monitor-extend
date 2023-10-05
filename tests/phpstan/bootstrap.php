@@ -1,7 +1,5 @@
 <?php
 
-require_once 'vendor/wordpress-plugins/query-monitor/query-monitor.php';
-
 if ( ! function_exists( 'is_production' ) ) {
 
 	/**

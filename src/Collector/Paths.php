@@ -77,6 +77,7 @@ class Paths extends \QM_DataCollector {
 			'get_theme_file_uri()'           => get_theme_file_uri(),
 		) );
 
+		/** @phpstan-ignore-next-line WP_DEBUG_LOG can be bool|string */
 		if ( defined( 'WP_DEBUG_LOG' ) && is_string( constant( 'WP_DEBUG_LOG' ) ) ) {
 			$this->data->paths['WP_DEBUG_LOG'] = constant( 'WP_DEBUG_LOG' );
 		}

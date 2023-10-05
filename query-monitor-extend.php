@@ -34,7 +34,7 @@ if ( defined( 'QMX_LOADED' ) ) {
 define( 'QMX_LOADED', __FILE__ );
 
 spl_autoload_register( static function ( $class_name ) {
-    // A nice autoloader.
+	// A nice autoloader.
 });
 
 add_action( 'plugins_loaded', array( QMX\Plugin::class, 'boot' ), 10, 0 );

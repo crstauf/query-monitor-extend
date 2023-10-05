@@ -1,50 +1,19 @@
-includes:
-	- phpstan-baseline.neon
-
 parameters:
 	level: 8
 	paths:
-		- acf/
-		- constants/
-		- files/
-		- heartbeat/
-		- image-sizes/
-		- paths/
-		- time/
-		- qmx-conditionals.php
 		- query-monitor-extend.php
-	excludePaths:
-		- vendor/
+		- src/
 	bootstrapFiles:
-		- dev/phpstan-bootstrap.php
-		- vendor/php-stubs/wordpress-stubs/wordpress-stubs.php
 		- vendor/php-stubs/acf-pro-stubs/acf-pro-stubs.php
+		- tests/phpstan/bootstrap.php
+		- vendor/johnbillion/query-monitor/query-monitor.php
 	stubFiles:
-		- dev/wordpress-overrides.stub
+		- tests/phpstan/wordpress-overrides.stub
 	dynamicConstantNames:
+		- QMX_DISABLED
 		- CONCATENATE_SCRIPTS
 		- COMPRESS_SCRIPTS
 		- COMPRESS_CSS
 	tmpDir: .phpstan-cache/
-	reportUnmatchedIgnoredErrors: false
-	ignoreErrors:
-		- '#^Function yoast_get_primary_term_id not found.$#'
-		# Uses func_get_args()
-		- '#^Function apply_filters invoked with [34567] parameters, 2 required\.$#'
-		- '#^Function do_action invoked with [3456] parameters, 1-2 required\.$#'
-		- '#^Function current_user_can invoked with 2 parameters, 1 required\.$#'
-		- '#^Function add_query_arg invoked with [123] parameters?, 0 required\.$#'
-		- '#^Function add_theme_support invoked with [2345] parameters, 1 required\.$#'
-		- '#^Function wp_sprintf invoked with [23456] parameters, 1 required\.$#'
-		# https://core.trac.wordpress.org/ticket/43304
-		- '/^Parameter #2 \$deprecated of function load_plugin_textdomain expects string, false given\.$/'
-		# WP-CLI accepts a class as callable
-		- '/^Parameter #2 \$callable of static method WP_CLI::add_command\(\) expects callable\(\): mixed, \S+ given\.$/'
-		- '#PHPDoc tag @throws with type .*? is not subtype of Throwable#'
-		- '#Function gravity_form not found.#'
-		- '/^Parameter #1 \$args of function wp_nav_menu expects.* given\.$/'
-
 	checkAlwaysTrueStrictComparison: true
-
-	# Unfortunately, DocBlocks can't be relied upon in WordPress.
-	treatPhpDocTypesAsCertain: false
+	#ignoreErrors:
