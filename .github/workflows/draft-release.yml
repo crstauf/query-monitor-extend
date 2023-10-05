@@ -22,11 +22,11 @@ jobs:
           sh dev/create-release-files.sh
 
       - name: "Draft new release"
-        uses: marvinpinto/action-automatic-releases@latest
+        uses: softprops/action-gh-release@v1
         with:
-          repo_token: "${{ secrets.GITHUB_TOKEN }}"
+          token: "${{ secrets.GITHUB_TOKEN }}"
           draft: true
-          title: "${{ github.event.inputs.version }}"
+          name: "${{ github.event.inputs.version }}"
           files: |
             releases/plugin.zip
             releases/mu-plugin.zip
