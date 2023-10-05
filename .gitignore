@@ -1,3 +1,4 @@
 /*.savedSearch
 /.phpstan-cache
 /vendor
+/releases
