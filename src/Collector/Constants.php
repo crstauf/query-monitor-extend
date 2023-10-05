@@ -17,7 +17,7 @@ class Constants extends \QM_DataCollector {
 
 	public function get_storage(): \QM_Data {
 		require_once 'qmx-constants-data.php';
-		return new QMX_Data_Constants();
+		return new \QMX\Data\Constants();
 	}
 
 	public function process() : void {
