@@ -104,8 +104,20 @@ if ( trailingslashit( constant( 'WPMU_PLUGIN_DIR' ) ) === $dir ) {
 
 # Include all collector and outputters.
 foreach ( $collector_names as $collector_name ) {
-	include_once sprintf( '%1$s%2$s/qmx-%2$s-collector.php', $dir, $collector_name );
-	include_once sprintf( '%1$s%2$s/qmx-%2$s-output.php', $dir, $collector_name );
+	$files = array(
+		sprintf( '%1$s%2$s/qmx-%2$s-collector.php', $dir, $collector_name ),
+		sprintf( '%1$s%2$s/qmx-%2$s-output.php', $dir, $collector_name ),
+	);
+
+	$files = array_filter( $files, 'file_exists' );
+
+	if ( count( $files ) !== 2 ) {
+		continue;
+	}
+
+	foreach ( $files as $file ) {
+		require_once $file;
+	}
 }
 
 # Include additional conditionals.
