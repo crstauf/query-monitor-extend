@@ -82,7 +82,7 @@ if ( ! class_exists( 'QueryMonitor' ) || did_action( 'qm/cease' ) ) {
 	return;
 }
 
-$collector_names = array(
+$collector_names = apply_filters( 'qmx/collectors', array(
 	'acf',
 	'constants',
 	'files',
@@ -90,7 +90,7 @@ $collector_names = array(
 	'image-sizes',
 	'paths',
 	'time',
-);
+) );
 
 $dir = trailingslashit( __DIR__ );
 
