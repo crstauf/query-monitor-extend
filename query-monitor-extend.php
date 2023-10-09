@@ -89,6 +89,7 @@ $collector_names = apply_filters( 'qmx/collectors', array(
 	'heartbeat',
 	'image-sizes',
 	'paths',
+	'server-get-post',
 	'time',
 ) );
 
