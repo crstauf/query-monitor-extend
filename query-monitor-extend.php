@@ -86,10 +86,10 @@ $collector_names = apply_filters( 'qmx/collectors', array(
 	'acf',
 	'constants',
 	'files',
+	'globals',
 	'heartbeat',
 	'image-sizes',
 	'paths',
-	'server-get-post',
 	'time',
 ) );
 

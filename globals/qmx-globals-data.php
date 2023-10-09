@@ -2,7 +2,7 @@
 
 defined( 'WPINC' ) || die();
 
-class QMX_Data_Server_Get_Post extends QM_Data {
+class QMX_Data_Globals extends QM_Data {
 
 	/**
 	 * @var array<string, scalar>
