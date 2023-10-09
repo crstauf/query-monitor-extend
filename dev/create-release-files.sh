@@ -36,6 +36,11 @@ cp -r files/ releases/plugins/query-monitor-extend/files;
 cp -r files/ releases/mu-plugins/query-monitor-extend/files;
 echo "- files";
 
+# Globals
+cp -r globals/ releases/plugins/query-monitor-extend/globals;
+cp -r globals/ releases/mu-plugins/query-monitor-extend/globals;
+echo "- globals";
+
 # Heartbeat
 cp -r heartbeat/ releases/plugins/query-monitor-extend/heartbeat;
 cp -r heartbeat/ releases/mu-plugins/query-monitor-extend/heartbeat;

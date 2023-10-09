@@ -9,6 +9,7 @@ on:
       - acf/*.php
       - constants/*.php
       - files/*.php
+      - globals/*.php
       - heartbeat/*.php
       - image-sizes/*.php
       - paths/*.php
@@ -22,6 +23,7 @@ on:
       - acf/*.php
       - constants/*.php
       - files/*.php
+      - globals/*.php
       - heartbeat/*.php
       - image-sizes/*.php
       - paths/*.php
@@ -53,6 +55,7 @@ jobs:
               - added|modified: 'acf/*.php'
               - added|modified: 'constants/*.php'
               - added|modified: 'files/*.php'
+              - added|modified: 'globals/*.php'
               - added|modified: 'heartbeat/*.php'
               - added|modified: 'image-sizes/*.php'
               - added|modified: 'paths/*.php'
