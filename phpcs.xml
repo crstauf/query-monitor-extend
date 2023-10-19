@@ -6,6 +6,7 @@
     <file>constants</file>
     <file>files</file>
     <file>heartbeat</file>
+    <file>globals</file>
     <file>image-sizes</file>
     <file>paths</file>
     <file>time</file>

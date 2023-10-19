@@ -7,6 +7,7 @@ parameters:
 		- acf/
 		- constants/
 		- files/
+		- globals/
 		- heartbeat/
 		- image-sizes/
 		- paths/
