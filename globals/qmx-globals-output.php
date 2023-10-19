@@ -156,7 +156,6 @@ class QMX_Output_Html_Globals extends QM_Output_Html {
 			echo '</div>';
 
 		}
-
 	}
 
 	/**
