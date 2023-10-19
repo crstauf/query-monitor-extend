@@ -13,6 +13,7 @@ class QMX_Output_Html_Globals extends QM_Output_Html {
 	}
 
 	public function output() {
+		/** @var QMX_Data_Globals */
 		$data = $this->collector->get_data();
 
 		if ( ! empty( $data->server ) ) {
@@ -163,6 +164,7 @@ class QMX_Output_Html_Globals extends QM_Output_Html {
 	 * @return array<string, array<string, mixed>>
 	 */
 	public function panel_menu( array $menu ) {
+		/** @var QMX_Data_Globals */
 		$data = $this->collector->get_data();
 
 		if ( ! empty( $data->server ) ) {
