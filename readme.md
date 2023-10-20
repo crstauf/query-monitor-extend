@@ -11,7 +11,7 @@
 ## Panels
 
 | Panel       | Description |
-| ----------- | ----------- |
+| :---------- | :---------- |
 | ACF         | Calls to `the_field()` and `get_field()`, and [Local JSON](https://www.advancedcustomfields.com/resources/local-json/) configuration |
 | Constants   | User defined constants: [`get_defined_constants( true )['user']`](https://www.php.net/manual/en/function.get-defined-constants.php) |
 | Files       | Included files: [`get_included_files()`](https://www.php.net/manual/en/function.get-included-files.php) |
