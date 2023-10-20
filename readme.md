@@ -6,7 +6,7 @@
 
 # Query Monitor Extend
 
-> WordPress plugin with customizations to enhance/extend the already awesome [Query Monitor](https://github.com/johnbillion/query-monitor) plugin by [John Blackbourn](https://github.com/johnbillion/).
+> WordPress plugin with customizations to enhance and extend the already awesome [Query Monitor](https://github.com/johnbillion/query-monitor) plugin by [John Blackbourn](https://github.com/johnbillion/).
 
 ## Panels
 
