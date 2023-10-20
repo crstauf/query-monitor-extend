@@ -1,6 +1,7 @@
 {
   "name": "crstauf/query-monitor-extend",
   "description": "Query Monitor Extend",
+  "type": "wordpress-plugin",
   "require-dev": {
     "automattic/vipwpcs": "^3.0",
     "szepeviktor/phpstan-wordpress": "^1.1",
