@@ -1,7 +1,14 @@
 {
   "name": "crstauf/query-monitor-extend",
   "description": "Query Monitor Extend",
+  "license": "GPL-3.0",
   "type": "wordpress-plugin",
+  "authors": [
+    {
+      "name": "Caleb Stauffer",
+      "homepage": "https://develop.calebstauffer.com"
+    }
+  ],
   "require-dev": {
     "automattic/vipwpcs": "^3.0",
     "szepeviktor/phpstan-wordpress": "^1.1",
@@ -21,7 +28,6 @@
       "composer/installers": true
     }
   },
-  "license": "proprietary",
   "extra": {
     "installer-paths": {
       "vendor/wordpress-plugins/{$name}/": [
