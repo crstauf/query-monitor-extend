@@ -12,14 +12,14 @@
 
 | Panel       | Description |
 | :---------- | :---------- |
-| ACF         | Calls to `the_field()` and `get_field()`, and [Local JSON](https://www.advancedcustomfields.com/resources/local-json/) configuration |
+| ACF         | Calls to [`the_field()`](https://www.advancedcustomfields.com/resources/the_field/) and [`get_field()`](https://www.advancedcustomfields.com/resources/get_field/), and [Local JSON](https://www.advancedcustomfields.com/resources/local-json/) configuration |
 | Constants   | User defined constants: [`get_defined_constants( true )['user']`](https://www.php.net/manual/en/function.get-defined-constants.php) |
 | Files       | Included files: [`get_included_files()`](https://www.php.net/manual/en/function.get-included-files.php) |
 | $_SERVER    | Dump of [`$_SERVER`](https://www.php.net/manual/en/reserved.variables.server.php) |
 | $_GET       | Dump of [`$_GET`](https://www.php.net/manual/en/reserved.variables.get.php) (if set) |
 | $_POST      | Dump of [`$_POST`](https://www.php.net/manual/en/reserved.variables.post.php) (if set) |
 | Heartbeats  | Monitors [WordPress' Heartbeat](https://developer.wordpress.org/plugins/javascript/heartbeat-api/) |
-| Image Sizes | Names, count, width, height, ratio, cropped, and source of registered [image sizes](https://developer.wordpress.org/themes/functionality/featured-images-post-thumbnails/) |
+| Image Sizes | Names, count, width, height, ratio, cropped, and source of WordPress registered [image sizes](https://developer.wordpress.org/themes/functionality/featured-images-post-thumbnails/) |
 | Paths       | Constants and functions for WordPress URLs and paths |
 | Time        | Current time in timezones: UTC, server, WordPress, and browser |
 
