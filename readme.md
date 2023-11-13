@@ -23,6 +23,15 @@
 | Paths       | Constants and functions for WordPress URLs and paths |
 | Time        | Current time in timezones: UTC, server, WordPress, and browser |
 
+## Demo
+
+Demos of QMX are available via the [WordPress Playground](https://developer.wordpress.org/playground/):
+
+- [Install as plugin](https://playground.wordpress.net/#%7B%22landingPage%22:%22/wp-admin/plugins.php%22,%22steps%22:%5B%7B%22step%22:%22login%22,%22username%22:%22admin%22,%22password%22:%22password%22%7D,%7B%22step%22:%22installPlugin%22,%22pluginZipFile%22:%7B%22resource%22:%22wordpress.org/plugins%22,%22slug%22:%22query-monitor%22%7D%7D,%7B%22step%22:%22installPlugin%22,%22pluginZipFile%22:%7B%22resource%22:%22url%22,%22url%22:%22https://calebstauffer.wpengine.com/plugin-proxy.php?repo=crstauf/query-monitor-extend&name=plugin.zip%22,%22caption%22:%22Installing%20Query%20Monitor%20Extend%22%7D%7D%5D%7D)
+- [Install as mu-plugin](https://playground.wordpress.net/#%7B%22landingPage%22:%22/wp-admin/plugins.php?plugin_status=mustuse%22,%22steps%22:%5B%7B%22step%22:%22login%22,%22username%22:%22admin%22,%22password%22:%22password%22%7D,%7B%22step%22:%22installPlugin%22,%22pluginZipFile%22:%7B%22resource%22:%22wordpress.org/plugins%22,%22slug%22:%22query-monitor%22%7D%7D,%7B%22step%22:%22mkdir%22,%22path%22:%22/wordpress/qmx%22%7D,%7B%22step%22:%22writeFile%22,%22path%22:%22/wordpress/qmx/mu-plugin.zip%22,%22data%22:%7B%22resource%22:%22url%22,%22url%22:%22https://calebstauffer.wpengine.com/plugin-proxy.php?repo=crstauf/query-monitor-extend&name=mu-plugin.zip%22,%22caption%22:%22Downloading%20Query%20Monitor%20Extend%22%7D,%22progress%22:%7B%22weight%22:2,%22caption%22:%22Installing%20Query%20Monitor%20Extend%22%7D%7D,%7B%22step%22:%22unzip%22,%22zipPath%22:%22/wordpress/qmx/mu-plugin.zip%22,%22extractToPath%22:%22/wordpress/qmx%22%7D,%7B%22step%22:%22mv%22,%22fromPath%22:%22/wordpress/qmx/mu-plugins/query-monitor-extend%22,%22toPath%22:%22/wordpress/wp-content/mu-plugins/query-monitor-extend%22%7D,%7B%22step%22:%22mv%22,%22fromPath%22:%22/wordpress/qmx/mu-plugins/load-qmx.php%22,%22toPath%22:%22/wordpress/wp-content/mu-plugins/load-qmx.php%22%7D%5D%7D)
+
+See [Demos document](.github/demos.md) for more info.
+
 ## Installing
 
 Recent [releases](https://github.com/crstauf/query-monitor-extend/releases) contain zip files for installation as a WordPress [plugin](https://github.com/crstauf/query-monitor-extend/releases/latest/download/plugin.zip) and [mu-plugin](https://github.com/crstauf/query-monitor-extend/releases/latest/download/mu-plugin.zip).
