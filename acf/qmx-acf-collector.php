@@ -173,7 +173,15 @@ class QMX_Collector_ACF extends QM_DataCollector {
 		}
 
 		if ( ! empty( $row['group'] ) ) {
-			$this->data->field_groups[ $row['group']['key'] ] = $row['group']['title'];
+			$key   = $row['group'];
+			$title = $key;
+
+			if ( is_array( $row['group'] ) ) {
+				$key   = $row['group']['key'];
+				$title = $row['group']['title'];
+			}
+			
+			$this->data->field_groups[ $key ] = $title;
 		}
 
 		$this->data->post_ids[ ( string ) $post_id ]              = $post_id;
