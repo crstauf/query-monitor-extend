@@ -3,18 +3,18 @@
  * Plugin Name: Query Monitor Extend
  * Plugin URI: https://github.com/crstauf/query-monitor-extend
  * Description: Additional panels for Query Monitor by John Blackbourn.
- * Version: 1.6.1
+ * Version: 1.6.2
  * Author: Caleb Stauffer
  * Author URI: https://develop.calebstauffer.com
  * Update URI: false
  *
- * QM tested up to: 3.14.0
+ * QM tested up to: 3.16.3
  */
 
 defined( 'WPINC' ) || die();
 
 defined( 'QMX_DISABLED' ) || define( 'QMX_DISABLED', false );
-defined( 'QMX_TESTED_WITH_QM' ) || define( 'QMX_TESTED_WITH_QM', '3.14.0' );
+defined( 'QMX_TESTED_WITH_QM' ) || define( 'QMX_TESTED_WITH_QM', '3.16.3' );
 
 if ( defined( 'QM_DISABLED' ) && constant( 'QM_DISABLED' ) ) {
 	return;
