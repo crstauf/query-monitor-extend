@@ -4,6 +4,7 @@ defined( 'WPINC' ) || die();
 
 /**
  * @extends QM_DataCollector<QMX_Data_Constants>
+ * @qm-collectors constants
  */
 class QMX_Collector_Constants extends QM_DataCollector {
 
@@ -29,8 +30,3 @@ class QMX_Collector_Constants extends QM_DataCollector {
 	}
 
 }
-
-add_filter( 'qm/collectors', static function ( array $collectors ) : array {
-	$collectors['constants'] = new QMX_Collector_Constants;
-	return $collectors;
-} );
