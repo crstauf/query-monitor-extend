@@ -121,5 +121,8 @@ foreach ( $collector_names as $collector_name ) {
 	}
 }
 
+# Include hook timing feature.
+include_once $dir . 'qmx-time-hooks.php';
+
 # Include additional conditionals.
 include_once $dir . 'qmx-conditionals.php';
