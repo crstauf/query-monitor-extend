@@ -45,7 +45,14 @@ function qmx_stop() : void {
 	qmx_time_hooks( 'stop' );
 }
 
-add_action( 'init', 'qmx_start', 0 );
-add_action( 'init', 'qmx_lap', 9 );
-add_action( 'init', 'qmx_lap', 11 );
-add_action( 'init', 'qmx_stop', 25 );
+/**
+ * @return void
+ */
+function qmx_auto() : void {
+	if ( ! doing_action() ) {
+		return;
+	}
+
+	qmx_time_hooks( 'start' );
+	add_action( current_action(), 'qmx_stop', PHP_INT_MAX );
+}
