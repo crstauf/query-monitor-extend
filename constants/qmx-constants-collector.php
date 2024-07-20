@@ -4,7 +4,7 @@ defined( 'WPINC' ) || die();
 
 /**
  * @extends QM_DataCollector<QMX_Data_Constants>
- * @qm-collectors constants
+ * @qm-collector constants
  */
 class QMX_Collector_Constants extends QM_DataCollector {
 
