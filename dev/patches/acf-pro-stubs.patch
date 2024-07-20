@@ -1,5 +1,5 @@
 diff --git a/acf-pro-stubs.php b/acf-pro-stubs.php
---- dev/null
+--- a/acf-pro-stubs.php
 +++ b/acf-pro-stubs.php
 @@ -21074,8 +21074,8 @@ function acf_register_field_type_info($info)
  *  @date    31/5/17
