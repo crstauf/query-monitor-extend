@@ -38,7 +38,7 @@ Recent [releases](https://github.com/crstauf/query-monitor-extend/releases) cont
 
 ### Composer
 
-If you prefer to use [Composer](https://getcomposer.org/), you can install this pacakge with the following command.
+If you prefer to use [Composer](https://getcomposer.org/), you can install this package with the following command.
 
 ```shell
 composer require --dev crstauf/query-monitor-extend
