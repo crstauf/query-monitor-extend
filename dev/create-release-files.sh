@@ -76,7 +76,7 @@ echo "- query-monitor-extend.php";
 echo "Creating mu-plugin loader...";
 
 # Create file to load mu-plugin
-head -12 query-monitor-extend.php > releases/mu-plugins/load-qmx.php;
+head -13 query-monitor-extend.php > releases/mu-plugins/load-qmx.php;
 echo "add_action( 'plugin_loaded', static function ( \$plugin ) : void {" >> releases/mu-plugins/load-qmx.php;
 echo "\tif ( trailingslashit( constant( 'WP_PLUGIN_DIR' ) ) . 'query-monitor/query-monitor.php' !== \$plugin ) {\n\t\treturn;\n\t}\n" >> releases/mu-plugins/load-qmx.php;
 echo "\trequire_once 'query-monitor-extend/query-monitor-extend.php';" >> releases/mu-plugins/load-qmx.php;
