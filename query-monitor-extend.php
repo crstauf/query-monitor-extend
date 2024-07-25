@@ -7,6 +7,7 @@
  * Author: Caleb Stauffer
  * Author URI: https://develop.calebstauffer.com
  * Update URI: false
+ * Requires Plugins: query-monitor
  *
  * QM tested up to: 3.16.3
  */
