@@ -73,6 +73,11 @@ cp query-monitor-extend.php releases/plugins/query-monitor-extend/query-monitor-
 cp query-monitor-extend.php releases/mu-plugins/query-monitor-extend/query-monitor-extend.php;
 echo "- query-monitor-extend.php";
 
+# Time hooks
+cp qmx-time-hooks.php releases/plugins/query-monitor-extend/qmx-time-hooks.php;
+cp qmx-time-hooks.php releases/mu-plugins/query-monitor-extend/qmx-time-hooks.php;
+echo "- qmx-time-hooks.php";
+
 echo "Creating mu-plugin loader...";
 
 # Create file to load mu-plugin
