@@ -38,21 +38,8 @@ Recent [releases](https://github.com/crstauf/query-monitor-extend/releases) cont
 
 ### Composer
 
-If you prefer to use [Composer](https://getcomposer.org/), you can install by using this repository as the source.
+If you prefer to use [Composer](https://getcomposer.org/), you can install this package with the following command.
 
-Add the following to your project's `composer.json`:
-
-```json
-"repositories": [
-	{
-		"type": "vcs",
-		"url": "https://github.com/crstauf/query-monitor-extend.git"
-	}
-]
-```
-
-And then install:
-
-```
+```shell
 composer require --dev crstauf/query-monitor-extend
 ```
