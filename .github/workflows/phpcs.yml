@@ -1,5 +1,5 @@
 name: PHPCS
-run-name: Run PHPCS on `${{ github.head_ref }}`
+run-name: Run PHPCS on `${{ github.head_ref || github.ref_name }}`
 
 on:
   push:
