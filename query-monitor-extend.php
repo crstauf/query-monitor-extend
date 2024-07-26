@@ -9,13 +9,13 @@
  * Update URI: false
  * Requires Plugins: query-monitor
  *
- * QM tested up to: 3.16.3
+ * QM tested up to: 3.16.4
  */
 
 defined( 'WPINC' ) || die();
 
 defined( 'QMX_DISABLED' ) || define( 'QMX_DISABLED', false );
-defined( 'QMX_TESTED_WITH_QM' ) || define( 'QMX_TESTED_WITH_QM', '3.16.3' );
+defined( 'QMX_TESTED_WITH_QM' ) || define( 'QMX_TESTED_WITH_QM', '3.16.4' );
 
 if ( defined( 'QM_DISABLED' ) && constant( 'QM_DISABLED' ) ) {
 	return;

@@ -1,5 +1,5 @@
 ![WP tested 6.6.1](https://img.shields.io/badge/WP-Tested_v6.6.1-blue)
-![QM tested up to 3.16.3](https://img.shields.io/badge/QM-Tested_v3.16.3-blue)
+![QM tested up to 3.16.4](https://img.shields.io/badge/QM-Tested_v3.16.4-blue)
 ![License: GPL v3](https://img.shields.io/badge/License-GPL_v3-blue)
 [![PHPCS](https://github.com/crstauf/query-monitor-extend/actions/workflows/phpcs.yml/badge.svg)](https://github.com/crstauf/query-monitor-extend/actions/workflows/phpcs.yml)
 [![PHPStan](https://github.com/crstauf/query-monitor-extend/actions/workflows/phpstan.yml/badge.svg)](https://github.com/crstauf/query-monitor-extend/actions/workflows/phpstan.yml)
