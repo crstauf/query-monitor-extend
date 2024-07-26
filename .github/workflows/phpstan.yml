@@ -15,6 +15,7 @@ on:
       - paths/*.php
       - time/*.php
       - qmx-conditionals.php
+      - qmx-time-hooks.php
       - query-monitor-extend.php
       - .github/workflows/phpstan.yml
       - phpstan-baseline.neon
@@ -30,6 +31,7 @@ on:
       - paths/*.php
       - time/*.php
       - qmx-conditionals.php
+      - qmx-time-hooks.php
       - query-monitor-extend.php
       - phpcs.xml
       - .github/workflows/phpcs.yml
@@ -62,6 +64,7 @@ jobs:
               - added|modified: 'paths/*.php'
               - added|modified: 'time/*.php'
               - added|modified: 'qmx-conditionals.php'
+              - added|modified: 'qmx-time-hooks.php'
               - added|modified: 'query-monitor-extend.php'
 
       - name: Setup PHP

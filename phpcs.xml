@@ -11,6 +11,7 @@
     <file>paths</file>
     <file>time</file>
     <file>qmx-conditionals.php</file>
+    <file>qmx-time-hooks.php</file>
     <file>query-monitor-extend.php</file>
 
     <arg name="extensions" value="php"/>
