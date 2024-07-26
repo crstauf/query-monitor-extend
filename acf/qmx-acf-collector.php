@@ -180,7 +180,7 @@ class QMX_Collector_ACF extends QM_DataCollector {
 				$key   = $row['group']['key'];
 				$title = $row['group']['title'];
 			}
-			
+
 			$this->data->field_groups[ $key ] = $title;
 		}
 
