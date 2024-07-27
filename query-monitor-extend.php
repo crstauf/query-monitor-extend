@@ -14,6 +14,10 @@
 
 defined( 'WPINC' ) || die();
 
+if ( ! function_exists( 'get_plugin_data' ) ) {
+	require_once ABSPATH . 'wp-admin/includes/plugin.php';
+}
+
 defined( 'QMX_DISABLED' ) || define( 'QMX_DISABLED', false );
 defined( 'QMX_TESTED_WITH_QM' ) || define( 'QMX_TESTED_WITH_QM', get_plugin_data( __FILE__ )['QM tested up to'] ?? '3.0.0' );
 
