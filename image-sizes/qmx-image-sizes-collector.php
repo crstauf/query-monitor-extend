@@ -144,8 +144,11 @@ class QMX_Collector_Image_Sizes extends QM_DataCollector {
 	 * @param int $attachment_id
 	 * @param string|int[] $size
 	 * @return false|array<int, string>
+	 *
+	 * Removed type constraint on $attachment_id parameter:
+	 * https://github.com/crstauf/query-monitor-extend/issues/77.
 	 */
-	public function filter__wp_get_attachment_image_src( $image, int $attachment_id, $size ) {
+	public function filter__wp_get_attachment_image_src( $image, $attachment_id, $size ) {
 		if ( did_action( 'qm/cease' ) ) {
 			return $image;
 		}
