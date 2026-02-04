@@ -31,9 +31,17 @@ class QMX_Collector_Files extends QM_DataCollector {
 			$php_errors = $collector->get_data();
 
 			if ( ! empty( $php_errors['errors'] ) ) {
-				foreach ( $php_errors['errors'] as $type => $errors ) {
-					foreach ( $errors as $error ) {
-						$files_with_errors[ $error['file'] ] = 1;
+				foreach ( $php_errors['errors'] as $key => $value ) {
+					if ( is_object( $value ) && isset( $value->callsite->file ) ) {
+						// New format: flat array of error objects with callsite
+						$files_with_errors[ $value->callsite->file ] = 1;
+					} elseif ( is_array( $value ) ) {
+						// Old format: nested array grouped by type
+						foreach ( $value as $error ) {
+							if ( isset( $error['file'] ) ) {
+								$files_with_errors[ $error['file'] ] = 1;
+							}
+						}
 					}
 				}
 			}
