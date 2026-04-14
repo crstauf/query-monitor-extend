@@ -108,6 +108,9 @@ if ( trailingslashit( constant( 'WPMU_PLUGIN_DIR' ) ) === $dir ) {
 	$dir .= 'query-monitor-extend/';
 }
 
+# Load the shared concerned-hooks outputter before registration runs.
+require_once $dir . 'qmx-output-html-concerned-hooks.php';
+
 # Include all collector and outputters.
 foreach ( $collector_names as $collector_name ) {
 	$files = array(

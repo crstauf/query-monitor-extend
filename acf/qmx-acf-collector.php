@@ -246,11 +246,9 @@ class QMX_Collector_ACF extends QM_DataCollector {
 	}
 
 	public function get_concerned_actions() {
-		$actions = array(
+		return array(
 			'acf/init',
 		);
-
-		return $actions;
 	}
 
 	public function get_concerned_filters() {
