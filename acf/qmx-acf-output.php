@@ -397,23 +397,19 @@ class QMX_Output_Html_ACF extends QM_Output_Html {
 	 */
 	protected function output_column_caller( array $row ) : void {
 		$trace          = $row['trace'];
-		$filtered_trace = $trace->get_display_trace();
+		$filtered_trace = $trace->get_filtered_trace();
 		$caller_name    = self::output_filename( $row['caller']['function'] . '()', $row['caller']['file'], $row['caller']['line'] );
 		$stack          = array();
 
 		array_shift( $filtered_trace );
 
 		foreach ( $filtered_trace as $item ) {
-			$item = wp_parse_args( $item, array(
-				'file' => '',
-				'line' => '',
-			) );
-
-			if ( empty( $item['display'] ) ) {
+			if ( empty( $item->id ) ) {
 				continue;
 			}
 
-			$stack[] = self::output_filename( $item['display'], $item['file'], $item['line'] );
+			$display = $item->id . '(' . ( $item->args ?? '' ) . ')';
+			$stack[] = self::output_filename( $display, (string) $item->file, (int) ( $item->line ?? 0 ) );
 		}
 
 		if ( 1 < count( $stack ) ) {

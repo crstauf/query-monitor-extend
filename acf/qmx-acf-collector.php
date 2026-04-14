@@ -123,27 +123,43 @@ class QMX_Collector_ACF extends QM_DataCollector {
 
 		$trace = new QM_Backtrace( $args );
 
+		$filtered_trace = $trace->get_filtered_trace();
+		$caller_frame   = $filtered_trace[0] ?? null;
+		$caller_site    = $filtered_trace[1] ?? $caller_frame;
+
 		if ( false === $full_stack_trace ) {
-			foreach ( $trace->get_trace() as $frame ) {
-				if (
-					in_array( $frame['function'], static::get_start_trace_functions() )
-					&& false === stripos( $frame['file'], constant( 'ACF_PATH' ) )
-				) {
-					break;
+			$start_trace_functions = static::get_start_trace_functions();
+			$acf_path              = (string) constant( 'ACF_PATH' );
+
+			foreach ( $filtered_trace as $index => $frame ) {
+				if ( ! in_array( $frame->id, $start_trace_functions, true ) ) {
+					continue;
 				}
 
-				if ( ! empty( $trace->get_trace()[1] ) ) {
-					$trace->ignore( 1 );
+				// QM 4.x shifts file/line up by one frame, so the frame
+				// below this one is where this function was called from.
+				$site = $filtered_trace[ $index + 1 ] ?? $frame;
+
+				if ( ! empty( $site->file ) && false === stripos( (string) $site->file, $acf_path ) ) {
+					$caller_frame = $frame;
+					$caller_site  = $site;
+					break;
 				}
 			}
 		}
+
+		$caller = array(
+			'function' => $caller_frame ? $caller_frame->id : '',
+			'file'     => $caller_site ? $caller_site->file : '',
+			'line'     => $caller_site ? $caller_site->line : 0,
+		);
 
 		$row = array(
 			'field'     => $field,
 			'post_id'   => acf_get_valid_post_id( $post_id ),
 			'trace'     => $trace,
 			'exists'    => ! empty( $field['key'] ),
-			'caller'    => $trace->get_trace()[0],
+			'caller'    => $caller,
 			'group'     => null,
 			'hash'      => null,
 			'duplicate' => false,
