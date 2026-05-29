@@ -85,7 +85,8 @@ class QMX_Output_Html_Heartbeat extends QM_Output_Html {
 
 add_filter( 'qm/outputter/html', static function ( array $output ) : array {
 	if ( $collector = QM_Collectors::get( 'heartbeat' ) ) {
-		$output['heartbeat'] = new QMX_Output_Html_Heartbeat( $collector );
+		$output['heartbeat']                 = new QMX_Output_Html_Heartbeat( $collector );
+		$output['heartbeat-concerned_hooks'] = new QMX_Output_Html_Concerned_Hooks( $collector );
 	}
 
 	return $output;

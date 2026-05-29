@@ -108,7 +108,8 @@ class QMX_Output_Html_Paths extends QM_Output_Html {
 
 add_filter( 'qm/outputter/html', static function ( array $output ) : array {
 	if ( $collector = QM_Collectors::get( 'paths' ) ) {
-		$output['paths'] = new QMX_Output_Html_Paths( $collector );
+		$output['paths']                 = new QMX_Output_Html_Paths( $collector );
+		$output['paths-concerned_hooks'] = new QMX_Output_Html_Concerned_Hooks( $collector );
 	}
 
 	return $output;

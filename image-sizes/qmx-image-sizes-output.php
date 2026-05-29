@@ -164,7 +164,8 @@ class QMX_Output_Html_Image_Sizes extends QM_Output_Html {
 
 add_filter( 'qm/outputter/html', static function ( array $output ) : array {
 	if ( $collector = QM_Collectors::get( 'image_sizes' ) ) {
-		$output['image_sizes'] = new QMX_Output_Html_Image_Sizes( $collector );
+		$output['image_sizes']                 = new QMX_Output_Html_Image_Sizes( $collector );
+		$output['image_sizes-concerned_hooks'] = new QMX_Output_Html_Concerned_Hooks( $collector );
 	}
 
 	return $output;
