@@ -85,7 +85,7 @@ echo "- qmx-conditionals.php";
 cp query-monitor-extend.php releases/plugins/query-monitor-extend/query-monitor-extend.php;
 cp query-monitor-extend.php releases/mu-plugins/query-monitor-extend/query-monitor-extend.php;
 cp qmx-output-html-concerned-hooks.php releases/plugins/query-monitor-extend/qmx-output-html-concerned-hooks.php;
-cp qmx-output-html-concerned-hooks.php releases/mu-pluginsplugins/query-monitor-extend/qmx-output-html-concerned-hooks.php;
+cp qmx-output-html-concerned-hooks.php releases/mu-plugins/query-monitor-extend/qmx-output-html-concerned-hooks.php;
 echo "- query-monitor-extend.php";
 
 # Time hooks
