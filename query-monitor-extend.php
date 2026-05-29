@@ -9,7 +9,7 @@
  * Update URI: false
  * Requires Plugins: query-monitor
  *
- * QM tested up to: 3.16.4
+ * QM tested up to: 4.0.6
  */
 
 defined( 'WPINC' ) || die();
@@ -19,7 +19,7 @@ if ( ! function_exists( 'get_plugin_data' ) ) {
 }
 
 defined( 'QMX_DISABLED' ) || define( 'QMX_DISABLED', false );
-defined( 'QMX_TESTED_WITH_QM' ) || define( 'QMX_TESTED_WITH_QM', get_plugin_data( __FILE__ )['QM tested up to'] ?? '3.0.0' );
+define( 'QMX_TESTED_WITH_QM', get_plugin_data( __FILE__ )['QM tested up to'] ?? '4.0.6' );
 
 if ( defined( 'QM_DISABLED' ) && constant( 'QM_DISABLED' ) ) {
 	return;
@@ -91,7 +91,9 @@ $collector_names = apply_filters( 'qmx/collectors', array(
 	'acf',
 	'constants',
 	'files',
-	'globals',
+	'globals-get',
+	'globals-post',
+	'globals-server',
 	'heartbeat',
 	'image-sizes',
 	'paths',

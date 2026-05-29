@@ -1,0 +1,95 @@
+<?php declare(strict_types=1);
+
+defined( 'WPINC' ) || die();
+
+/**
+ * @property-read QMX_Collector_Globals_Server $collector
+ */
+class QMX_Output_Html_Globals_Server extends QM_Output_Html {
+
+	public function __construct( QM_Collector $collector ) {
+		parent::__construct( $collector );
+		add_filter( 'qm/output/panel_menus', array( &$this, 'panel_menu' ), 60 );
+	}
+
+	public function output() {
+		/** @var QMX_Data_Globals_Server */
+		$data = $this->collector->get_data();
+		$rows = $data->server ?? [];
+
+		echo '<div class="qm" id="qm-global-server">';
+
+			echo '<table class="qm-sortable">';
+				echo '<caption class="qm-screen-reader-text">$_SERVER</caption>';
+				echo '<thead>';
+					echo '<tr>';
+
+						echo '<th scope="col" class="qm-num qm-sorted-asc qm-sortable-column">';
+							echo $this->build_sorter( __( '', 'query-monitor-extend' ) );
+						echo '</th>';
+
+						echo '<th scope="col" class="qm-sortable-column">';
+							echo $this->build_sorter( __( 'Key', 'query-monitor-extend' ) );
+						echo '</th>';
+
+						echo '<th scope="col" class="qm-ltr">';
+							echo __( 'Value', 'query-monitor-extend' );
+						echo '</th>';
+
+					echo '</tr>';
+				echo '</thead>';
+
+				echo '<tbody>';
+
+					$bools = array( true => 'true', false => 'false' );
+					$i     = 1;
+
+					foreach ( $rows as $key => $value ) {
+						if ( is_string( $value ) ) {
+							$value = sanitize_textarea_field( stripslashes( $value ) );
+						}
+
+						echo '<tr>';
+							echo '<td class="qm-num">' . $i++ . '</td>';
+							echo '<td class="qm-ltr" data-qm-sort-weight="' . strtolower( esc_attr( $key ) ) . '"><code style="user-select: all;">' . esc_html( $key ) . '</code></td>';
+							echo '<td ' . ( is_bool( $value ) ? ' class="qm-' . $bools[ $value ] . '"' : '' ) . '>' . esc_html( (string) QM_Util::display_variable( $value ) ) . '</td>';
+						echo '</tr>';
+					}
+
+				echo '</tbody>';
+
+			echo '</table>';
+
+		echo '</div>';
+	}
+
+	/**
+	 * @param array<string, array<string, mixed>> $menu
+	 * @return array<string, array<string, mixed>>
+	 */
+	public function panel_menu( array $menu ) {
+		/** @var QMX_Data_Globals */
+		$data = $this->collector->get_data();
+
+		if ( empty( $data->server ) ) {
+			return $menu;
+		}
+
+		$menu['globals-server'] = $this->menu( array(
+			'title' => '$_SERVER',
+			'id'    => 'query-monitor-extend-globals-server',
+			'href'  => '#qm-globals-server',
+		) );
+
+		return $menu;
+	}
+
+}
+
+add_filter( 'qm/outputter/html', static function ( array $output ) : array {
+	if ( $collector = QM_Collectors::get( 'globals-server' ) ) {
+		$output['globals-server'] = new QMX_Output_Html_Globals_Server( $collector );
+	}
+
+	return $output;
+}, 70 );
