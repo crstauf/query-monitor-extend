@@ -18,7 +18,7 @@ class QMX_Output_Html_ACF extends QM_Output_Html {
 	}
 
 	protected static function identify_duplicates() : bool {
-		$bool = null;
+		static $bool = null;
 
 		if ( ! is_null( $bool ) ) {
 			return $bool;
@@ -237,6 +237,7 @@ class QMX_Output_Html_ACF extends QM_Output_Html {
 		array_shift( $filtered_trace );
 
 		foreach ( $filtered_trace as $item ) {
+			/** @var QM_Data_Stack_Frame $item **/
 			if ( empty( $item->id ) ) {
 				continue;
 			}

@@ -67,13 +67,31 @@ class QMX_Output_Html_Concerned_Hooks extends QM_Output_Html {
 			# for its `data-qm-name` attribute, and closure callbacks leave
 			# `$cb->name` null which fatals in `output_filename()`'s
 			# `strpos()`. Backfill both with the minimum the renderer needs.
+
+			/**
+			 * @var array<int, array{
+			 *     name: string,
+			 *     type: string,
+			 *     parts: array<string>,
+			 *     components: array<string, QM_Component>,
+			 *     actions: list<array{
+			 *         priority: int,
+			 *         callback: QM_Data_Callback
+			 *     }>
+			 * }>
+			 */
 			$hooks = array_map( static function ( array $hook ) : array {
 				$hook['parts'] ??= array();
 
 				foreach ( $hook['actions'] ?? array() as $action ) {
 					$cb = $action['callback'] ?? null;
 
-					if ( is_object( $cb ) && null === $cb->name && 'closure' === $cb->callback_type ) {
+					if ( ! is_object( $cb ) ) {
+						continue;
+					}
+
+					/** @var QM_Data_Callback $cb */
+					if ( null === $cb->name && 'closure' === $cb->callback_type ) {
 						// `{closure}` triggers output_filename's built-in closure formatter.
 						$cb->name = '{closure}';
 					}
