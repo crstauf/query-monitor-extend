@@ -4,6 +4,9 @@
 # - ACF
 # - Constants
 # - Files
+# - Globals: $_GET
+# - Globals: $_POST
+# - Globals: $_SERVER
 # - Heartbeat
 # - Image Sizes
 # - Paths
@@ -36,10 +39,20 @@ cp -r files/ releases/plugins/query-monitor-extend/files;
 cp -r files/ releases/mu-plugins/query-monitor-extend/files;
 echo "- files";
 
-# Globals
-cp -r globals/ releases/plugins/query-monitor-extend/globals;
-cp -r globals/ releases/mu-plugins/query-monitor-extend/globals;
-echo "- globals";
+# Globals: $_GET
+cp -r globals-get/ releases/plugins/query-monitor-extend/globals-get;
+cp -r globals-get/ releases/mu-plugins/query-monitor-extend/globals-get;
+echo "- globals-get";
+
+# Globals: $_POST
+cp -r globals-post/ releases/plugins/query-monitor-extend/globals-post;
+cp -r globals-post/ releases/mu-plugins/query-monitor-extend/globals-post;
+echo "- globals-post";
+
+# Globals: $_SERVER
+cp -r globals-server/ releases/plugins/query-monitor-extend/globals-server;
+cp -r globals-server/ releases/mu-plugins/query-monitor-extend/globals-server;
+echo "- globals-server";
 
 # Heartbeat
 cp -r heartbeat/ releases/plugins/query-monitor-extend/heartbeat;
