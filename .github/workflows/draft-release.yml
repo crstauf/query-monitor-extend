@@ -1,5 +1,5 @@
 name: "Draft new release"
-run-name: "Draft release: ${{ inputs.version }}"
+run-name: "Draft release: `${{ inputs.version }}`"
 
 on:
   workflow_dispatch:
