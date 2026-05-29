@@ -3,7 +3,7 @@
 defined( 'WPINC' ) || die();
 
 /**
- * @extends QM_DataCollector<QMX_Data_Globals>
+ * @extends QM_DataCollector<QMX_Data_Globals_Get>
  */
 class QMX_Collector_Globals_Get extends QM_DataCollector {
 
@@ -23,7 +23,7 @@ class QMX_Collector_Globals_Get extends QM_DataCollector {
 			return;
 		}
 
-		$this->data['get'] = $_GET ?? [];
+		$this->data['get'] = $_GET ?: [];
 	}
 
 }

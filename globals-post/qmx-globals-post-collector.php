@@ -23,7 +23,7 @@ class QMX_Collector_Globals_Post extends QM_DataCollector {
 			return;
 		}
 
-		$this->data['post'] = $_POST ?? [];
+		$this->data['post'] = $_POST ?: [];
 	}
 
 }

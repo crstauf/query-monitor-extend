@@ -13,9 +13,9 @@ class QMX_Output_Html_Globals_Get extends QM_Output_Html {
 	}
 
 	public function output() {
-		/** @var QMX_Data_Globals */
+		/** @var QMX_Data_Globals_Get */
 		$data = $this->collector->get_data();
-		$rows = $data->get ?? [];
+		$rows = $data->get ?: [];
 
 		echo '<div class="qm" id="qm-globals-get">';
 

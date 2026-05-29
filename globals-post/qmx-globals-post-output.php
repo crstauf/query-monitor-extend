@@ -15,7 +15,7 @@ class QMX_Output_Html_Globals_Post extends QM_Output_Html {
 	public function output() {
 		/** @var QMX_Data_Globals_Post */
 		$data = $this->collector->get_data();
-		$rows = $data->post ?? [];
+		$rows = $data->post ?: [];
 
 		echo '<div class="qm" id="qm-globals-post">';
 

@@ -15,7 +15,7 @@ class QMX_Output_Html_Globals_Server extends QM_Output_Html {
 	public function output() {
 		/** @var QMX_Data_Globals_Server */
 		$data = $this->collector->get_data();
-		$rows = $data->server ?? [];
+		$rows = $data->server ?: [];
 
 		echo '<div class="qm" id="qm-global-server">';
 
@@ -68,7 +68,7 @@ class QMX_Output_Html_Globals_Server extends QM_Output_Html {
 	 * @return array<string, array<string, mixed>>
 	 */
 	public function panel_menu( array $menu ) {
-		/** @var QMX_Data_Globals */
+		/** @var QMX_Data_Globals_Server */
 		$data = $this->collector->get_data();
 
 		if ( empty( $data->server ) ) {

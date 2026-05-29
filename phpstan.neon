@@ -7,7 +7,9 @@ parameters:
 		- acf/
 		- constants/
 		- files/
-		- globals/
+		- globals-get/
+		- globals-post/
+		- globals-server/
 		- heartbeat/
 		- image-sizes/
 		- paths/
