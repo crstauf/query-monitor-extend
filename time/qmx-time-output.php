@@ -61,8 +61,8 @@ class QMX_Output_Html_Time extends QM_Output_Html {
 									var d = new Date();
 									var UTC_string = d.toUTCString();
 									var utc_time = d.getTime() + (d.getTimezoneOffset() * 60 * 1000);
-									var server = new Date(utc_time + (<?php echo esc_js($this->collector->get_server_offset()) ?> * 1000));
-									var wp = new Date(utc_time + (<?php echo esc_js((string)($this->collector->get_wp_offset() * HOUR_IN_SECONDS)) ?> * 1000));
+									var server = new Date(utc_time + (<?php echo esc_js( $this->collector->get_server_offset() ) ?> * 1000));
+									var wp = new Date(utc_time + (<?php echo esc_js( (string) ( $this->collector->get_wp_offset() * HOUR_IN_SECONDS ) ) ?> * 1000 ) );
 
 									// UTC
 									qmx_time_utc.innerHTML =
@@ -83,7 +83,7 @@ class QMX_Output_Html_Time extends QM_Output_Html {
 										(10 > server.getHours() ? '0' : '') + server.getHours() + ':' +
 										(10 > server.getMinutes() ? '0' : '') + server.getMinutes() + ':' +
 										(10 > server.getSeconds() ? '0' : '') + server.getSeconds() +
-										' <?php echo esc_js($this->collector->get_server_timezone()); ?>';
+										' <?php echo esc_js( $this->collector->get_server_timezone() ); ?>';
 
 									// WordPress time
 									qmx_time_wp.innerHTML =
@@ -94,7 +94,7 @@ class QMX_Output_Html_Time extends QM_Output_Html {
 										(10 > wp.getHours() ? '0' : '') + wp.getHours() + ':' +
 										(10 > wp.getMinutes() ? '0' : '') + wp.getMinutes() + ':' +
 										(10 > wp.getSeconds() ? '0' : '') + wp.getSeconds() +
-										' <?php echo esc_js($this->collector->get_wp_timezone()); ?>';
+										' <?php echo esc_js( $this->collector->get_wp_timezone() ); ?>';
 
 									// Browser time
 									qmx_time_browser.innerHTML =
