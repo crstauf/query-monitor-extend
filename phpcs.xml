@@ -6,7 +6,9 @@
     <file>constants</file>
     <file>files</file>
     <file>heartbeat</file>
-    <file>globals</file>
+    <file>globals-get</file>
+    <file>globals-post</file>
+    <file>globals-server</file>
     <file>image-sizes</file>
     <file>paths</file>
     <file>time</file>
@@ -90,6 +92,7 @@
     <rule ref="WordPressVIPMinimum">
         <severity>3</severity>
         <exclude name="WordPressVIPMinimum.Constants.ConstantString.NotCheckingConstantName"/>
+        <exclude name="WordPressVIPMinimum.JS"/>
     </rule>
 
     <!-- Generic -->

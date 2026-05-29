@@ -1,0 +1,13 @@
+--- ../acf-pro-stubs.php
++++ ../acf-pro-stubs.php
+@@ -22008,8 +22008,8 @@
+      * @date    31/5/17
+      * @since   5.6.0
+      *
+-     * @param   void
+-     * @return  void
++     * @param   string $name
++     * @return  mixed
+      */
+     function acf_get_field_type($name)
+     {

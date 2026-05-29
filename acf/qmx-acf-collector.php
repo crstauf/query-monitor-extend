@@ -84,7 +84,7 @@ class QMX_Collector_ACF extends QM_DataCollector {
 	 * @return string[]
 	 */
 	protected static function get_start_trace_functions() {
-		$functions = null;
+		static $functions = null;
 
 		if ( ! is_null( $functions ) ) {
 			return $functions;

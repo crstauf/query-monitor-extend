@@ -7,15 +7,19 @@ parameters:
 		- acf/
 		- constants/
 		- files/
-		- globals/
+		- globals-get/
+		- globals-post/
+		- globals-server/
 		- heartbeat/
 		- image-sizes/
 		- paths/
 		- time/
 		- qmx-conditionals.php
+		- qmx-output-html-concerned-hooks.php
 		- query-monitor-extend.php
 	excludePaths:
-		- vendor/
+		analyseAndScan:
+			- vendor/
 	bootstrapFiles:
 		- dev/phpstan-bootstrap.php
 		- vendor/php-stubs/wordpress-stubs/wordpress-stubs.php
@@ -44,8 +48,6 @@ parameters:
 		- '#PHPDoc tag @throws with type .*? is not subtype of Throwable#'
 		- '#Function gravity_form not found.#'
 		- '/^Parameter #1 \$args of function wp_nav_menu expects.* given\.$/'
-
-	checkAlwaysTrueStrictComparison: true
 
 	# Unfortunately, DocBlocks can't be relied upon in WordPress.
 	treatPhpDocTypesAsCertain: false
