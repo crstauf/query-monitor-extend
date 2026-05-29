@@ -1,0 +1,10 @@
+/.editorconfig         export-ignore
+/.gitattributes        export-ignore
+/.github               export-ignore
+/.gitignore            export-ignore
+/composer.lock         export-ignore
+/dev                   export-ignore
+/patches.lock.json     export-ignore
+/phpcs.xml             export-ignore
+/phpstan.neon          export-ignore
+/phpstan-baseline.neon export-ignore
