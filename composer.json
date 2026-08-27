@@ -36,7 +36,7 @@
     },
     "patches": {
       "php-stubs/acf-pro-stubs": [
-          "dev/patches/php-stubs-acf-pro-stubs-acf-pro-stubs-php.patch"
+        "dev/patches/php-stubs-acf-pro-stubs-acf-pro-stubs-php.patch"
       ]
     }
   },
