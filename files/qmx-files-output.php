@@ -165,14 +165,13 @@ class QMX_Output_Html_Files extends QM_Output_Html {
 		$data = $this->collector->get_data();
 
 		if ( ! empty( $data->files ) ) {
-			$_title = sprintf( esc_html_x( '%s F', 'Files count', 'query-monitor-extend' ), number_format_i18n( count( $data->files ) ) );
-			$_title = preg_replace( '#\s?([^0-9,\.]+)#', '<small>$1</small>', $_title );
-
-			if ( is_null( $_title ) ) {
-				return $title;
-			}
-
-			$title[] = $_title;
+			$placeholder = '{file_count}';
+			$_title      = sprintf( esc_html_x( '%s F', 'Files count', 'query-monitor-extend' ), $placeholder );
+			$_title      = str_replace( "$placeholder ", "$placeholder <small>", $_title ) . '</small>';
+			$count       = number_format_i18n( count( $data->files ) );
+			$count       = str_replace( '&nbsp;', ' ', $count );
+			$_title      = str_replace( $placeholder, $count, $_title );
+			$title[]     = $_title;
 		}
 
 		return $title;
