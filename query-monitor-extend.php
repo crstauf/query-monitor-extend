@@ -83,23 +83,6 @@ add_filter( 'plugin_row_meta', static function ( array $meta, string $file ) : a
 	return $meta;
 }, 10, 2 );
 
-if ( ! class_exists( 'QueryMonitor' ) || did_action( 'qm/cease' ) ) {
-	return;
-}
-
-$collector_names = apply_filters( 'qmx/collectors', array(
-	'acf',
-	'constants',
-	'files',
-	'globals-get',
-	'globals-post',
-	'globals-server',
-	'heartbeat',
-	'image-sizes',
-	'paths',
-	'time',
-) );
-
 $dir = trailingslashit( __DIR__ );
 
 /**
@@ -110,29 +93,60 @@ if ( trailingslashit( constant( 'WPMU_PLUGIN_DIR' ) ) === $dir ) {
 	$dir .= 'query-monitor-extend/';
 }
 
-# Load the shared concerned-hooks outputter before registration runs.
-require_once $dir . 'qmx-output-html-concerned-hooks.php';
-
-# Include all collector and outputters.
-foreach ( $collector_names as $collector_name ) {
-	$files = array(
-		sprintf( '%1$s%2$s/qmx-%2$s-collector.php', $dir, $collector_name ),
-		sprintf( '%1$s%2$s/qmx-%2$s-output.php', $dir, $collector_name ),
-	);
-
-	$files = array_filter( $files, 'file_exists' );
-
-	if ( count( $files ) !== 2 ) {
-		continue;
-	}
-
-	foreach ( $files as $file ) {
-		require_once $file;
-	}
-}
-
-# Include hook timing feature.
+# Include hook timing feature; no Query Monitor dependency, so load right away.
 include_once $dir . 'qmx-time-hooks.php';
 
-# Include additional conditionals.
-include_once $dir . 'qmx-conditionals.php';
+/**
+ * Action: plugins_loaded
+ *
+ * Load collectors and outputters once all plugins are loaded:
+ * plugins load alphabetically, so Query Monitor is not yet
+ * available when this file is included (unless its db.php
+ * drop-in is installed).
+ *
+ * Priority 9: before Query Monitor registers collectors (10).
+ *
+ * @return void
+ */
+add_action( 'plugins_loaded', static function () use ( $dir ) : void {
+	if ( ! class_exists( 'QueryMonitor' ) || did_action( 'qm/cease' ) ) {
+		return;
+	}
+
+	$collector_names = apply_filters( 'qmx/collectors', array(
+		'acf',
+		'constants',
+		'files',
+		'globals-get',
+		'globals-post',
+		'globals-server',
+		'heartbeat',
+		'image-sizes',
+		'paths',
+		'time',
+	) );
+
+	# Load the shared concerned-hooks outputter before registration runs.
+	require_once $dir . 'qmx-output-html-concerned-hooks.php';
+
+	# Include all collector and outputters.
+	foreach ( $collector_names as $collector_name ) {
+		$files = array(
+			sprintf( '%1$s%2$s/qmx-%2$s-collector.php', $dir, $collector_name ),
+			sprintf( '%1$s%2$s/qmx-%2$s-output.php', $dir, $collector_name ),
+		);
+
+		$files = array_filter( $files, 'file_exists' );
+
+		if ( count( $files ) !== 2 ) {
+			continue;
+		}
+
+		foreach ( $files as $file ) {
+			require_once $file;
+		}
+	}
+
+	# Include additional conditionals.
+	include_once $dir . 'qmx-conditionals.php';
+}, 9 );
